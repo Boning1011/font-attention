@@ -13,7 +13,7 @@ const cache = new Map();
  *
  * @param {string} family  — e.g. "Roboto Flex"
  * @param {string} apiKey  — Google Fonts API key
- * @returns {Promise<Array<{ tag: string, start: number, end: number }>>}
+ * @returns {Promise<Array<{ tag: string, start: number, end: number, defaultValue: number }>>}
  */
 export async function fetchFontAxes(family, apiKey) {
   if (cache.has(family)) return cache.get(family);
@@ -36,6 +36,7 @@ export async function fetchFontAxes(family, apiKey) {
     tag: a.tag,
     start: a.start,
     end: a.end,
+    defaultValue: a.defaultValue ?? a.start,
   }));
 
   // Google Fonts API doesn't include 'ital' in axes — it's a separate style,
@@ -44,7 +45,7 @@ export async function fetchFontAxes(family, apiKey) {
   const hasItal = axes.some(a => a.tag === 'ital');
   const hasItalicVariant = item.variants?.some(v => v.includes('italic'));
   if (!hasItal && hasItalicVariant) {
-    axes.push({ tag: 'ital', start: 0, end: 1 });
+    axes.push({ tag: 'ital', start: 0, end: 1, defaultValue: 0 });
   }
 
   cache.set(family, axes);

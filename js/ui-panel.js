@@ -43,6 +43,10 @@ const AXIS_LABELS = {
 // Axes that are binary on/off (typically 0 or 1)
 const BINARY_AXES = new Set(['ital']);
 
+// Axes that change glyph advance width and cause text reflow.
+// Default to locked (min === max === defaultValue) to keep layout stable.
+const REFLOW_AXES = new Set(['wght', 'wdth', 'XTRA', 'XOPQ']);
+
 let activeFont = null;
 let axesMetadata = [];          // [{ tag, start, end }] from API
 let axisRanges = {};            // { [tag]: { min, max } } user-set active ranges
@@ -141,7 +145,13 @@ async function loadAxesForCurrentFont() {
     axesMetadata = await fetchFontAxes(activeFont.family, apiKey);
     axisRanges = {};
     axesMetadata.forEach(a => {
-      axisRanges[a.tag] = { min: a.start, max: a.end };
+      if (REFLOW_AXES.has(a.tag)) {
+        // Lock reflow axes to their default value — no oscillation, no layout shift
+        const def = a.defaultValue ?? a.start;
+        axisRanges[a.tag] = { min: def, max: def };
+      } else {
+        axisRanges[a.tag] = { min: a.start, max: a.end };
+      }
     });
 
     renderAxisControls();
@@ -163,6 +173,7 @@ function renderAxisControls() {
     const range = axisRanges[tag];
     const label = AXIS_LABELS[tag] || tag;
     const isBinary = BINARY_AXES.has(tag);
+    const isReflow = REFLOW_AXES.has(tag);
 
     const group = document.createElement('div');
     group.className = 'axis-control';
@@ -195,7 +206,7 @@ function renderAxisControls() {
       const step = Number.isInteger(start) && Number.isInteger(end) ? 1 : 0.1;
       group.innerHTML = `
         <div class="axis-header">
-          <span class="axis-tag">${label}</span>
+          <span class="axis-tag">${label}${isReflow ? ' <span class="axis-hint">· layout</span>' : ''}</span>
           <span class="axis-readout" id="readout-${tag}">${range.min} … ${range.max}</span>
         </div>
         <div class="range-stack">
