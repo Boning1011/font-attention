@@ -15,6 +15,34 @@ import { fetchFontAxes, clearCache } from './font-api.js';
 const LS_KEY_API = 'gf-api-key';
 const LS_KEY_FONT = 'gf-selected-font';
 
+// Human-readable axis names
+const AXIS_LABELS = {
+  wght: 'Weight',
+  wdth: 'Width',
+  slnt: 'Slant',
+  ital: 'Italic',
+  opsz: 'Optical Size',
+  GRAD: 'Grade',
+  XOPQ: 'Thick Stroke',
+  YOPQ: 'Thin Stroke',
+  XTRA: 'Counter Width',
+  YTAS: 'Ascender Height',
+  YTDE: 'Descender Depth',
+  YTFI: 'Figure Height',
+  YTLC: 'Lowercase Height',
+  YTUC: 'Uppercase Height',
+  FILL: 'Fill',
+  CRSV: 'Cursive',
+  CASL: 'Casual',
+  MONO: 'Monospace',
+  WONK: 'Wonkiness',
+  SOFT: 'Softness',
+  ROND: 'Roundness',
+};
+
+// Axes that are binary on/off (typically 0 or 1)
+const BINARY_AXES = new Set(['ital']);
+
 let activeFont = null;
 let axesMetadata = [];          // [{ tag, start, end }] from API
 let axisRanges = {};            // { [tag]: { min, max } } user-set active ranges
@@ -133,50 +161,84 @@ function renderAxisControls() {
   axesMetadata.forEach(axis => {
     const { tag, start, end } = axis;
     const range = axisRanges[tag];
-    const step = Number.isInteger(start) && Number.isInteger(end) ? 1 : 0.1;
+    const label = AXIS_LABELS[tag] || tag;
+    const isBinary = BINARY_AXES.has(tag);
 
     const group = document.createElement('div');
     group.className = 'axis-control';
-    group.innerHTML = `
-      <div class="axis-header">
-        <span class="axis-tag">${tag}</span>
-        <span class="axis-readout" id="readout-${tag}">${range.min} … ${range.max}</span>
-      </div>
-      <div class="range-stack">
-        <input type="range" class="range-lower" data-tag="${tag}"
-               min="${start}" max="${end}" step="${step}" value="${range.min}">
-        <input type="range" class="range-upper" data-tag="${tag}"
-               min="${start}" max="${end}" step="${step}" value="${range.max}">
-      </div>
-    `;
-    container.appendChild(group);
 
-    const lower = group.querySelector('.range-lower');
-    const upper = group.querySelector('.range-upper');
+    if (isBinary) {
+      group.innerHTML = `
+        <div class="axis-header">
+          <span class="axis-tag">${label}</span>
+          <span class="axis-readout" id="readout-${tag}">${range.max >= 1 ? 'On' : 'Off'}</span>
+        </div>
+        <label class="toggle-label">
+          <input type="checkbox" class="axis-toggle" data-tag="${tag}"
+                 ${range.max >= 1 ? 'checked' : ''}>
+          <span class="toggle-desc">Enable ${label.toLowerCase()}</span>
+        </label>
+      `;
+      container.appendChild(group);
 
-    lower.addEventListener('input', () => {
-      if (parseFloat(lower.value) > parseFloat(upper.value)) {
-        lower.value = upper.value;
-      }
-      axisRanges[tag].min = parseFloat(lower.value);
-      updateReadout(tag);
-      fireChange();
-    });
+      const checkbox = group.querySelector('.axis-toggle');
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          axisRanges[tag] = { min: 1, max: 1 };
+        } else {
+          axisRanges[tag] = { min: 0, max: 0 };
+        }
+        updateReadout(tag);
+        fireChange();
+      });
+    } else {
+      const step = Number.isInteger(start) && Number.isInteger(end) ? 1 : 0.1;
+      group.innerHTML = `
+        <div class="axis-header">
+          <span class="axis-tag">${label}</span>
+          <span class="axis-readout" id="readout-${tag}">${range.min} … ${range.max}</span>
+        </div>
+        <div class="range-stack">
+          <input type="range" class="range-lower" data-tag="${tag}"
+                 min="${start}" max="${end}" step="${step}" value="${range.min}">
+          <input type="range" class="range-upper" data-tag="${tag}"
+                 min="${start}" max="${end}" step="${step}" value="${range.max}">
+        </div>
+      `;
+      container.appendChild(group);
 
-    upper.addEventListener('input', () => {
-      if (parseFloat(upper.value) < parseFloat(lower.value)) {
-        upper.value = lower.value;
-      }
-      axisRanges[tag].max = parseFloat(upper.value);
-      updateReadout(tag);
-      fireChange();
-    });
+      const lower = group.querySelector('.range-lower');
+      const upper = group.querySelector('.range-upper');
+
+      lower.addEventListener('input', () => {
+        if (parseFloat(lower.value) > parseFloat(upper.value)) {
+          lower.value = upper.value;
+        }
+        axisRanges[tag].min = parseFloat(lower.value);
+        updateReadout(tag);
+        fireChange();
+      });
+
+      upper.addEventListener('input', () => {
+        if (parseFloat(upper.value) < parseFloat(lower.value)) {
+          upper.value = lower.value;
+        }
+        axisRanges[tag].max = parseFloat(upper.value);
+        updateReadout(tag);
+        fireChange();
+      });
+    }
   });
 }
 
 function updateReadout(tag) {
   const el = document.getElementById(`readout-${tag}`);
-  if (el) el.textContent = `${axisRanges[tag].min} … ${axisRanges[tag].max}`;
+  if (!el) return;
+  if (BINARY_AXES.has(tag)) {
+    el.textContent = axisRanges[tag].max >= 1 ? 'On' : 'Off';
+  } else {
+    el.textContent = `${axisRanges[tag].min} … ${axisRanges[tag].max}`;
+  }
 }
 
 function fireChange() {

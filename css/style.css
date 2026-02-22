@@ -188,3 +188,25 @@ body {
   pointer-events: auto;
   border: none;
 }
+
+/* ── Binary axis toggle ──────────────────────────────────────────────── */
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.2rem 0;
+}
+
+.toggle-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1a1a1a;
+  cursor: pointer;
+}
+
+.toggle-desc {
+  color: #666;
+  font-size: 12px;
+}

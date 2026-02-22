@@ -9,4 +9,10 @@
 
 export const FONTS = [
   { id: 'roboto-flex', family: 'Roboto Flex' },
+  { id: 'roboto', family: 'Roboto' },
+  { id: 'open-sans', family: 'Open Sans' },
+  { id: 'noto-sans', family: 'Noto Sans' },
+  { id: 'noto-serif', family: 'Noto Serif' },
+  { id: 'playfair-display', family: 'Playfair Display' },
+  { id: 'merriweather', family: 'Merriweather' },
 ];
