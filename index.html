@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>font-attention — Session 1</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Roboto+Flex:GRAD,XOPQ,XTRA,opsz,wdth,wght@-200..150,27..175,323..603,8..144,25..151,100..1000&display=swap">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      background: #0d0d0d;
+      color: #f0ece3;
+      padding: 4rem 6vw;
+      min-height: 100vh;
+    }
+
+    #token-stage {
+      font-family: 'Roboto Flex', sans-serif;
+      /* Generous line-height prevents vertical collision at extreme opsz values */
+      line-height: 2.5;
+      display: block;
+      max-width: 72ch;
+    }
+
+    .token {
+      display: inline;
+      /* baseline, not middle — keeps all glyphs on the same baseline grid
+         regardless of how font-size differs between tokens */
+      vertical-align: baseline;
+      /* pre-wrap preserves the trailing space included in each token's text,
+         which correctly inherits that token's wdth/wght spacing */
+      white-space: pre-wrap;
+      /* cross-token kerning is undefined when adjacent tokens have different
+         axis values — disable to avoid artefacts */
+      font-kerning: none;
+      /* zero-cost in session 1; session 2 gets animated transitions for free */
+      transition: font-variation-settings 0.4s ease, font-size 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="token-stage"></div>
+
+  <script>
+    /**
+     * Renders an array of token objects into #token-stage.
+     *
+     * @param {Array<{text: string, axes: Object}>} tokenDataArray
+     *   text  — string to display (may include trailing space)
+     *   axes  — object mapping CSS font-variation axis tags to numbers
+     *           e.g. { wght: 800, wdth: 100, opsz: 20, GRAD: 80 }
+     */
+    function renderTokens(tokenDataArray) {
+      const stage = document.getElementById('token-stage');
+      stage.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+
+      tokenDataArray.forEach(({ text, axes }) => {
+        const span = document.createElement('span');
+        span.className = 'token';
+        span.textContent = text;
+
+        // Build font-variation-settings from the axes object.
+        // Axis tags must be quoted strings in the CSS value.
+        const fvs = Object.entries(axes)
+          .map(([tag, value]) => `"${tag}" ${value}`)
+          .join(', ');
+        span.style.fontVariationSettings = fvs;
+
+        // Critical: once font-variation-settings is set, the browser stops
+        // auto-syncing opsz to the rendered font-size. Sync manually so the
+        // optical-size optical corrections are actually applied.
+        if (axes.opsz !== undefined) {
+          // 1 opsz unit ≈ 1pt. Scale around a 16pt baseline.
+          // Clamp to 0.7em–2.5em to keep tokens readable.
+          const scale = Math.min(2.5, Math.max(0.7, axes.opsz / 16));
+          span.style.fontSize = `${scale}em`;
+        }
+
+        fragment.appendChild(span);
+      });
+
+      // Single reflow — important when this is called on every animation frame
+      stage.appendChild(fragment);
+    }
+
+    // ── Test data ─────────────────────────────────────────────────────────────
+    // Each token's axis values correspond to its meaning so visual variation
+    // is immediately legible. "heavy" pushes weight/width/grade to max;
+    // "whisper" pulls them to min; "GRAD only" demonstrates the grade axis
+    // changing apparent darkness without altering glyph metrics.
+
+    const TOKEN_DATA = [
+      { text: 'heavy ',      axes: { wght: 950,  wdth: 100, opsz: 24, GRAD:  100, XOPQ: 150, XTRA: 500 } },
+      { text: 'thin ',       axes: { wght: 100,  wdth: 100, opsz: 12, GRAD: -150, XOPQ:  30, XTRA: 400 } },
+      { text: 'wide ',       axes: { wght: 400,  wdth: 151, opsz: 16, GRAD:    0, XOPQ:  88, XTRA: 603 } },
+      { text: 'narrow ',     axes: { wght: 400,  wdth:  25, opsz: 16, GRAD:    0, XOPQ:  88, XTRA: 323 } },
+      { text: 'bold ',       axes: { wght: 800,  wdth: 110, opsz: 20, GRAD:   80, XOPQ: 140, XTRA: 520 } },
+      { text: 'whisper ',    axes: { wght: 100,  wdth:  70, opsz:  8, GRAD: -200, XOPQ:  27, XTRA: 340 } },
+      { text: 'SCREAM ',     axes: { wght: 1000, wdth: 151, opsz: 40, GRAD:  150, XOPQ: 175, XTRA: 603 } },
+      { text: 'delicate ',   axes: { wght: 200,  wdth:  80, opsz: 10, GRAD: -100, XOPQ:  40, XTRA: 370 } },
+      { text: 'massive ',    axes: { wght: 900,  wdth: 130, opsz: 36, GRAD:  120, XOPQ: 160, XTRA: 560 } },
+      { text: 'micro ',      axes: { wght: 300,  wdth:  50, opsz:  8, GRAD:  -80, XOPQ:  35, XTRA: 330 } },
+      { text: 'optical ',    axes: { wght: 400,  wdth: 100, opsz: 80, GRAD:    0, XOPQ:  88, XTRA: 463 } },
+      { text: 'compressed ', axes: { wght: 600,  wdth:  30, opsz: 18, GRAD:   20, XOPQ: 100, XTRA: 323 } },
+      { text: 'expanded ',   axes: { wght: 500,  wdth: 148, opsz: 18, GRAD:   10, XOPQ:  90, XTRA: 590 } },
+      { text: 'dark ',       axes: { wght: 800,  wdth: 100, opsz: 20, GRAD:  150, XOPQ: 155, XTRA: 460 } },
+      { text: 'light ',      axes: { wght: 200,  wdth: 100, opsz: 14, GRAD: -190, XOPQ:  32, XTRA: 450 } },
+      { text: 'normal.',     axes: { wght: 400,  wdth: 100, opsz: 16, GRAD:    0, XOPQ:  88, XTRA: 463 } },
+    ];
+
+    renderTokens(TOKEN_DATA);
+  </script>
+
+</body>
+</html>
