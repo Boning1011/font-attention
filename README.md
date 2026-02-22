@@ -12,25 +12,33 @@
 需要 local server（ES modules 不支持 `file://` 协议）：
 
 ```bash
-npx serve .
-# 或
-python3 -m http.server
+# 创建虚拟环境（首次）
+python3 -m venv venv
+
+# 启动本地服务
+source venv/bin/activate && python -m http.server 8000
 ```
+
+打开 `http://localhost:8000`，在右侧面板输入 Google Fonts API Key（首次需要，之后自动记住）。
 
 ## 当前状态
 
+**Session 3 完成（2026-02-22）**
+- 多字体支持：通过 Google Fonts API 运行时获取任意可变字体的轴元数据
+- 右侧配置面板：字体选择 + 每个轴的双滑块范围控制
+- 所有模块通用化：renderer/driver 不再硬编码特定轴，支持任意轴集合
+- 添加新字体只需在 `js/font-registry.js` 加一行
+
 **Session 2 完成（2026-02-21）**
-- 代码重构：从单文件拆分为模块化结构（`css/style.css` + `js/renderer.js` + `js/mock-driver.js` + `js/main.js`）
-- Token 流式出现：`streamTokens()` 按时间间隔逐个添加 token，模拟模型生成过程
-- Axis 平滑变化：每次新 token 出现时，前面所有 token 的 wght/slnt 会平滑过渡（模拟 attention 重分布）
-- 入场动画：fade-in + 微缩放（250ms ease-out）
-- 渲染层（`renderer.js`）与数据源（`mock-driver.js`）解耦，方便将来替换为真实 attention 数据
+- 代码重构：从单文件拆分为模块化结构
+- Token 流式出现 + Axis 平滑变化（模拟 attention 重分布）
+- 渲染层与数据源解耦
 
 **Session 1 完成（2026-02-21）**
-- 静态 token 渲染器：每个 token 独立 `<span>`，通过 `font-variation-settings` 控制 `wght` 和 `slnt`
-- 使用 Roboto Flex 可变字体（Google Fonts CDN 加载）
+- 静态 token 渲染器 + Roboto Flex 可变字体
 - Lorem Ipsum 占位数据，非公约数相位驱动
 
 **待完成 / 下一步**
+- 扩充字体列表（5-10 种 Google Variable Fonts）
 - 接入真实 attention 数据源（Hugging Face Transformers pipeline）
 - attention → font axis 映射策略设计
