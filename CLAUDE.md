@@ -25,7 +25,8 @@
 **方向**: 用 LLM 的 attention 权重实时驱动可变字体参数，让每个 token 的字形随模型内部状态变化。
 **核心管线**: Token → Attention → Font Axis Values → Rendered Glyph
 
-**主字体**: [Roboto Flex](https://fonts.google.com/specimen/Roboto+Flex/tester?query=robot+fl&categoryFilters=Technology:%2FTechnology%2FVariable)（13 个可变轴，Apache 2.0）
+**字体**: 支持多种 Google Variable Fonts（通过 Google Fonts API 运行时获取轴元数据）
+**默认字体**: Roboto Flex（13 个可变轴，Apache 2.0）
 **渲染端**: 纯 Web（HTML/CSS/JS），Google Fonts CDN 加载字体
 
 ---
@@ -53,7 +54,20 @@
 - 入场动画：fade-in + scale（@keyframes token-enter, 250ms）
 - 渲染层与数据源解耦：renderer 不知道数据从哪来，driver 可替换
 
+### Session 3（2026-02-22）— 已完成
+- 多字体支持架构重构
+  - `js/font-registry.js` — 极简字体列表（只需 family name）
+  - `js/font-api.js` — 运行时调用 Google Fonts Developer API 获取轴元数据，内存缓存
+  - `js/font-loader.js` — 动态构建 CSS API v2 URL + 切换 `<link>` 加载字体
+  - `js/ui-panel.js` — 右侧配置面板（API Key 输入 + 字体选择 + 双滑块轴范围调节）
+- renderer.js 通用化：接受任意轴（Record<string, number>），不再硬编码 wght/slnt
+- mock-driver.js 通用化：根据 config.activeAxes 驱动任意轴振荡
+- main.js 改为协调器：监听 `fontconfig:change` 事件，generation counter 防异步竞态
+- 添加 .gitignore、Python venv（本地 server）
+- API Key 通过 UI 面板输入，存 localStorage
+
 ### 下一步（未开始）
+- 用户提供 5-10 个字体列表，扩充 font-registry.js
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
 
@@ -61,9 +75,12 @@
 
 ## 技术约定
 
-- **运行需要 local server**：ES modules 不支持 `file://`，用 `npx serve .` 或 `python3 -m http.server`
-- 字体加载：Google Fonts CSS API v2，在 URL 中显式声明所有需要动态控制的轴及其范围
+- **运行需要 local server**：ES modules 不支持 `file://`，用 `source venv/bin/activate && python -m http.server 8000`
+- **Google Fonts API Key**：`.env` 文件存有 key，但前端通过 UI 面板输入（存 localStorage）。API 端点：`https://www.googleapis.com/webfonts/v1/webfonts?family={name}&capability=VF&key={key}`
+- **字体加载**：Google Fonts CSS API v2，URL 由 `font-loader.js` 从 API 返回的轴数据动态构建（轴排序：大写标签在前按字母序，小写在后）
+- **添加新字体**：在 `js/font-registry.js` 的 `FONTS` 数组中加一行 `{ id: 'xxx', family: 'Font Name' }` 即可，轴数据由 API 自动获取
 - 每个 token 用独立 `<span>` 渲染，`display: inline`，`white-space: pre-wrap`
 - `font-kerning: none` 是必要的，不要删除
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
-- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（入口），新数据源只需写新 driver
+- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（配置面板）
+- `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
