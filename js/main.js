@@ -18,4 +18,4 @@ const MOCK_TEXT =
 
 const tokens = MOCK_TEXT.match(/\S+\s*/g) || [];
 
-streamTokens(tokens, 120);
+streamTokens(tokens, 100);
