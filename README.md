@@ -5,7 +5,7 @@
 ## 文档
 
 - [项目方向与核心概念](doc/PROJECT_DIRECTION.md)
-- [Roboto Flex 字体参数参考](doc/roboto-flex.md)
+- [Roboto Flex 字体参数参考](doc/roboto-flex.md) | [在线预览](https://fonts.google.com/specimen/Roboto+Flex/tester?query=robot+fl&categoryFilters=Technology:%2FTechnology%2FVariable)
 
 ## 运行
 
