@@ -25,7 +25,7 @@
 **方向**: 用 LLM 的 attention 权重实时驱动可变字体参数，让每个 token 的字形随模型内部状态变化。
 **核心管线**: Token → Attention → Font Axis Values → Rendered Glyph
 
-**主字体**: Roboto Flex（13 个可变轴，Apache 2.0）
+**主字体**: [Roboto Flex](https://fonts.google.com/specimen/Roboto+Flex/tester?query=robot+fl&categoryFilters=Technology:%2FTechnology%2FVariable)（13 个可变轴，Apache 2.0）
 **渲染端**: 纯 Web（HTML/CSS/JS），Google Fonts CDN 加载字体
 
 ---
