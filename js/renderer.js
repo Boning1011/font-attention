@@ -21,7 +21,7 @@ export function appendToken({ text, axes = {} }) {
   const span = document.createElement('span');
   span.className = 'token entering';
   span.textContent = text;
-  span.style.fontVariationSettings = serializeFVS(axes);
+  applyAxes(span, axes);
 
   span.addEventListener('animationend', () => {
     span.classList.remove('entering');
@@ -45,7 +45,7 @@ export function updateAxes(index, newAxes) {
 
   const current = parseFVS(span.style.fontVariationSettings);
   Object.assign(current, newAxes);
-  span.style.fontVariationSettings = serializeFVS(current);
+  applyAxes(span, current);
 }
 
 /**
@@ -73,6 +73,25 @@ export function setFontFamily(family) {
 }
 
 // ── helpers ──────────────────────────────────────────────────────────────
+
+// Axes that map to dedicated CSS properties instead of font-variation-settings.
+// For most Google Fonts 'ital' is a separate font file, not a true variable
+// axis, so font-variation-settings has no effect — we need font-style instead.
+const CSS_PROP_AXES = {
+  ital: (span, val) => { span.style.fontStyle = val >= 1 ? 'italic' : 'normal'; },
+};
+
+function applyAxes(span, axes) {
+  const fvsAxes = {};
+  for (const [tag, val] of Object.entries(axes)) {
+    if (CSS_PROP_AXES[tag]) {
+      CSS_PROP_AXES[tag](span, val);
+    } else {
+      fvsAxes[tag] = val;
+    }
+  }
+  span.style.fontVariationSettings = serializeFVS(fvsAxes);
+}
 
 function parseFVS(fvs) {
   const result = {};
