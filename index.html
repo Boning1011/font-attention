@@ -3,108 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>font-attention — Session 1</title>
+  <title>font-attention</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Roboto+Flex:GRAD,XOPQ,XTRA,opsz,slnt,wdth,wght@-200..150,27..175,323..603,8..144,-10..0,25..151,100..1000&display=swap">
 
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: 16px;
-    }
-
-    body {
-      background: #0d0d0d;
-      color: #f0ece3;
-      padding: 4rem 6vw;
-      min-height: 100vh;
-    }
-
-    #token-stage {
-      font-family: 'Roboto Flex', sans-serif;
-      line-height: 1.75;
-      display: block;
-      max-width: 72ch;
-    }
-
-    .token {
-      display: inline;
-      vertical-align: baseline;
-      /* pre-wrap preserves the trailing space included in each token's text */
-      white-space: pre-wrap;
-      /* disable cross-token kerning to avoid artefacts at axis boundaries */
-      font-kerning: none;
-      transition: font-variation-settings 0.4s ease;
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <div id="token-stage"></div>
 
-  <script>
-    /**
-     * Renders an array of token objects into #token-stage.
-     *
-     * @param {Array<{text: string, wght: number, slnt: number}>} tokenDataArray
-     *   text  — string to display (may include trailing space)
-     *   wght  — weight axis value (100–900)
-     *   slnt  — slant axis value (−10..0; 0 = upright, negative = italic lean)
-     */
-    function renderTokens(tokenDataArray) {
-      const stage = document.getElementById('token-stage');
-      stage.innerHTML = '';
-      const fragment = document.createDocumentFragment();
-
-      tokenDataArray.forEach(({ text, wght = 400, slnt = 0 }) => {
-        const span = document.createElement('span');
-        span.className = 'token';
-        span.textContent = text;
-        span.style.fontVariationSettings = `"wght" ${wght}, "slnt" ${slnt}`;
-        fragment.appendChild(span);
-      });
-
-      stage.appendChild(fragment);
-    }
-
-    // ── Lorem Ipsum token data ────────────────────────────────────────────────
-    // Each token (word + trailing space) gets a subtly different weight and
-    // slant. Incommensurate phase increments (0.41 rad/token for weight,
-    // 0.70 rad/token for slant) ensure the variation pattern never aligns
-    // with word, clause, or sentence boundaries — it reads as token-level
-    // signal, not word-level meaning.
-    //
-    // Ranges are kept intentionally narrow:
-    //   wght  320–480  (±80 around regular 400)
-    //   slnt  −4..0    (subtle lean; 0 = upright)
-
-    const LOREM_IPSUM =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
-      'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' +
-      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ' +
-      'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ' +
-      'reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ' +
-      'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in ' +
-      'culpa qui officia deserunt mollit anim id est laborum.';
-
-    const TOKEN_DATA = (LOREM_IPSUM.match(/\S+\s*/g) || []).map((text, i) => {
-      const w = i * 0.41;                                      // weight phase
-      const s = i * 0.70;                                      // slant phase
-      const wght = Math.round(400 + 80 * Math.sin(w));         // 320–480
-      const slnt = parseFloat((-2 * (Math.sin(s) + 1)).toFixed(1)); // −4..0
-      return { text, wght, slnt };
-    });
-
-    renderTokens(TOKEN_DATA);
-  </script>
+  <script type="module" src="js/main.js"></script>
 
 </body>
 </html>
