@@ -38,6 +38,15 @@ export async function fetchFontAxes(family, apiKey) {
     end: a.end,
   }));
 
+  // Google Fonts API doesn't include 'ital' in axes — it's a separate style,
+  // not a continuous variable axis. Detect italic support from variants and
+  // inject it so the UI can toggle italic on/off.
+  const hasItal = axes.some(a => a.tag === 'ital');
+  const hasItalicVariant = item.variants?.some(v => v.includes('italic'));
+  if (!hasItal && hasItalicVariant) {
+    axes.push({ tag: 'ital', start: 0, end: 1 });
+  }
+
   cache.set(family, axes);
   return axes;
 }

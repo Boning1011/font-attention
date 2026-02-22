@@ -26,11 +26,26 @@ export function buildGoogleFontsUrl(family, axes) {
     return a.tag.localeCompare(b.tag);
   });
 
-  const tags = sorted.map(a => a.tag).join(',');
-  const ranges = sorted.map(a => `${a.start}..${a.end}`).join(',');
   const encoded = family.replace(/ /g, '+');
+  const hasItal = sorted.some(a => a.tag === 'ital');
 
-  return `https://fonts.googleapis.com/css2?family=${encoded}:${tags}@${ranges}&display=swap`;
+  if (!hasItal) {
+    // Simple range format: wght,wdth@300..800,75..100
+    const tags = sorted.map(a => a.tag).join(',');
+    const ranges = sorted.map(a => `${a.start}..${a.end}`).join(',');
+    return `https://fonts.googleapis.com/css2?family=${encoded}:${tags}@${ranges}&display=swap`;
+  }
+
+  // When ital is present, Google Fonts CSS v2 requires tuple format:
+  //   ital,wght@0,300..800;1,300..800
+  // ital must be first, followed by other axes sorted normally.
+  const otherAxes = sorted.filter(a => a.tag !== 'ital');
+  const tags = ['ital', ...otherAxes.map(a => a.tag)].join(',');
+  const otherRanges = otherAxes.map(a => `${a.start}..${a.end}`).join(',');
+  const tuple0 = otherRanges ? `0,${otherRanges}` : '0';
+  const tuple1 = otherRanges ? `1,${otherRanges}` : '1';
+
+  return `https://fonts.googleapis.com/css2?family=${encoded}:${tags}@${tuple0};${tuple1}&display=swap`;
 }
 
 /**
