@@ -38,7 +38,11 @@ source venv/bin/activate && python -m http.server 8000
 - 静态 token 渲染器 + Roboto Flex 可变字体
 - Lorem Ipsum 占位数据，非公约数相位驱动
 
+**Session 3b（2026-02-22）**
+- 扩充字体列表：Roboto, Open Sans, Noto Sans, Noto Serif, Playfair Display, Merriweather
+- UI 轴标签改为人类可读名称（Weight, Width, Slant 等）
+- 二值轴（如 Italic）显示为 on/off 开关而非滑块
+
 **待完成 / 下一步**
-- 扩充字体列表（5-10 种 Google Variable Fonts）
 - 接入真实 attention 数据源（Hugging Face Transformers pipeline）
 - attention → font axis 映射策略设计

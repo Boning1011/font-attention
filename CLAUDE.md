@@ -66,8 +66,12 @@
 - 添加 .gitignore、Python venv（本地 server）
 - API Key 通过 UI 面板输入，存 localStorage
 
+### Session 3b（2026-02-22）— 已完成
+- 扩充字体列表至 7 种：Roboto Flex, Roboto, Open Sans, Noto Sans, Noto Serif, Playfair Display, Merriweather
+- UI 轴标签改为人类可读名称（`AXIS_LABELS` 映射表在 `ui-panel.js`）
+- 二值轴（`BINARY_AXES` set，目前含 `ital`）显示为 checkbox toggle 而非双滑块
+
 ### 下一步（未开始）
-- 用户提供 5-10 个字体列表，扩充 font-registry.js
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
 
