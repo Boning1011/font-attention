@@ -74,23 +74,24 @@ export function setFontFamily(family) {
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
-// Axes that map to dedicated CSS properties instead of font-variation-settings.
-// For most Google Fonts 'ital' is a separate font file, not a true variable
-// axis, so font-variation-settings has no effect — we need font-style instead.
+// Axes that also need a dedicated CSS property in addition to font-variation-settings.
+// For 'ital': Google Fonts serves italic as a separate font file selected via
+// @font-face font-style descriptor, so we need font-style to pick the right file.
+// We also keep "ital" in font-variation-settings because the spec says FVS resets
+// unmentioned axes to defaults, which would override font-style back to normal.
 const CSS_PROP_AXES = {
   ital: (span, val) => { span.style.fontStyle = val >= 1 ? 'italic' : 'normal'; },
 };
 
 function applyAxes(span, axes) {
-  const fvsAxes = {};
+  // Keep ALL axes in font-variation-settings (including ital).
+  // Additionally apply CSS properties for axes that need them.
   for (const [tag, val] of Object.entries(axes)) {
     if (CSS_PROP_AXES[tag]) {
       CSS_PROP_AXES[tag](span, val);
-    } else {
-      fvsAxes[tag] = val;
     }
   }
-  span.style.fontVariationSettings = serializeFVS(fvsAxes);
+  span.style.fontVariationSettings = serializeFVS(axes);
 }
 
 function parseFVS(fvs) {
