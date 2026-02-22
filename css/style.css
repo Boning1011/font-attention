@@ -129,6 +129,13 @@ body {
   font-family: 'SF Mono', 'Menlo', monospace;
 }
 
+.axis-hint {
+  font-weight: 400;
+  font-size: 11px;
+  color: #aaa;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
 .axis-readout {
   font-size: 12px;
   color: #888;
