@@ -14,6 +14,7 @@ import { fetchFontAxes, clearCache } from './font-api.js';
 
 const LS_KEY_API = 'gf-api-key';
 const LS_KEY_FONT = 'gf-selected-font';
+const DEFAULT_API_KEY = '';
 
 // Human-readable axis names
 const AXIS_LABELS = {
@@ -65,7 +66,7 @@ export function initPanel() {
     <label class="panel-label" for="api-key-input">API Key</label>
     <input id="api-key-input" class="panel-input" type="password"
            placeholder="Google Fonts API Key"
-           value="${localStorage.getItem(LS_KEY_API) || ''}">
+           value="${localStorage.getItem(LS_KEY_API) || DEFAULT_API_KEY}">
 
     <label class="panel-label" for="font-select">Font Family</label>
     <select id="font-select" class="panel-select">
@@ -126,7 +127,7 @@ function onFontChange(e) {
 // ── axes loading & rendering ─────────────────────────────────────────────
 
 async function loadAxesForCurrentFont() {
-  const apiKey = localStorage.getItem(LS_KEY_API);
+  const apiKey = localStorage.getItem(LS_KEY_API) || DEFAULT_API_KEY;
   const status = document.getElementById('axes-status');
   const container = document.getElementById('axes-container');
 
