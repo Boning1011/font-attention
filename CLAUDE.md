@@ -41,16 +41,29 @@
 - 记录字体完整规格：`doc/roboto-flex.md`
 - Lorem Ipsum 占位数据，非公约数相位驱动（wght: ±80 around 400，slnt: −4..0）
 
+### Session 2（2026-02-21）— 已完成
+- 代码重构：单文件 → 模块化（ES modules）
+  - `index.html` → 极简 HTML shell
+  - `css/style.css` → 所有样式
+  - `js/renderer.js` → 渲染引擎（appendToken, updateAxes, clearStage, getTokenCount）
+  - `js/mock-driver.js` → mock 数据源 + 流式驱动（streamTokens）
+  - `js/main.js` → 入口
+- Token 流式出现：`streamTokens(tokens, interval)` 逐个添加
+- Axis 平滑变化：每次新增 token 时重算所有前序 token 的 axis（模拟 attention 重分布）
+- 入场动画：fade-in + scale（@keyframes token-enter, 250ms）
+- 渲染层与数据源解耦：renderer 不知道数据从哪来，driver 可替换
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
-- 实现实时 token 流更新逻辑
 
 ---
 
 ## 技术约定
 
+- **运行需要 local server**：ES modules 不支持 `file://`，用 `npx serve .` 或 `python3 -m http.server`
 - 字体加载：Google Fonts CSS API v2，在 URL 中显式声明所有需要动态控制的轴及其范围
 - 每个 token 用独立 `<span>` 渲染，`display: inline`，`white-space: pre-wrap`
 - `font-kerning: none` 是必要的，不要删除
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
+- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（入口），新数据源只需写新 driver

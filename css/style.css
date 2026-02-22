@@ -1,0 +1,46 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background: #0d0d0d;
+  color: #f0ece3;
+  padding: 4rem 6vw;
+  min-height: 100vh;
+}
+
+#token-stage {
+  font-family: 'Roboto Flex', sans-serif;
+  line-height: 1.75;
+  display: block;
+  max-width: 72ch;
+}
+
+.token {
+  display: inline;
+  vertical-align: baseline;
+  white-space: pre-wrap;
+  font-kerning: none;
+  transition: font-variation-settings 300ms ease-out, opacity 200ms;
+}
+
+@keyframes token-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.token.entering {
+  animation: token-enter 250ms ease-out forwards;
+}
