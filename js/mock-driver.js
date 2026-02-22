@@ -4,20 +4,29 @@
  * When a new token appears, existing tokens' axes rapidly oscillate
  * (overshoot → undershoot → settle) before locking to their final values,
  * simulating the "jitter then commit" feel of attention redistribution.
+ *
+ * Axis-agnostic: driven by config.activeAxes { [tag]: {min, max} }.
  */
 
 import { appendToken, updateAxes } from './renderer.js';
+
+// Axes that use integer values (most parametric axes and weight)
+const INTEGER_AXES = new Set([
+  'wght', 'GRAD', 'XOPQ', 'XTRA', 'YOPQ', 'YTAS', 'YTDE', 'YTFI', 'YTLC', 'YTUC',
+]);
 
 /**
  * Stream tokens with rhythmic pacing and oscillating axis updates.
  *
  * @param {string[]} tokens
- * @param {number}   baseInterval — base ms between tokens (default 100)
+ * @param {{ activeAxes: Record<string, {min: number, max: number}> }} config
+ * @param {number} baseInterval — base ms between tokens (default 100)
  * @returns {{ stop: () => void }}
  */
-export function streamTokens(tokens, baseInterval = 100) {
+export function streamTokens(tokens, config, baseInterval = 100) {
   let i = 0;
   let stopped = false;
+  const axesCfg = config.activeAxes;
 
   function scheduleNext() {
     if (stopped || i >= tokens.length) return;
@@ -25,18 +34,15 @@ export function streamTokens(tokens, baseInterval = 100) {
     const idx = i;
     const total = idx + 1;
 
-    // Append the new token with its initial axes
-    appendToken({ text: tokens[idx], ...computeAxes(idx, total) });
+    appendToken({ text: tokens[idx], axes: computeAxes(idx, total, axesCfg) });
 
-    // Oscillate all preceding tokens then lock
     if (idx > 0) {
-      oscillateAll(idx, total);
+      oscillateAll(idx, total, axesCfg);
     }
 
     i++;
 
     if (i < tokens.length) {
-      // Rhythm: every ~6 tokens, take a slightly longer breath
       const breath = (i % 6 === 0) ? baseInterval * 1.8 : baseInterval;
       setTimeout(scheduleNext, breath);
     }
@@ -52,60 +58,55 @@ export function streamTokens(tokens, baseInterval = 100) {
 const OSCILLATION_STEPS = 4;
 const STEP_MS = 35;
 
-/**
- * Rapidly oscillate all tokens [0..newIndex-1] through several overshoot
- * frames, then snap to the final target value.
- */
-function oscillateAll(newIndex, total) {
+function oscillateAll(newIndex, total, axesCfg) {
   for (let step = 0; step < OSCILLATION_STEPS; step++) {
     const isLast = step === OSCILLATION_STEPS - 1;
     setTimeout(() => {
       for (let j = 0; j < newIndex; j++) {
         if (isLast) {
-          // Final frame: lock to target
-          updateAxes(j, computeAxes(j, total));
+          updateAxes(j, computeAxes(j, total, axesCfg));
         } else {
-          // Intermediate frame: overshoot with decaying amplitude
-          updateAxes(j, computeAxesOscillation(j, total, step));
+          updateAxes(j, computeAxesOscillation(j, total, step, axesCfg));
         }
       }
     }, step * STEP_MS);
   }
 }
 
-/**
- * Compute an oscillation frame for token j.
- * Each step overshoots the target in alternating directions
- * with decaying amplitude: ±overshoot * (decay ^ step)
- */
-function computeAxesOscillation(j, total, step) {
-  const target = computeAxes(j, total);
-  const prev = computeAxes(j, total - 1);
+function computeAxesOscillation(j, total, step, axesCfg) {
+  const target = computeAxes(j, total, axesCfg);
+  const prev = computeAxes(j, total - 1, axesCfg);
 
-  // Direction alternates: +1, -1, +1, ...
   const sign = (step % 2 === 0) ? 1 : -1;
-  // Amplitude decays each step: 1.6, 0.8, 0.4, ...
   const amp = 1.6 * Math.pow(0.5, step);
 
-  const deltaW = target.wght - prev.wght;
-  const deltaS = target.slnt - prev.slnt;
-
-  return {
-    wght: Math.round(target.wght + sign * amp * deltaW),
-    slnt: parseFloat((target.slnt + sign * amp * deltaS).toFixed(1)),
-  };
+  const result = {};
+  for (const tag of Object.keys(axesCfg)) {
+    const delta = target[tag] - prev[tag];
+    const raw = target[tag] + sign * amp * delta;
+    result[tag] = INTEGER_AXES.has(tag) ? Math.round(raw) : parseFloat(raw.toFixed(2));
+  }
+  return result;
 }
 
 // ── axis computation ─────────────────────────────────────────────────────
 
-function computeAxes(j, total) {
-  const phase = j * 0.41 + total * 0.13;
+function computeAxes(j, total, axesCfg) {
   const decay = 1 / (1 + 0.02 * total);
+  const result = {};
+  const tags = Object.keys(axesCfg);
 
-  const wght = Math.round(400 + 80 * decay * Math.sin(phase));
-  const slnt = parseFloat(
-    (-2 * decay * (Math.sin(j * 0.70 + total * 0.09) + 1)).toFixed(1)
-  );
+  tags.forEach((tag, i) => {
+    const { min, max } = axesCfg[tag];
+    const mid = (min + max) / 2;
+    const halfRange = (max - min) / 2;
 
-  return { wght, slnt };
+    // Unique phase per axis so they don't all pulse together
+    const phase = j * (0.41 + i * 0.07) + total * (0.13 + i * 0.03);
+    const raw = mid + halfRange * decay * Math.sin(phase);
+
+    result[tag] = INTEGER_AXES.has(tag) ? Math.round(raw) : parseFloat(raw.toFixed(2));
+  });
+
+  return result;
 }

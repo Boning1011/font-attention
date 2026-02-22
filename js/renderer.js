@@ -4,6 +4,8 @@
  * Pure rendering layer: appends tokens to #token-stage, manages their
  * font-variation-settings, and triggers entry animations.
  * Knows nothing about where the data comes from.
+ *
+ * Axis-agnostic: accepts any set of axes as a Record<string, number>.
  */
 
 const stage = document.getElementById('token-stage');
@@ -12,14 +14,14 @@ const tokenSpans = [];
 /**
  * Append a single token to the stage with an entry animation.
  *
- * @param {{ text: string, wght?: number, slnt?: number }} tokenData
+ * @param {{ text: string, axes?: Record<string, number> }} tokenData
  * @returns {number} Index of the newly appended token.
  */
-export function appendToken({ text, wght = 400, slnt = 0 }) {
+export function appendToken({ text, axes = {} }) {
   const span = document.createElement('span');
   span.className = 'token entering';
   span.textContent = text;
-  span.style.fontVariationSettings = `"wght" ${wght}, "slnt" ${slnt}`;
+  span.style.fontVariationSettings = serializeFVS(axes);
 
   span.addEventListener('animationend', () => {
     span.classList.remove('entering');
@@ -35,18 +37,15 @@ export function appendToken({ text, wght = 400, slnt = 0 }) {
  * CSS transition handles the smooth interpolation automatically.
  *
  * @param {number} index
- * @param {{ wght?: number, slnt?: number }} newAxes
+ * @param {Record<string, number>} newAxes — partial update: only provided axes are changed
  */
 export function updateAxes(index, newAxes) {
   const span = tokenSpans[index];
   if (!span) return;
 
-  const style = span.style;
-  // Parse current values so we can do partial updates
-  const current = parseFVS(style.fontVariationSettings);
-  if (newAxes.wght !== undefined) current.wght = newAxes.wght;
-  if (newAxes.slnt !== undefined) current.slnt = newAxes.slnt;
-  style.fontVariationSettings = `"wght" ${current.wght}, "slnt" ${current.slnt}`;
+  const current = parseFVS(span.style.fontVariationSettings);
+  Object.assign(current, newAxes);
+  span.style.fontVariationSettings = serializeFVS(current);
 }
 
 /**
@@ -64,10 +63,19 @@ export function getTokenCount() {
   return tokenSpans.length;
 }
 
+/**
+ * Dynamically set the font-family on the stage element.
+ *
+ * @param {string} family — e.g. "Roboto Flex"
+ */
+export function setFontFamily(family) {
+  stage.style.fontFamily = `'${family}', sans-serif`;
+}
+
 // ── helpers ──────────────────────────────────────────────────────────────
 
 function parseFVS(fvs) {
-  const result = { wght: 400, slnt: 0 };
+  const result = {};
   if (!fvs) return result;
   const re = /"(\w+)"\s+([-\d.]+)/g;
   let m;
@@ -75,4 +83,10 @@ function parseFVS(fvs) {
     result[m[1]] = parseFloat(m[2]);
   }
   return result;
+}
+
+function serializeFVS(axes) {
+  return Object.entries(axes)
+    .map(([tag, val]) => `"${tag}" ${val}`)
+    .join(', ');
 }

@@ -18,11 +18,11 @@ body {
 }
 
 #token-stage {
-  font-family: 'Roboto Flex', sans-serif;
   font-size: 18px;
   line-height: 1.75;
   display: block;
   max-width: 64ch;
+  margin-right: 300px;
 }
 
 .token {
@@ -46,4 +46,145 @@ body {
 
 .token.entering {
   animation: token-enter 250ms ease-out forwards;
+}
+
+/* ── Config panel ─────────────────────────────────────────────────────── */
+
+#config-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-left: 1px solid #e0e0e0;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  z-index: 100;
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  color: #333;
+}
+
+.panel-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #555;
+}
+
+.panel-input,
+.panel-select {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+.panel-input:focus,
+.panel-select:focus {
+  outline: none;
+  border-color: #666;
+}
+
+.panel-status {
+  color: #888;
+  font-size: 12px;
+  margin-top: 0.5rem;
+}
+
+/* ── Axis controls ────────────────────────────────────────────────────── */
+
+#axes-container {
+  margin-top: 0.5rem;
+}
+
+.axis-control {
+  margin-bottom: 1rem;
+}
+
+.axis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.3rem;
+}
+
+.axis-tag {
+  font-weight: 700;
+  font-size: 13px;
+  color: #333;
+  font-family: 'SF Mono', 'Menlo', monospace;
+}
+
+.axis-readout {
+  font-size: 12px;
+  color: #888;
+  font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', 'Menlo', monospace;
+}
+
+/* Dual-range slider: two overlapping inputs */
+.range-stack {
+  position: relative;
+  height: 28px;
+}
+
+.range-stack input[type="range"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  margin: 0;
+}
+
+.range-stack input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+}
+
+.range-stack input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  cursor: grab;
+  pointer-events: auto;
+  margin-top: -5px;
+}
+
+.range-stack input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  border: none;
+}
+
+.range-stack input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  cursor: grab;
+  pointer-events: auto;
+  border: none;
 }
