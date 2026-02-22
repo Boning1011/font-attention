@@ -71,6 +71,13 @@
 - UI 轴标签改为人类可读名称（`AXIS_LABELS` 映射表在 `ui-panel.js`）
 - 二值轴（`BINARY_AXES` set，目前含 `ital`）显示为 checkbox toggle 而非双滑块
 
+### Session 4（2026-02-22）— 已完成
+- 布局稳定性：区分 reflow 轴（`wght`, `wdth`, `XTRA`, `XOPQ`）和 layout-safe 轴（`GRAD`, `slnt`, `YOPQ` 等）
+- Reflow 轴默认锁定在字体 defaultValue（min === max），不振荡，避免文本排版抖动
+- Layout-safe 轴保持全范围，用户仍可手动拖开 reflow 轴滑块来解锁
+- `font-api.js` 补充返回 `defaultValue` 字段
+- UI 面板中 reflow 轴标签旁显示 `· layout` 灰色提示
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
@@ -88,3 +95,4 @@
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
 - 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（配置面板）
 - `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
+- **Reflow 轴 vs Layout-safe 轴**：`wght`、`wdth`、`XTRA`、`XOPQ` 会改变字形宽度导致排版抖动（`REFLOW_AXES` in `ui-panel.js`），默认锁定在 defaultValue；`GRAD`、`slnt`、`YOPQ` 等不影响排版，可安全动态变化
