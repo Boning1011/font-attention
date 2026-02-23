@@ -46,7 +46,7 @@ const BINARY_AXES = new Set(['ital']);
 
 // Axes that change glyph advance width and cause text reflow.
 // Default to locked (min === max === defaultValue) to keep layout stable.
-const REFLOW_AXES = new Set(['wght', 'wdth', 'XTRA', 'XOPQ']);
+const REFLOW_AXES = new Set(['wdth', 'XTRA', 'XOPQ']);
 
 let activeFont = null;
 let axesMetadata = [];          // [{ tag, start, end }] from API
