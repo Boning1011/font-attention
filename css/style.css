@@ -32,6 +32,7 @@ body {
   font-kerning: none;
   font-synthesis: none;
   overflow: visible;
+  text-align: center;
   transition: font-variation-settings 50ms linear, opacity 200ms;
 }
 
