@@ -23,16 +23,18 @@ export function appendToken({ text, axes = {} }) {
   span.textContent = text;
   applyAxes(span, axes);
 
-  span.addEventListener('animationend', () => {
-    span.classList.remove('entering');
-  }, { once: true });
-
   stage.appendChild(span);
 
   // Measure-then-lock: freeze the initial width so axis changes never reflow the paragraph
   // Use getBoundingClientRect for sub-pixel precision (offsetWidth rounds to integers)
   const naturalWidth = span.getBoundingClientRect().width;
   span.style.width = naturalWidth + 'px';
+
+  // Typewriter pop: force layout with opacity 0, then snap to visible
+  requestAnimationFrame(() => {
+    span.classList.remove('entering');
+    span.classList.add('entered');
+  });
 
   tokenSpans.push(span);
   return tokenSpans.length - 1;

@@ -33,22 +33,16 @@ body {
   font-synthesis: none;
   overflow: visible;
   text-align: center;
-  transition: font-variation-settings 50ms linear, opacity 200ms;
+  padding: 0 0.5px;
+  transition: font-variation-settings 50ms linear;
 }
 
-@keyframes token-enter {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
+/* Typewriter pop: instant snap, no smooth fade */
 .token.entering {
-  animation: token-enter 250ms ease-out forwards;
+  opacity: 0;
+}
+.token.entered {
+  opacity: 1;
 }
 
 /* ── Config panel ─────────────────────────────────────────────────────── */
