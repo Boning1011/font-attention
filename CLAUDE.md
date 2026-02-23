@@ -78,6 +78,14 @@
 - `font-api.js` 补充返回 `defaultValue` 字段
 - UI 面板中 reflow 轴标签旁显示 `· layout` 灰色提示
 
+### Session 5（2026-02-22）— 已完成
+- BPE tokenizer 集成：使用 HuggingFace Transformers.js（GPT-2 tokenizer），替代朴素空格分词
+- `js/tokenizer.js` — 封装 tokenizer 初始化与 tokenize 接口
+- `index.html` 增加 importmap 引入 `@huggingface/transformers`
+- 测试文本选择器：UI 面板新增 "Test Text" 下拉，选择后重新流式渲染
+- `js/text-samples.js` — 测试文本集合（Lorem Ipsum, Bacon Ipsum），可扩展
+- **添加新测试文本**：在 `js/text-samples.js` 的 `SAMPLES` 数组中加一个 `{ id, label, text }` 对象即可
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
