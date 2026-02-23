@@ -46,9 +46,15 @@ const AXIS_LABELS = {
 // Axes that are binary on/off (typically 0 or 1)
 const BINARY_AXES = new Set(['ital']);
 
-// Axes that change glyph advance width and cause text reflow.
-// Default to locked (min === max === defaultValue) to keep layout stable.
-const REFLOW_AXES = new Set(['wdth', 'XTRA', 'XOPQ']);
+// Primary expression axes — actively driven with sensible default ranges.
+// All other axes are locked at their defaultValue (reflow axes like wdth/XTRA/XOPQ
+// and parametric axes like YOPQ/YTAS/YTDE/YTFI/YTLC/YTUC).
+// Users can still manually unlock any axis via the sliders.
+const PRIMARY_AXES = {
+  wght: { min: 300, max: 700 },   // weight: moderate range centered around 400
+  slnt: { min: -10, max: 0 },     // slant: full range (already narrow)
+  GRAD: { min: -50, max: 50 },    // grade: subtle, layout-safe weight tweak
+};
 
 let activeFont = null;
 let axesMetadata = [];          // [{ tag, start, end }] from API
@@ -178,12 +184,17 @@ async function loadAxesForCurrentFont() {
     axesMetadata = await fetchFontAxes(activeFont.family, apiKey);
     axisRanges = {};
     axesMetadata.forEach(a => {
-      if (REFLOW_AXES.has(a.tag)) {
-        // Lock reflow axes to their default value — no oscillation, no layout shift
+      if (a.tag in PRIMARY_AXES) {
+        // Primary expression axes — use sensible default ranges
+        const p = PRIMARY_AXES[a.tag];
+        axisRanges[a.tag] = {
+          min: Math.max(a.start, p.min),
+          max: Math.min(a.end, p.max),
+        };
+      } else {
+        // All other axes (reflow + parametric) — lock at default value
         const def = a.defaultValue ?? a.start;
         axisRanges[a.tag] = { min: def, max: def };
-      } else {
-        axisRanges[a.tag] = { min: a.start, max: a.end };
       }
     });
 
@@ -206,7 +217,7 @@ function renderAxisControls() {
     const range = axisRanges[tag];
     const label = AXIS_LABELS[tag] || tag;
     const isBinary = BINARY_AXES.has(tag);
-    const isReflow = REFLOW_AXES.has(tag);
+    const isLocked = !(tag in PRIMARY_AXES);
 
     const group = document.createElement('div');
     group.className = 'axis-control';
@@ -239,7 +250,7 @@ function renderAxisControls() {
       const step = Number.isInteger(start) && Number.isInteger(end) ? 1 : 0.1;
       group.innerHTML = `
         <div class="axis-header">
-          <span class="axis-tag">${label}${isReflow ? ' <span class="axis-hint">· layout</span>' : ''}</span>
+          <span class="axis-tag">${label}${isLocked ? ' <span class="axis-hint">· locked</span>' : ''}</span>
           <span class="axis-readout" id="readout-${tag}">${range.min} … ${range.max}</span>
         </div>
         <div class="range-stack">
