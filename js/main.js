@@ -1,28 +1,19 @@
 /**
  * main.js — Coordinator
  *
- * Wires the UI panel, font loader, renderer, and mock driver together.
+ * Wires the UI panel, font loader, renderer, tokenizer, and mock driver together.
  * Listens for config changes and restarts the stream accordingly.
  */
 
-import { initPanel, getActiveConfig } from './ui-panel.js';
+import { initPanel, getActiveConfig, getSelectedText } from './ui-panel.js';
 import { loadFont } from './font-loader.js';
 import { clearStage, setFontFamily } from './renderer.js';
 import { streamTokens } from './mock-driver.js';
-
-const MOCK_TEXT =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
-  'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' +
-  'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ' +
-  'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ' +
-  'reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ' +
-  'pariatur. Excepteur sint occaecat cupidatat non proident, sunt in ' +
-  'culpa qui officia deserunt mollit anim id est laborum.';
-
-const tokens = MOCK_TEXT.match(/\S+\s*/g) || [];
+import { initTokenizer, tokenize } from './tokenizer.js';
 
 let currentStream = null;
 let generation = 0;
+let tokenizerReady = false;
 
 async function start() {
   const gen = ++generation;
@@ -32,6 +23,8 @@ async function start() {
     currentStream = null;
   }
   clearStage();
+
+  if (!tokenizerReady) return;
 
   const config = getActiveConfig();
   if (!config) return; // no API key or axes not loaded yet
@@ -48,10 +41,34 @@ async function start() {
   // Guard against stale start if a newer config change fired while we waited
   if (gen !== generation) return;
 
+  // BPE tokenization
+  const tokens = tokenize(getSelectedText()).map(t => t.text);
+
   currentStream = streamTokens(tokens, config, 100);
 }
 
-document.addEventListener('fontconfig:change', () => start());
+function showStatus(msg) {
+  const stage = document.getElementById('token-stage');
+  if (msg) {
+    stage.textContent = msg;
+  } else {
+    stage.textContent = '';
+  }
+}
 
-initPanel();
-start();
+async function init() {
+  initPanel();
+
+  try {
+    await initTokenizer('gpt2', showStatus);
+    tokenizerReady = true;
+  } catch (err) {
+    showStatus(`Tokenizer failed to load: ${err.message}`);
+    return;
+  }
+
+  start();
+}
+
+document.addEventListener('fontconfig:change', () => start());
+init();
