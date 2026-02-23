@@ -11,9 +11,11 @@
 
 import { FONTS } from './font-registry.js';
 import { fetchFontAxes, clearCache } from './font-api.js';
+import { SAMPLES } from './text-samples.js';
 
 const LS_KEY_API = 'gf-api-key';
 const LS_KEY_FONT = 'gf-selected-font';
+const LS_KEY_TEXT = 'gf-selected-text';
 const DEFAULT_API_KEY = '';
 
 // Human-readable axis names
@@ -68,6 +70,11 @@ export function initPanel() {
            placeholder="Google Fonts API Key"
            value="${localStorage.getItem(LS_KEY_API) || DEFAULT_API_KEY}">
 
+    <label class="panel-label" for="text-select">Test Text</label>
+    <select id="text-select" class="panel-select">
+      ${SAMPLES.map(s => `<option value="${s.id}">${s.label}</option>`).join('')}
+    </select>
+
     <label class="panel-label" for="font-select">Font Family</label>
     <select id="font-select" class="panel-select">
       ${FONTS.map(f => `<option value="${f.id}">${f.family}</option>`).join('')}
@@ -78,6 +85,13 @@ export function initPanel() {
   `;
   document.body.appendChild(panel);
 
+  // Restore saved text selection
+  const savedTextId = localStorage.getItem(LS_KEY_TEXT);
+  const textSelect = document.getElementById('text-select');
+  if (savedTextId && SAMPLES.some(s => s.id === savedTextId)) {
+    textSelect.value = savedTextId;
+  }
+
   // Restore saved font selection
   const savedFontId = localStorage.getItem(LS_KEY_FONT);
   const select = document.getElementById('font-select');
@@ -87,11 +101,24 @@ export function initPanel() {
 
   // Wire events
   document.getElementById('api-key-input').addEventListener('change', onApiKeyChange);
+  textSelect.addEventListener('change', onTextChange);
   select.addEventListener('change', onFontChange);
 
   // Initial load
   activeFont = FONTS.find(f => f.id === select.value) || FONTS[0];
   loadAxesForCurrentFont();
+}
+
+/**
+ * Get the currently selected test text.
+ * @returns {string}
+ */
+export function getSelectedText() {
+  const id = document.getElementById('text-select')?.value
+    || localStorage.getItem(LS_KEY_TEXT)
+    || SAMPLES[0].id;
+  const sample = SAMPLES.find(s => s.id === id) || SAMPLES[0];
+  return sample.text;
 }
 
 /**
@@ -115,6 +142,11 @@ function onApiKeyChange(e) {
   localStorage.setItem(LS_KEY_API, key);
   clearCache();
   loadAxesForCurrentFont();
+}
+
+function onTextChange(e) {
+  localStorage.setItem(LS_KEY_TEXT, e.target.value);
+  fireChange();
 }
 
 function onFontChange(e) {
