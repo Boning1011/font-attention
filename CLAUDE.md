@@ -103,4 +103,4 @@
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
 - 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（配置面板）
 - `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
-- **Reflow 轴 vs Layout-safe 轴**：`wght`、`wdth`、`XTRA`、`XOPQ` 会改变字形宽度导致排版抖动（`REFLOW_AXES` in `ui-panel.js`），默认锁定在 defaultValue；`GRAD`、`slnt`、`YOPQ` 等不影响排版，可安全动态变化
+- **主要表达轴 vs 锁定轴**：只有 `wght`(300–700)、`slnt`(-10–0)、`GRAD`(-50–50) 三个轴默认激活驱动（`PRIMARY_AXES` in `ui-panel.js`）；其余所有轴（reflow 轴 `wdth`/`XTRA`/`XOPQ` + 参数轴 `YOPQ`/`YTAS`/`YTDE`/`YTFI`/`YTLC`/`YTUC` + `opsz`）锁定在 defaultValue。用户可通过滑块手动解锁任意轴
