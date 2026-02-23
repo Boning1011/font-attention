@@ -26,11 +26,12 @@ body {
 }
 
 .token {
-  display: inline;
+  display: inline-block;
   vertical-align: baseline;
   white-space: pre-wrap;
   font-kerning: none;
   font-synthesis: none;
+  overflow: visible;
   transition: font-variation-settings 50ms linear, opacity 200ms;
 }
 
