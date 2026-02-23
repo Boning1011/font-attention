@@ -28,11 +28,10 @@ body {
 .token {
   display: inline-block;
   vertical-align: baseline;
-  white-space: pre-wrap;
+  white-space: pre;
   font-kerning: none;
   font-synthesis: none;
   overflow: visible;
-  text-align: center;
   padding: 0 0.5px;
   transition: font-variation-settings 50ms linear;
 }
