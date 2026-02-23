@@ -28,6 +28,11 @@ export function appendToken({ text, axes = {} }) {
   }, { once: true });
 
   stage.appendChild(span);
+
+  // Measure-then-lock: freeze the initial width so axis changes never reflow the paragraph
+  const naturalWidth = span.offsetWidth;
+  span.style.width = naturalWidth + 'px';
+
   tokenSpans.push(span);
   return tokenSpans.length - 1;
 }
