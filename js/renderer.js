@@ -30,7 +30,8 @@ export function appendToken({ text, axes = {} }) {
   stage.appendChild(span);
 
   // Measure-then-lock: freeze the initial width so axis changes never reflow the paragraph
-  const naturalWidth = span.offsetWidth;
+  // Use getBoundingClientRect for sub-pixel precision (offsetWidth rounds to integers)
+  const naturalWidth = span.getBoundingClientRect().width;
   span.style.width = naturalWidth + 'px';
 
   tokenSpans.push(span);
