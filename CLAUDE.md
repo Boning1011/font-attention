@@ -99,6 +99,14 @@
   - Italic 默认开启（`ital` checkbox 默认 checked）
   - Weight 默认使用字体的完整范围（min–max），不再限制 300–700
 
+### Session 6b（2026-02-23）— 已完成
+- 共鸣弹跳（sympathetic pops）：新 token 出现时，随机 3–6 个已有 token 重播 scale+blur 弹跳动画，错开 20–50ms
+  - `renderer.js` 新增 `popToken(index)` 接口，通过 class toggle 重播 CSS 动画
+  - `mock-driver.js` 新增 `triggerSympatheticPops()` 随机选取 + 错开触发
+- Italic 改为动态振荡：`ital` 默认范围 0↔1（不再是静态 ON），随 attention 来回切换
+- Weight 极端化偏置：`wght` 轴使用 `pow(|sin|, 0.35)` 幂曲线，把值推向两端（更多 thin/black 对比，更少 regular）
+  - `EXTREME_BIAS_AXES` set 控制哪些轴应用此偏置
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
@@ -117,4 +125,4 @@
 - 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（配置面板）
 - `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
 - **主要表达轴 vs 锁定轴**：`wght`(full range)、`slnt`(-10–0)、`GRAD`(-50–50) 三个轴默认激活驱动（`PRIMARY_AXES` in `ui-panel.js`）；`ital` 默认开启；其余所有轴锁定在 defaultValue。用户可通过滑块手动解锁任意轴
-- **Token 动画模型**：新 token 以 scale+blur 弹入；每轮只有 ≤35% 的 token 被扰动；token 连续 5 轮未被扰动后进入 settled 状态（3% ripple 概率）。参数在 `mock-driver.js` 顶部常量
+- **Token 动画模型**：新 token 以 scale+blur 弹入；同时 3–6 个随机已有 token 做共鸣弹跳；每轮 ≤35% token 轴振荡；token 连续 5 轮未扰动后 settled（3% ripple）。`wght` 值偏向极端（pow 0.35）。参数在 `mock-driver.js` 顶部常量
