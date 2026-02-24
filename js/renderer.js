@@ -50,15 +50,13 @@ export function popToken(index) {
   const span = tokenSpans[index];
   if (!span) return;
 
-  // Remove entered, apply entering to trigger the scale+blur state
-  span.classList.remove('entered');
-  span.classList.add('entering');
+  // Apply popping state (subtler scale + blur than the new-token entrance)
+  span.classList.add('popping');
 
-  // After one frame (so the browser registers the entering state), snap back
+  // After one frame, remove popping so the .entered transition animates back
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      span.classList.remove('entering');
-      span.classList.add('entered');
+      span.classList.remove('popping');
     });
   });
 }
