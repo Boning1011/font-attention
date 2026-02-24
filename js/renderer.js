@@ -50,15 +50,16 @@ export function popToken(index) {
   const span = tokenSpans[index];
   if (!span) return;
 
-  // Apply popping state (subtler scale + blur than the new-token entrance)
+  // Remove class first in case a previous pop is still running
+  span.classList.remove('popping');
+  // Force reflow so re-adding the class restarts the animation
+  void span.offsetWidth;
   span.classList.add('popping');
 
-  // After one frame, remove popping so the .entered transition animates back
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      span.classList.remove('popping');
-    });
-  });
+  // Clean up after animation completes
+  span.addEventListener('animationend', () => {
+    span.classList.remove('popping');
+  }, { once: true });
 }
 
 /**
