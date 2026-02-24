@@ -86,6 +86,19 @@
 - `js/text-samples.js` — 测试文本集合（Lorem Ipsum, Bacon Ipsum），可扩展
 - **添加新测试文本**：在 `js/text-samples.js` 的 `SAMPLES` 数组中加一个 `{ id, label, text }` 对象即可
 
+### Session 6（2026-02-23）— 已完成
+- 入场动画增强：token 出现时有 scale(1.35) + blur(2px) → 正常大小的弹跳效果，区别度更大
+- 选择性振荡：新 token 出现时不再振荡所有前序 token，而是随机选取一部分（≤35%）
+  - 距离近的 token 更容易被扰动（nearby window = 8）
+  - 远处 token 扰动概率随距离衰减
+- Token 稳定化机制：每个 token 有 stability 计数器
+  - 连续未被扰动 5 轮后进入 "settled" 状态
+  - settled token 仅有 3% 概率被偶尔 ripple 触及
+  - 效果：大部分文字逐渐稳定，只有零星变化
+- 默认字体设置调整：
+  - Italic 默认开启（`ital` checkbox 默认 checked）
+  - Weight 默认使用字体的完整范围（min–max），不再限制 300–700
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
@@ -103,4 +116,5 @@
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
 - 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（配置面板）
 - `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
-- **主要表达轴 vs 锁定轴**：只有 `wght`(300–700)、`slnt`(-10–0)、`GRAD`(-50–50) 三个轴默认激活驱动（`PRIMARY_AXES` in `ui-panel.js`）；其余所有轴（reflow 轴 `wdth`/`XTRA`/`XOPQ` + 参数轴 `YOPQ`/`YTAS`/`YTDE`/`YTFI`/`YTLC`/`YTUC` + `opsz`）锁定在 defaultValue。用户可通过滑块手动解锁任意轴
+- **主要表达轴 vs 锁定轴**：`wght`(full range)、`slnt`(-10–0)、`GRAD`(-50–50) 三个轴默认激活驱动（`PRIMARY_AXES` in `ui-panel.js`）；`ital` 默认开启；其余所有轴锁定在 defaultValue。用户可通过滑块手动解锁任意轴
+- **Token 动画模型**：新 token 以 scale+blur 弹入；每轮只有 ≤35% 的 token 被扰动；token 连续 5 轮未被扰动后进入 settled 状态（3% ripple 概率）。参数在 `mock-driver.js` 顶部常量

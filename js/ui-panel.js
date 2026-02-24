@@ -51,7 +51,7 @@ const BINARY_AXES = new Set(['ital']);
 // and parametric axes like YOPQ/YTAS/YTDE/YTFI/YTLC/YTUC).
 // Users can still manually unlock any axis via the sliders.
 const PRIMARY_AXES = {
-  wght: { min: 300, max: 700 },   // weight: moderate range centered around 400
+  wght: 'full',                    // weight: full axis range (min to max)
   slnt: { min: -10, max: 0 },     // slant: full range (already narrow)
   GRAD: { min: -50, max: 50 },    // grade: subtle, layout-safe weight tweak
 };
@@ -184,13 +184,20 @@ async function loadAxesForCurrentFont() {
     axesMetadata = await fetchFontAxes(activeFont.family, apiKey);
     axisRanges = {};
     axesMetadata.forEach(a => {
-      if (a.tag in PRIMARY_AXES) {
-        // Primary expression axes — use sensible default ranges
+      if (BINARY_AXES.has(a.tag) && a.tag === 'ital') {
+        // Italic defaults to ON
+        axisRanges[a.tag] = { min: 1, max: 1 };
+      } else if (a.tag in PRIMARY_AXES) {
         const p = PRIMARY_AXES[a.tag];
-        axisRanges[a.tag] = {
-          min: Math.max(a.start, p.min),
-          max: Math.min(a.end, p.max),
-        };
+        if (p === 'full') {
+          // Full axis range
+          axisRanges[a.tag] = { min: a.start, max: a.end };
+        } else {
+          axisRanges[a.tag] = {
+            min: Math.max(a.start, p.min),
+            max: Math.min(a.end, p.max),
+          };
+        }
       } else {
         // All other axes (reflow + parametric) — lock at default value
         const def = a.defaultValue ?? a.start;
