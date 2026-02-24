@@ -41,6 +41,29 @@ export function appendToken({ text, axes = {} }) {
 }
 
 /**
+ * Replay the pop animation (scale + blur) on an existing token.
+ * Used to create sympathetic "pops" when a new token enters.
+ *
+ * @param {number} index
+ */
+export function popToken(index) {
+  const span = tokenSpans[index];
+  if (!span) return;
+
+  // Remove entered, apply entering to trigger the scale+blur state
+  span.classList.remove('entered');
+  span.classList.add('entering');
+
+  // After one frame (so the browser registers the entering state), snap back
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      span.classList.remove('entering');
+      span.classList.add('entered');
+    });
+  });
+}
+
+/**
  * Update the font-variation axis values of an existing token.
  * CSS transition handles the smooth interpolation automatically.
  *
