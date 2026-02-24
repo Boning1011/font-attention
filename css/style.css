@@ -50,9 +50,13 @@ body {
 }
 
 /* Sympathetic pop: subtler version for existing tokens reacting to a new arrival */
+@keyframes sympathetic-pop {
+  0%   { transform: scale(1);    filter: blur(0); }
+  25%  { transform: scale(1.15); filter: blur(1px); }
+  100% { transform: scale(1);    filter: blur(0); }
+}
 .token.popping {
-  transform: scale(1.15);
-  filter: blur(1px);
+  animation: sympathetic-pop 350ms ease-out;
 }
 
 /* ── Config panel ─────────────────────────────────────────────────────── */
