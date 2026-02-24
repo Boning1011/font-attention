@@ -185,8 +185,8 @@ async function loadAxesForCurrentFont() {
     axisRanges = {};
     axesMetadata.forEach(a => {
       if (BINARY_AXES.has(a.tag) && a.tag === 'ital') {
-        // Italic defaults to ON
-        axisRanges[a.tag] = { min: 1, max: 1 };
+        // Italic oscillates between off and on (driven by animation)
+        axisRanges[a.tag] = { min: 0, max: 1 };
       } else if (a.tag in PRIMARY_AXES) {
         const p = PRIMARY_AXES[a.tag];
         if (p === 'full') {
