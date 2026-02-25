@@ -107,6 +107,18 @@
 - Weight 极端化偏置：`wght` 轴使用 `pow(|sin|, 0.35)` 幂曲线，把值推向两端（更多 thin/black 对比，更少 regular）
   - `EXTREME_BIAS_AXES` set 控制哪些轴应用此偏置
 
+### Session 7（2026-02-24）— 已完成
+- 模块化动画编辑器：将所有硬编码动画参数拆分为 6 个独立模块，每个模块有开关和实时参数滑块
+  - `js/module-store.js` — 集中参数存储 + 模块定义 + CSS 动态生成
+  - `js/effects-panel.js` — 左侧效果面板 UI（可折叠卡片 + 滑块）
+  - 6 个模块：Entrance、Sympathetic Pops、Oscillation、Disturbance、Stability、Axis Curve
+- `mock-driver.js` 重构：删除所有硬编码常量，改为从 module-store 实时读取
+  - 滑块修改即时生效（下一个 token 使用新参数），无需重启 stream
+  - 每个模块可独立开关（关闭 = 跳过该行为）
+- 动画 CSS 动态化：入场动画和共鸣弹跳的 CSS（scale、blur、duration）从 module-store 参数生成，注入 `<style id="module-css">`
+- UI 布局：左侧效果面板 + 中间 token 渲染区 + 右侧字体配置面板
+- **添加新动画模块**：在 `module-store.js` 的 `MODULES` 数组中添加模块定义（id、label、params），在 `mock-driver.js` 中读取参数并实现行为
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
@@ -122,7 +134,8 @@
 - 每个 token 用独立 `<span>` 渲染，`display: inline`，`white-space: pre-wrap`
 - `font-kerning: none` 是必要的，不要删除
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
-- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（配置面板）
+- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（字体配置面板）→ `effects-panel.js`（效果编辑面板）
 - `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
+- **效果模块系统**：动画参数定义在 `js/module-store.js` 的 `MODULES` 数组中，`mock-driver.js` 通过 `getParam(key)` 实时读取。滑块修改即时生效，无需重启。CSS 动画参数由 `buildAnimationCSS()` 动态生成并注入 `<style id="module-css">`
 - **主要表达轴 vs 锁定轴**：`wght`(full range)、`slnt`(-10–0)、`GRAD`(-50–50) 三个轴默认激活驱动（`PRIMARY_AXES` in `ui-panel.js`）；`ital` 默认开启；其余所有轴锁定在 defaultValue。用户可通过滑块手动解锁任意轴
-- **Token 动画模型**：新 token 以 scale+blur 弹入；同时 3–6 个随机已有 token 做共鸣弹跳；每轮 ≤35% token 轴振荡；token 连续 5 轮未扰动后 settled（3% ripple）。`wght` 值偏向极端（pow 0.35）。参数在 `mock-driver.js` 顶部常量
+- **Token 动画模型**（默认参数）：新 token 以 scale(1.35)+blur(2px) 弹入；同时 3–6 个随机已有 token 做共鸣弹跳；每轮 ≤35% token 轴振荡；token 连续 5 轮未扰动后 settled（3% ripple）。`wght` 值偏向极端（pow 0.35）。所有参数可通过左侧效果面板实时调节
