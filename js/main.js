@@ -6,6 +6,7 @@
  */
 
 import { initPanel, getActiveConfig, getSelectedText } from './ui-panel.js';
+import { initEffectsPanel } from './effects-panel.js';
 import { loadFont } from './font-loader.js';
 import { clearStage, setFontFamily } from './renderer.js';
 import { streamTokens } from './mock-driver.js';
@@ -58,6 +59,7 @@ function showStatus(msg) {
 
 async function init() {
   initPanel();
+  initEffectsPanel();
 
   try {
     await initTokenizer('gpt2', showStatus);
