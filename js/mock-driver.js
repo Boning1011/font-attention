@@ -9,10 +9,14 @@
  *   4. Once a token has been stable for several rounds, it rarely changes;
  *      only an occasional "ripple" reaches settled tokens
  *
+ * All parameters are read from module-store.js on each tick, so UI slider
+ * changes take effect immediately without restarting the stream.
+ *
  * Axis-agnostic: driven by config.activeAxes { [tag]: {min, max} }.
  */
 
 import { appendToken, updateAxes, popToken } from './renderer.js';
+import { getParam, isModuleEnabled } from './module-store.js';
 
 // Axes that use integer values (most parametric axes and weight)
 const INTEGER_AXES = new Set([
@@ -21,6 +25,9 @@ const INTEGER_AXES = new Set([
 
 // Binary axes (0 or 1 only) — values are rounded to nearest integer
 const BINARY_AXES = new Set(['ital']);
+
+// Axes whose values should be biased towards extremes (min/max) for higher contrast
+const EXTREME_BIAS_AXES = new Set(['wght']);
 
 /**
  * Stream tokens with rhythmic pacing and selective axis updates.
@@ -49,19 +56,21 @@ export function streamTokens(tokens, config, baseInterval = 100) {
     stability.push(0); // new token starts unstable
 
     // Trigger sympathetic pops on a few random existing tokens
-    if (idx > 0) {
+    if (isModuleEnabled('sympatheticPops') && idx > 0) {
       triggerSympatheticPops(idx);
     }
 
     // Selectively oscillate a subset of existing tokens
-    if (idx > 0) {
+    if (isModuleEnabled('oscillation') && idx > 0) {
       oscillateSubset(idx, total, axesCfg, stability);
     }
 
     i++;
 
     if (i < tokens.length) {
-      const breath = (i % 6 === 0) ? baseInterval * 1.8 : baseInterval;
+      const breathEvery = getParam('breathEvery');
+      const breathMult = getParam('breathMultiplier');
+      const breath = (i % breathEvery === 0) ? baseInterval * breathMult : baseInterval;
       setTimeout(scheduleNext, breath);
     }
   }
@@ -73,12 +82,13 @@ export function streamTokens(tokens, config, baseInterval = 100) {
 
 // ── sympathetic pops ──────────────────────────────────────────────────────
 
-// Number of existing tokens that get a sympathetic pop animation
-const POP_COUNT_MIN = 3;
-const POP_COUNT_MAX = 6;
-
 function triggerSympatheticPops(currentCount) {
-  const count = POP_COUNT_MIN + Math.floor(Math.random() * (POP_COUNT_MAX - POP_COUNT_MIN + 1));
+  const popMin = getParam('popCountMin');
+  const popMax = getParam('popCountMax');
+  const staggerMin = getParam('popStaggerMin');
+  const staggerMax = getParam('popStaggerMax');
+
+  const count = popMin + Math.floor(Math.random() * (popMax - popMin + 1));
   const picks = Math.min(count, currentCount);
 
   // Pick random unique indices from [0, currentCount)
@@ -93,44 +103,36 @@ function triggerSympatheticPops(currentCount) {
   let delay = 0;
   for (const idx of indices) {
     setTimeout(() => popToken(idx), delay);
-    delay += 20 + Math.random() * 30;
+    delay += staggerMin + Math.random() * (staggerMax - staggerMin);
   }
 }
 
 // ── selective oscillation ─────────────────────────────────────────────────
 
-const OSCILLATION_STEPS = 4;
-const STEP_MS = 35;
-
-// How many rounds of stability before a token is "settled"
-const SETTLE_THRESHOLD = 5;
-
-// Probability that a settled token gets a rare ripple
-const RIPPLE_CHANCE = 0.03;
-
-// Maximum fraction of existing tokens that oscillate per round
-const MAX_DISTURB_FRACTION = 0.35;
-
-// Tokens within this distance from the new token are more likely to be disturbed
-const NEARBY_WINDOW = 8;
-
 function oscillateSubset(newIndex, total, axesCfg, stability) {
   // Decide which tokens get disturbed this round
-  const disturbed = pickDisturbedTokens(newIndex, stability);
+  const disturbed = isModuleEnabled('disturbance')
+    ? pickDisturbedTokens(newIndex, stability)
+    : pickAllTokens(newIndex);
 
-  // Increment stability for undisturbed tokens, reset for disturbed ones
-  for (let j = 0; j < newIndex; j++) {
-    if (disturbed.has(j)) {
-      stability[j] = 0;
-    } else {
-      stability[j]++;
+  // Update stability counters (only if stability module is enabled)
+  if (isModuleEnabled('stability')) {
+    for (let j = 0; j < newIndex; j++) {
+      if (disturbed.has(j)) {
+        stability[j] = 0;
+      } else {
+        stability[j]++;
+      }
     }
   }
 
   if (disturbed.size === 0) return;
 
-  for (let step = 0; step < OSCILLATION_STEPS; step++) {
-    const isLast = step === OSCILLATION_STEPS - 1;
+  const steps = getParam('oscillationSteps');
+  const stepMs = getParam('stepMs');
+
+  for (let step = 0; step < steps; step++) {
+    const isLast = step === steps - 1;
     setTimeout(() => {
       for (const j of disturbed) {
         if (isLast) {
@@ -139,31 +141,43 @@ function oscillateSubset(newIndex, total, axesCfg, stability) {
           updateAxes(j, computeAxesOscillation(j, total, step, axesCfg));
         }
       }
-    }, step * STEP_MS);
+    }, step * stepMs);
   }
 }
 
-function pickDisturbedTokens(newIndex, stability) {
+// When disturbance module is off, oscillate all existing tokens
+function pickAllTokens(newIndex) {
   const set = new Set();
-  const maxDisturb = Math.max(1, Math.floor(newIndex * MAX_DISTURB_FRACTION));
+  for (let j = 0; j < newIndex; j++) set.add(j);
+  return set;
+}
+
+function pickDisturbedTokens(newIndex, stability) {
+  const maxDisturbFraction = getParam('maxDisturbFraction');
+  const nearbyWindow = getParam('nearbyWindow');
+  const settleThreshold = getParam('settleThreshold');
+  const rippleChance = getParam('rippleChance');
+
+  const set = new Set();
+  const maxDisturb = Math.max(1, Math.floor(newIndex * maxDisturbFraction));
 
   for (let j = 0; j < newIndex; j++) {
     if (set.size >= maxDisturb) break;
 
     const age = newIndex - j; // how far back this token is
-    const isNearby = age <= NEARBY_WINDOW;
-    const isSettled = stability[j] >= SETTLE_THRESHOLD;
+    const isNearby = age <= nearbyWindow;
+    const isSettled = isModuleEnabled('stability') && stability[j] >= settleThreshold;
 
     let probability;
     if (isSettled) {
       // Settled tokens: very rare ripple, even rarer the older they are
-      probability = RIPPLE_CHANCE / (1 + age * 0.05);
+      probability = rippleChance / (1 + age * 0.05);
     } else if (isNearby) {
       // Recent unsettled tokens: high chance of being disturbed
-      probability = 0.7 - (age / NEARBY_WINDOW) * 0.4;
+      probability = 0.7 - (age / nearbyWindow) * 0.4;
     } else {
       // Distant unsettled tokens: moderate chance that decays with distance
-      probability = 0.25 / (1 + (age - NEARBY_WINDOW) * 0.15);
+      probability = 0.25 / (1 + (age - nearbyWindow) * 0.15);
     }
 
     if (Math.random() < probability) {
@@ -180,8 +194,11 @@ function computeAxesOscillation(j, total, step, axesCfg) {
   const target = computeAxes(j, total, axesCfg);
   const prev = computeAxes(j, total - 1, axesCfg);
 
+  const ampBase = getParam('oscillationAmpBase');
+  const ampDecay = getParam('oscillationAmpDecay');
+
   const sign = (step % 2 === 0) ? 1 : -1;
-  const amp = 1.6 * Math.pow(0.5, step);
+  const amp = ampBase * Math.pow(ampDecay, step);
 
   const result = {};
   for (const tag of Object.keys(axesCfg)) {
@@ -200,11 +217,11 @@ function quantize(tag, raw) {
   return parseFloat(raw.toFixed(2));
 }
 
-// Axes whose values should be biased towards extremes (min/max) for higher contrast
-const EXTREME_BIAS_AXES = new Set(['wght']);
-
 function computeAxes(j, total, axesCfg) {
-  const decay = 1 / (1 + 0.02 * total);
+  const decayCoeff = isModuleEnabled('axisCurve') ? getParam('axisDecayCoeff') : 0;
+  const biasExp = isModuleEnabled('axisCurve') ? getParam('extremeBiasExponent') : 1.0;
+
+  const decay = 1 / (1 + decayCoeff * total);
   const result = {};
   const tags = Object.keys(axesCfg);
 
@@ -217,10 +234,10 @@ function computeAxes(j, total, axesCfg) {
     const phase = j * (0.41 + i * 0.07) + total * (0.13 + i * 0.03);
     let sinVal = Math.sin(phase);
 
-    if (EXTREME_BIAS_AXES.has(tag)) {
+    if (EXTREME_BIAS_AXES.has(tag) && biasExp !== 1.0) {
       // Push values towards ±1 (extremes) using a power curve with sign preservation
       // exponent < 1 compresses the middle and stretches the extremes
-      sinVal = Math.sign(sinVal) * Math.pow(Math.abs(sinVal), 0.35);
+      sinVal = Math.sign(sinVal) * Math.pow(Math.abs(sinVal), biasExp);
     }
 
     const raw = mid + halfRange * decay * sinVal;
