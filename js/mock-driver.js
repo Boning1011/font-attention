@@ -85,8 +85,8 @@ export function streamTokens(tokens, config, baseInterval = 100) {
 function triggerSympatheticPops(currentCount) {
   const popMin = getParam('popCountMin');
   const popMax = getParam('popCountMax');
-  const staggerMin = getParam('popStaggerMin');
-  const staggerMax = getParam('popStaggerMax');
+  const staggerMin = 20;
+  const staggerMax = 50;
 
   const count = popMin + Math.floor(Math.random() * (popMax - popMin + 1));
   const picks = Math.min(count, currentCount);
@@ -218,7 +218,7 @@ function quantize(tag, raw) {
 }
 
 function computeAxes(j, total, axesCfg) {
-  const decayCoeff = isModuleEnabled('axisCurve') ? getParam('axisDecayCoeff') : 0;
+  const decayCoeff = isModuleEnabled('axisCurve') ? 0.02 : 0;
   const biasExp = isModuleEnabled('axisCurve') ? getParam('extremeBiasExponent') : 1.0;
 
   const decay = 1 / (1 + decayCoeff * total);

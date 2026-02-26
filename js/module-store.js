@@ -31,8 +31,6 @@ const MODULES = [
       { key: 'popCountMin',    label: 'Min Count',        min: 0,   max: 10,  step: 1,    value: 3 },
       { key: 'popCountMax',    label: 'Max Count',        min: 0,   max: 20,  step: 1,    value: 6 },
       { key: 'popScale',       label: 'Pop Scale',        min: 1.0, max: 1.5, step: 0.05, value: 1.15 },
-      { key: 'popStaggerMin',  label: 'Stagger Min (ms)', min: 0,   max: 100, step: 5,    value: 20 },
-      { key: 'popStaggerMax',  label: 'Stagger Max (ms)', min: 0,   max: 200, step: 5,    value: 50 },
     ],
   },
   {
@@ -69,7 +67,6 @@ const MODULES = [
     label: 'Axis Curve',
     enabled: true,
     params: [
-      { key: 'axisDecayCoeff',      label: 'Decay Coeff',     min: 0.0,  max: 0.1,  step: 0.005, value: 0.02 },
       { key: 'extremeBiasExponent', label: 'Bias Exponent',   min: 0.1,  max: 2.0,  step: 0.05,  value: 0.35 },
       { key: 'breathEvery',         label: 'Breath Every N',  min: 2,    max: 20,   step: 1,     value: 6 },
       { key: 'breathMultiplier',    label: 'Breath Mult',     min: 1.0,  max: 4.0,  step: 0.1,   value: 1.8 },
