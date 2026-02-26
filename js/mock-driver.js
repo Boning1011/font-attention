@@ -17,6 +17,7 @@
 
 import { appendToken, updateAxes, popToken } from './renderer.js';
 import { getParam, isModuleEnabled } from './module-store.js';
+import { drawAttentionLines } from './attention-lines.js';
 
 // Axes that use integer values (most parametric axes and weight)
 const INTEGER_AXES = new Set([
@@ -58,6 +59,11 @@ export function streamTokens(tokens, config, baseInterval = 100) {
     // Trigger sympathetic pops on a few random existing tokens
     if (isModuleEnabled('sympatheticPops') && idx > 0) {
       triggerSympatheticPops(idx);
+    }
+
+    // Draw attention lines from new token to earlier tokens
+    if (isModuleEnabled('attentionLines') && idx > 0) {
+      drawAttentionLines(idx);
     }
 
     // Selectively oscillate a subset of existing tokens

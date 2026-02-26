@@ -132,6 +132,18 @@
   - 预览跟随滑块实时变化，折叠/禁用时自动停止计时器
   - 字体通过 CSS 变量 `--preview-font` 与主 stage 同步
 
+### Session 9（2026-02-25）— 已完成
+- Attention Lines 效果模块：模拟上下文 attention 连线
+  - `js/attention-lines.js` — SVG 叠加层管理，曲线绘制与生命周期
+  - SVG `<path>` 二次贝塞尔曲线连接 token 对，弧线向上弯曲
+  - 连线选择策略：距离加权概率（偏好近距 token），每个新 token 生成 1–2 条线
+  - 线条生命周期：fade-in (400ms) → hold (800ms) → fade-out (600ms) → 自动移除
+  - 最大同时显示线条数限制（默认 8 条），超出时旧线被淘汰
+  - 窗口 resize 时清除并重新缓存位置
+  - `index.html` 新增 `#stage-wrapper` 包裹 `#token-stage`，SVG 绝对定位在其中
+  - 预览窗口：随机 token 对之间的曲线淡入淡出
+  - 7 个可调参数：Max Lines、Lines per Token、Opacity、Stroke Width、Fade In、Hold、Fade Out
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
@@ -147,7 +159,7 @@
 - 每个 token 用独立 `<span>` 渲染，`display: inline`，`white-space: pre-wrap`
 - `font-kerning: none` 是必要的，不要删除
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
-- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（字体配置面板）→ `effects-panel.js`（效果编辑面板）→ `preview-engine.js`（模块内联预览）
+- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（字体配置面板）→ `effects-panel.js`（效果编辑面板）→ `preview-engine.js`（模块内联预览）→ `attention-lines.js`（SVG 连线叠加层）
 - `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
 - **效果模块系统**：动画参数定义在 `js/module-store.js` 的 `MODULES` 数组中，`mock-driver.js` 通过 `getParam(key)` 实时读取。滑块修改即时生效，无需重启。CSS 动画参数由 `buildAnimationCSS()` 动态生成并注入 `<style id="module-css">`
 - **主要表达轴 vs 锁定轴**：`wght`(full range)、`slnt`(-10–0)、`GRAD`(-50–50) 三个轴默认激活驱动（`PRIMARY_AXES` in `ui-panel.js`）；`ital` 默认开启；其余所有轴锁定在 defaultValue。用户可通过滑块手动解锁任意轴
