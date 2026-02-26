@@ -119,6 +119,19 @@
 - UI 布局：左侧效果面板 + 中间 token 渲染区 + 右侧字体配置面板
 - **添加新动画模块**：在 `module-store.js` 的 `MODULES` 数组中添加模块定义（id、label、params），在 `mock-driver.js` 中读取参数并实现行为
 
+### Session 8（2026-02-25）— 已完成
+- 删除 3 个视觉效果不明显的参数滑块：`popStaggerMin`、`popStaggerMax`、`axisDecayCoeff`（改为硬编码常量）
+- 模块内联预览窗口：每个效果模块卡片底部新增小型实时预览
+  - `js/preview-engine.js` — 6 个独立预览控制器，各自运行轻量动画循环
+  - Entrance：循环播放入场 scale+blur 动画
+  - Sympathetic Pops：静止 token 随机弹跳
+  - Oscillation：font-variation-settings 实时振荡
+  - Disturbance：蓝色高亮标记被选中扰动的 token
+  - Stability：token 逐渐变灰（settled），偶尔琥珀色闪烁（ripple）
+  - Axis Curve：展示 extreme bias exponent 对 wght 的影响
+  - 预览跟随滑块实时变化，折叠/禁用时自动停止计时器
+  - 字体通过 CSS 变量 `--preview-font` 与主 stage 同步
+
 ### 下一步（未开始）
 - 接入真实 attention 数据（Hugging Face Transformers）
 - 设计 attention → font axis 映射策略
@@ -134,7 +147,7 @@
 - 每个 token 用独立 `<span>` 渲染，`display: inline`，`white-space: pre-wrap`
 - `font-kerning: none` 是必要的，不要删除
 - `slnt` 符号注意：`slnt -10` = 向右倾斜最大，`slnt 0` = 直立
-- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（字体配置面板）→ `effects-panel.js`（效果编辑面板）
+- 架构分层：`renderer.js`（纯渲染）→ `*-driver.js`（数据源）→ `main.js`（协调器）→ `ui-panel.js`（字体配置面板）→ `effects-panel.js`（效果编辑面板）→ `preview-engine.js`（模块内联预览）
 - `fontconfig:change` 自定义事件：UI 面板任何变更都 dispatch 此事件，main.js 监听并重启 stream
 - **效果模块系统**：动画参数定义在 `js/module-store.js` 的 `MODULES` 数组中，`mock-driver.js` 通过 `getParam(key)` 实时读取。滑块修改即时生效，无需重启。CSS 动画参数由 `buildAnimationCSS()` 动态生成并注入 `<style id="module-css">`
 - **主要表达轴 vs 锁定轴**：`wght`(full range)、`slnt`(-10–0)、`GRAD`(-50–50) 三个轴默认激活驱动（`PRIMARY_AXES` in `ui-panel.js`）；`ital` 默认开启；其余所有轴锁定在 defaultValue。用户可通过滑块手动解锁任意轴
