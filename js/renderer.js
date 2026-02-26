@@ -100,6 +100,7 @@ export function getTokenCount() {
  */
 export function setFontFamily(family) {
   stage.style.fontFamily = `'${family}', sans-serif`;
+  document.documentElement.style.setProperty('--preview-font', `'${family}', sans-serif`);
 }
 
 // ── helpers ──────────────────────────────────────────────────────────────

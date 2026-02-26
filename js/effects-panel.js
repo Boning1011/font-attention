@@ -15,6 +15,7 @@ import {
   isCSSParam,
   injectModuleCSS,
 } from './module-store.js';
+import { initPreviews, onModuleVisibilityChange } from './preview-engine.js';
 
 /**
  * Build and mount the effects panel. Call once on page load.
@@ -48,6 +49,9 @@ export function initEffectsPanel() {
       html += `</div>`;
     }
 
+    // Preview area
+    html += `<div class="module-preview" data-preview="${mod.id}"></div>`;
+
     html += `  </div>`;
     html += `</div>`;
   }
@@ -59,6 +63,9 @@ export function initEffectsPanel() {
   wireToggleEvents(panel);
   wireSliderEvents(panel);
   wireCollapseEvents(panel);
+
+  // Initialize preview animations
+  initPreviews();
 }
 
 // ── event wiring ────────────────────────────────────────────────────────
@@ -74,6 +81,8 @@ function wireToggleEvents(panel) {
       const card = panel.querySelector(`.module-card[data-module="${moduleId}"]`);
       if (card) {
         card.classList.toggle('disabled', !enabled);
+        const visible = enabled && !card.classList.contains('collapsed');
+        onModuleVisibilityChange(moduleId, visible);
       }
     });
   });
@@ -109,6 +118,9 @@ function wireCollapseEvents(panel) {
 
       const card = header.closest('.module-card');
       card.classList.toggle('collapsed');
+      const moduleId = card.dataset.module;
+      const visible = !card.classList.contains('collapsed') && isModuleEnabled(moduleId);
+      onModuleVisibilityChange(moduleId, visible);
     });
   });
 }
