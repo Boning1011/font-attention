@@ -70,21 +70,20 @@ function createEntrancePreview(container) {
 
   function runCycle() {
     if (!running) return;
-    // Hide all
+    // Hide all — use the CSS class, not inline style (inline would override entered opacity)
     tokens.forEach(t => {
-      t.style.opacity = '0';
-      t.className = 'preview-token';
+      t.className = 'preview-token token entering';
     });
 
     // Stagger entrance
     tokens.forEach((t, i) => {
       setTimeout(() => {
         if (!running) return;
+        // Force reflow so the browser registers the 'entering' state before transitioning
         t.className = 'preview-token token entering';
-        requestAnimationFrame(() => {
-          t.classList.remove('entering');
-          t.classList.add('entered');
-        });
+        void t.offsetWidth;
+        t.classList.remove('entering');
+        t.classList.add('entered');
       }, i * 200);
     });
 
