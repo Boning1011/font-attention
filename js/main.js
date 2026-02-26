@@ -11,6 +11,7 @@ import { loadFont } from './font-loader.js';
 import { clearStage, setFontFamily } from './renderer.js';
 import { streamTokens } from './mock-driver.js';
 import { initTokenizer, tokenize } from './tokenizer.js';
+import { initAttentionLines, clearLines } from './attention-lines.js';
 
 let currentStream = null;
 let generation = 0;
@@ -24,6 +25,7 @@ async function start() {
     currentStream = null;
   }
   clearStage();
+  clearLines();
 
   if (!tokenizerReady) return;
 
@@ -60,6 +62,7 @@ function showStatus(msg) {
 async function init() {
   initPanel();
   initEffectsPanel();
+  initAttentionLines();
 
   try {
     await initTokenizer('gpt2', showStatus);

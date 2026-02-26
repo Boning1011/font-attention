@@ -24,6 +24,7 @@ export function initPreviews() {
     disturbance: createDisturbancePreview,
     stability: createStabilityPreview,
     axisCurve: createAxisCurvePreview,
+    attentionLines: createAttentionLinesPreview,
   };
 
   for (const [moduleId, factory] of Object.entries(factories)) {
@@ -282,5 +283,81 @@ function createAxisCurvePreview(container) {
   return {
     start() { if (running) return; running = true; tick = 0; runStep(); },
     stop() { running = false; clearTimeout(timerId); },
+  };
+}
+
+// ── Attention Lines preview ──────────────────────────────────────────────
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function createAttentionLinesPreview(container) {
+  const tokens = createTokens(container, SHORT_WORDS);
+  tokens.forEach(t => { t.style.opacity = '1'; });
+
+  // Wrap tokens in a positioned div so SVG can overlay
+  const svgWrap = document.createElement('div');
+  svgWrap.style.position = 'relative';
+  container.innerHTML = '';
+  container.appendChild(svgWrap);
+  tokens.forEach(t => svgWrap.appendChild(t));
+
+  const pvSvg = document.createElementNS(SVG_NS, 'svg');
+  pvSvg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;';
+  svgWrap.appendChild(pvSvg);
+
+  let timerId = null;
+  let running = false;
+
+  function runCycle() {
+    if (!running) return;
+
+    const opacity = getParam('alOpacity');
+    const strokeWidth = getParam('alStrokeWidth');
+    const fadeIn = getParam('alFadeIn');
+    const holdTime = getParam('alHoldTime');
+    const fadeOut = getParam('alFadeOut');
+
+    // Pick a random pair
+    const a = Math.floor(Math.random() * tokens.length);
+    let b = Math.floor(Math.random() * tokens.length);
+    if (b === a) b = (a + 1) % tokens.length;
+
+    const wrapRect = svgWrap.getBoundingClientRect();
+    const rA = tokens[a].getBoundingClientRect();
+    const rB = tokens[b].getBoundingClientRect();
+
+    const x1 = rA.left + rA.width / 2 - wrapRect.left;
+    const y1 = rA.top + rA.height / 2 - wrapRect.top;
+    const x2 = rB.left + rB.width / 2 - wrapRect.left;
+    const y2 = rB.top + rB.height / 2 - wrapRect.top;
+
+    const midX = (x1 + x2) / 2;
+    const arcH = Math.min(Math.abs(x2 - x1) * 0.4, 12);
+    const midY = Math.min(y1, y2) - arcH;
+
+    const path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute('d', `M ${x1} ${y1} Q ${midX} ${midY} ${x2} ${y2}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', '#888');
+    path.setAttribute('stroke-width', strokeWidth);
+    path.style.opacity = '0';
+    path.style.transition = `opacity ${fadeIn}ms ease`;
+    pvSvg.appendChild(path);
+
+    requestAnimationFrame(() => { path.style.opacity = String(opacity); });
+
+    setTimeout(() => {
+      path.style.transition = `opacity ${fadeOut}ms ease`;
+      path.style.opacity = '0';
+    }, fadeIn + holdTime);
+
+    setTimeout(() => { path.remove(); }, fadeIn + holdTime + fadeOut + 50);
+
+    timerId = setTimeout(runCycle, 600);
+  }
+
+  return {
+    start() { if (running) return; running = true; runCycle(); },
+    stop() { running = false; clearTimeout(timerId); pvSvg.innerHTML = ''; },
   };
 }

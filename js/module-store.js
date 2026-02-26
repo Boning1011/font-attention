@@ -72,6 +72,20 @@ const MODULES = [
       { key: 'breathMultiplier',    label: 'Breath Mult',     min: 1.0,  max: 4.0,  step: 0.1,   value: 1.8 },
     ],
   },
+  {
+    id: 'attentionLines',
+    label: 'Attention Lines',
+    enabled: true,
+    params: [
+      { key: 'alMaxLines',    label: 'Max Lines',      min: 1,    max: 20,   step: 1,    value: 8 },
+      { key: 'alPerToken',    label: 'Lines per Token', min: 1,    max: 5,    step: 1,    value: 2 },
+      { key: 'alOpacity',     label: 'Opacity',         min: 0.05, max: 0.5,  step: 0.01, value: 0.15 },
+      { key: 'alStrokeWidth', label: 'Stroke Width',    min: 0.3,  max: 2.0,  step: 0.1,  value: 0.7 },
+      { key: 'alFadeIn',      label: 'Fade In (ms)',    min: 100,  max: 1500, step: 50,   value: 400 },
+      { key: 'alHoldTime',    label: 'Hold (ms)',       min: 200,  max: 3000, step: 100,  value: 800 },
+      { key: 'alFadeOut',     label: 'Fade Out (ms)',   min: 200,  max: 2000, step: 50,   value: 600 },
+    ],
+  },
 ];
 
 // ── Runtime state ───────────────────────────────────────────────────────
