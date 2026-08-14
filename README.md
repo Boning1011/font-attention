@@ -29,6 +29,7 @@ Create a production build with `npm run build`. The repository includes a GitHub
 Create a Python environment with PyTorch and Transformers, then run:
 
 ```bash
+python -m pip install -r requirements-model.txt
 python scripts/export_attention_replay.py
 ```
 
