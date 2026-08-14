@@ -1,48 +1,52 @@
-# font-attention
+# Font Attention
 
-实时 LLM attention 驱动的可变字体渲染实验。每个生成的 token，其字形的粗细、宽窄、倾斜等参数由模型内部的 attention 权重实时驱动，形成一段在语义中呼吸、变形的文字。
+Font Attention is a design-engineering experiment that translates transformer attention into variable typography. A recorded pass from **Qwen3-0.6B** drives the weight, width, slant, and optical-size axes of Roboto Flex while the interface exposes the strongest token-to-token links.
 
-## 文档
+The current demo uses the opening quatrain of Shakespeare's *Sonnet 18*. It is a teacher-forced replay of real attention tensors—not a simulation and not a claim that the model authored the text.
 
-- [项目方向与核心概念](doc/PROJECT_DIRECTION.md)
-- [Roboto Flex 字体参数参考](doc/roboto-flex.md) | [在线预览](https://fonts.google.com/specimen/Roboto+Flex/tester?query=robot+fl&categoryFilters=Technology:%2FTechnology%2FVariable)
+![Font Attention interface replay](media/font-attention-demo.gif)
 
-## 运行
+## What it explores
 
-需要 local server（ES modules 不支持 `file://` 协议）：
+- **LLM interpretability as visual material** — model attention becomes legible motion, emphasis, and connection.
+- **Variable typography as a data display** — four font axes respond to focus, entropy, and self-attention.
+- **Design engineering in the browser** — the visualization, transport controls, and inspector are implemented as a lightweight static web app.
+- **Reproducible model-to-interface pipeline** — a Python exporter converts local model tensors into compact JSON; the deployed site needs no model server or API key.
+
+## Run the interface
 
 ```bash
-# 创建虚拟环境（首次）
-python3 -m venv venv
-
-# 启动本地服务
-source venv/bin/activate && python -m http.server 8000
+npm install
+npm run dev
 ```
 
-打开 `http://localhost:8000`，在右侧面板输入 Google Fonts API Key（首次需要，之后自动记住）。
+Create a production build with `npm run build`. The repository includes a GitHub Pages workflow, and the site has no runtime secrets or backend dependency.
 
-## 当前状态
+## Regenerate the attention replay
 
-**Session 3 完成（2026-02-22）**
-- 多字体支持：通过 Google Fonts API 运行时获取任意可变字体的轴元数据
-- 右侧配置面板：字体选择 + 每个轴的双滑块范围控制
-- 所有模块通用化：renderer/driver 不再硬编码特定轴，支持任意轴集合
-- 添加新字体只需在 `js/font-registry.js` 加一行
+Create a Python environment with PyTorch and Transformers, then run:
 
-**Session 2 完成（2026-02-21）**
-- 代码重构：从单文件拆分为模块化结构
-- Token 流式出现 + Axis 平滑变化（模拟 attention 重分布）
-- 渲染层与数据源解耦
+```bash
+python scripts/export_attention_replay.py
+```
 
-**Session 1 完成（2026-02-21）**
-- 静态 token 渲染器 + Roboto Flex 可变字体
-- Lorem Ipsum 占位数据，非公约数相位驱动
+The exporter defaults to `Qwen/Qwen3-0.6B`, runs on CUDA when available, averages every head in the final four transformer layers, and writes `public/data/qwen3-sonnet-18.json`. A different model or text can be supplied with `--model` and `--text`.
 
-**Session 3b（2026-02-22）**
-- 扩充字体列表：Roboto, Open Sans, Noto Sans, Noto Serif, Playfair Display, Merriweather
-- UI 轴标签改为人类可读名称（Weight, Width, Slant 等）
-- 二值轴（如 Italic）显示为 on/off 开关而非滑块
+## Mapping
 
-**待完成 / 下一步**
-- 接入真实 attention 数据源（Hugging Face Transformers pipeline）
-- attention → font axis 映射策略设计
+| Attention signal | Typographic axis |
+| --- | --- |
+| Maximum attention / focus | Weight (`wght`) |
+| Normalized attention entropy | Width (`wdth`) |
+| Self-attention | Slant (`slnt`) |
+| Inverse entropy | Optical size (`opsz`) |
+
+This mapping is an expressive design decision, not an analytical claim about model cognition.
+
+## Stack
+
+Qwen3 · PyTorch · Hugging Face Transformers · JavaScript · SVG · CSS variable fonts · Vite
+
+## License
+
+Source code is available under the MIT License. Shakespeare's *Sonnet 18* is in the public domain.

@@ -1,31 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>font-attention</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link id="gf-stylesheet" rel="stylesheet" href="">
-
-  <link rel="stylesheet" href="css/style.css">
-
-  <script type="importmap">
-  {
-    "imports": {
-      "@huggingface/transformers": "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3"
-    }
-  }
-  </script>
-</head>
-<body>
-
-  <div id="stage-wrapper">
-    <div id="token-stage"></div>
-  </div>
-
-  <script type="module" src="js/main.js"></script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Font Attention maps Qwen3 transformer attention to variable typography in a real-time browser interface." />
+    <meta name="theme-color" content="#f1eee5" />
+    <title>Font Attention — language model attention as typography</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Font Attention home">FONT/<span>ATTENTION</span></a>
+        <p>Language model attention<br />as a typographic instrument.</p>
+        <a class="source-link" href="https://github.com/Boning1011/font-attention" target="_blank" rel="noreferrer">SOURCE ↗</a>
+      </header>
+      <main>
+        <section class="stage" aria-label="Attention visualization">
+          <div class="stage-meta"><span>01 / LIVE REPLAY</span><span id="model-label">LOADING QWEN DATA…</span></div>
+          <svg id="attention-arcs" class="attention-arcs" aria-hidden="true"></svg>
+          <div id="text-canvas" class="text-canvas" aria-live="polite"></div>
+          <div class="transport">
+            <button id="play-toggle" class="transport-button" type="button" aria-label="Pause replay">PAUSE</button>
+            <button id="restart" class="transport-button secondary" type="button">RESTART</button>
+            <label class="timeline-wrap"><span class="sr-only">Replay position</span><input id="timeline" type="range" min="0" max="1" value="0" step="1" /></label>
+            <output id="counter">00 / 00</output>
+            <button id="speed" class="speed-button" type="button" aria-label="Change replay speed">1×</button>
+          </div>
+        </section>
+        <aside class="inspector" aria-label="Attention inspector">
+          <div class="inspector-heading"><span>02 / INSPECTOR</span><span class="live-dot">DATA</span></div>
+          <div class="active-token-block"><span class="eyebrow">ACTIVE TOKEN</span><strong id="active-token">—</strong></div>
+          <div class="axis-panel"><span class="eyebrow">VARIABLE FONT AXES</span><div id="axis-list"></div></div>
+          <div class="links-panel"><span class="eyebrow">STRONGEST CONTEXT LINKS</span><div id="link-list"></div></div>
+          <div class="method-panel"><span class="eyebrow">METHOD</span><p id="method-copy">Loading the recorded attention tensor…</p></div>
+        </aside>
+      </main>
+      <footer><span>QWEN3 / SELF-ATTENTION</span><span>ATTENTION → TYPOGRAPHIC AXES</span><span>BONING LI, 2026</span></footer>
+    </div>
+    <script type="module" src="./js/main.js"></script>
+  </body>
 </html>
