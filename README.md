@@ -2,6 +2,8 @@
 
 Font Attention is a design-engineering experiment that translates transformer attention into variable typography. A recorded pass from **Qwen3-0.6B** drives the weight, width, slant, and optical-size axes of Roboto Flex while the interface exposes the strongest token-to-token links.
 
+**[Open the live interactive replay](https://boning1011.github.io/font-attention/)**
+
 The current demo uses the opening quatrain of Shakespeare's *Sonnet 18*. It is a teacher-forced replay of real attention tensors—not a simulation and not a claim that the model authored the text.
 
 ![Font Attention interface replay](media/font-attention-demo.gif)
