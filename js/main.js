@@ -6,8 +6,15 @@ const svg = $("#attention-arcs");
 const timeline = $("#timeline");
 const playButton = $("#play-toggle");
 const speedButton = $("#speed");
+const fontSelect = $("#font-select");
 const speeds = [0.5, 1, 1.5, 2];
 const TOKEN_INTERVAL_MS = 160;
+const FONT_STORAGE_KEY = "font-attention:typeface";
+const FONT_PRESETS = {
+  "roboto-flex": { family: "Roboto Flex", load: '72px "Roboto Flex"' },
+  recursive: { family: "Recursive", load: '72px "Recursive"' },
+  "roboto-serif": { family: "Roboto Serif", load: '72px "Roboto Serif"' },
+};
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const AXIS_LIMITS = {
   wght: [100, 1000], wdth: [25, 151], slnt: [-10, 0], opsz: [8, 144],
@@ -46,6 +53,36 @@ function createTokens() {
 function applyAxes(element, axes) {
   for (const [axis, limits] of Object.entries(AXIS_LIMITS)) {
     element.style.setProperty(`--${axis}`, String(clamp(Number(axes[axis]), limits)));
+  }
+  const widthNorm = (clamp(Number(axes.wdth), AXIS_LIMITS.wdth) - 25) / 126;
+  const opticalNorm = (clamp(Number(axes.opsz), AXIS_LIMITS.opsz) - 8) / 136;
+  const slant = clamp(Number(axes.slnt), AXIS_LIMITS.slnt);
+  element.style.setProperty("--recursive-wght", String(clamp(Number(axes.wght), [300, 1000])));
+  element.style.setProperty("--recursive-slnt", String(slant * 1.5));
+  element.style.setProperty("--casl", String(widthNorm.toFixed(3)));
+  element.style.setProperty("--crsv", slant < -5 ? "1" : ".5");
+  element.style.setProperty("--mono-axis", String((1 - opticalNorm).toFixed(3)));
+  element.style.setProperty("--serif-wght", String(clamp(Number(axes.wght), [100, 900])));
+  element.style.setProperty("--serif-wdth", String((50 + widthNorm * 100).toFixed(2)));
+  element.style.setProperty("--serif-slant", `${slant}deg`);
+  element.style.setProperty("--grad", String((-50 + opticalNorm * 150).toFixed(2)));
+}
+
+function lockTokenWidths() {
+  tokenElements.forEach((element) => { element.style.width = "auto"; });
+  tokenElements.forEach((element) => { element.style.width = `${element.getBoundingClientRect().width}px`; });
+}
+
+async function setTypeface(value, persist = true) {
+  const preset = FONT_PRESETS[value] || FONT_PRESETS["roboto-flex"];
+  canvas.dataset.font = value in FONT_PRESETS ? value : "roboto-flex";
+  fontSelect.value = canvas.dataset.font;
+  $("#active-token").style.fontFamily = `"${preset.family}", sans-serif`;
+  if (persist) localStorage.setItem(FONT_STORAGE_KEY, canvas.dataset.font);
+  await document.fonts.load(preset.load);
+  if (tokenElements.length) {
+    lockTokenWidths();
+    requestAnimationFrame(renderArcs);
   }
 }
 
@@ -101,11 +138,11 @@ function pickDisturbedTokens() {
 function triggerSympatheticPops() {
   const linked = replay.frames[position].links.map(({ index }) => index);
   const picks = new Set(linked);
-  for (let offset = 1; offset <= position && picks.size < 5; offset += 1) {
+  for (let offset = 1; offset <= position && picks.size < 2; offset += 1) {
     const candidate = (position * 7 + offset * 11) % position;
     picks.add(candidate);
   }
-  [...picks].slice(0, 5).forEach((index, order) => {
+  [...picks].slice(0, 2).forEach((index, order) => {
     const element = tokenElements[index];
     if (element) replayAnimation(element, "popping", 410, order * 38);
   });
@@ -136,9 +173,9 @@ function oscillateDisturbedTokens() {
 function triggerMotion() {
   if (reducedMotion) return;
   const active = tokenElements[position];
-  if (active) replayAnimation(active, "entering", 440);
   oscillateDisturbedTokens();
-  if (position > 0) {
+  if (active && position % 3 === 0) replayAnimation(active, "entering", 440);
+  if (position > 0 && position % 3 === 0) {
     triggerSympatheticPops();
   }
 }
@@ -197,6 +234,8 @@ async function start() {
   timeline.max = replay.tokens.length-1;
   $("#model-label").textContent = `${replay.meta.model.toUpperCase()} / ${replay.meta.source}`;
   $("#method-copy").textContent = replay.meta.method;
+  const savedTypeface = localStorage.getItem(FONT_STORAGE_KEY) || "roboto-flex";
+  await setTypeface(savedTypeface, false);
   await document.fonts.ready;
   createTokens();
   setPosition(0);
@@ -207,5 +246,6 @@ playButton.addEventListener("click", () => { playing = !playing; playButton.text
 $("#restart").addEventListener("click", () => { stability.fill(0); setPosition(0); playing = true; playButton.textContent = "PAUSE"; lastStep = performance.now(); });
 timeline.addEventListener("input", (event) => { setPosition(event.target.value); lastStep = performance.now(); });
 speedButton.addEventListener("click", () => { speedIndex = (speedIndex+1)%speeds.length; speedButton.textContent = `${speeds[speedIndex]}×`; });
+fontSelect.addEventListener("change", (event) => setTypeface(event.target.value));
 window.addEventListener("resize", () => requestAnimationFrame(renderArcs));
 start().catch((error) => { canvas.innerHTML = `<p>Could not load attention replay.<br><small>${error.message}</small></p>`; });

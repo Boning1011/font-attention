@@ -67,7 +67,7 @@ def main() -> None:
 
         frames.append({
             "axes": {
-                "wght": round(remap(focus, 300, 900)),
+                "wght": round(remap(focus, 180, 600)),
                 "wdth": round(remap(entropy_norm, 72, 138)),
                 "slnt": round(remap(self_weight, 0, -9), 1),
                 "opsz": round(remap(1 - entropy_norm, 28, 112)),
