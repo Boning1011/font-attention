@@ -7,6 +7,7 @@ const timeline = $("#timeline");
 const playButton = $("#play-toggle");
 const speedButton = $("#speed");
 const speeds = [0.5, 1, 1.5, 2];
+const TOKEN_INTERVAL_MS = 160;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const AXIS_LIMITS = {
   wght: [100, 1000], wdth: [25, 151], slnt: [-10, 0], opsz: [8, 144],
@@ -111,22 +112,24 @@ function triggerSympatheticPops() {
 }
 
 function oscillateDisturbedTokens() {
-  const disturbed = pickDisturbedTokens();
+  const disturbed = position > 0 ? pickDisturbedTokens() : [];
+  disturbed.push(position);
   const steps = [1, -0.58, 0.3, -0.12, 0];
   steps.forEach((amplitude, step) => {
     effectTimers.push(setTimeout(() => {
       disturbed.forEach((index) => {
         const base = replay.frames[index].axes;
         const phase = (index + position + step) % 2 === 0 ? 1 : -1;
+        const swing = phase * amplitude;
         applyAxes(tokenElements[index], {
-          wght: base.wght + phase * amplitude * 170,
-          wdth: base.wdth - phase * amplitude * 19,
-          slnt: base.slnt + phase * amplitude * 3.5,
-          opsz: base.opsz + phase * amplitude * 18,
+          wght: base.wght + swing * 260,
+          wdth: base.wdth - swing * 34,
+          slnt: amplitude === 0 ? base.slnt : swing > 0 ? -10 : 0,
+          opsz: base.opsz + swing * 34,
         });
       });
       if (step === steps.length - 1) requestAnimationFrame(renderArcs);
-    }, step * 48));
+    }, step * 30));
   });
 }
 
@@ -134,9 +137,9 @@ function triggerMotion() {
   if (reducedMotion) return;
   const active = tokenElements[position];
   if (active) replayAnimation(active, "entering", 440);
+  oscillateDisturbedTokens();
   if (position > 0) {
     triggerSympatheticPops();
-    oscillateDisturbedTokens();
   }
 }
 
@@ -182,7 +185,7 @@ function setPosition(next, animate = true) {
 }
 
 function animationLoop(now) {
-  if (playing && now-lastStep > 850/speeds[speedIndex]) {
+  if (playing && now-lastStep > TOKEN_INTERVAL_MS/speeds[speedIndex]) {
     setPosition(position === replay.tokens.length-1 ? 0 : position+1);
     lastStep = now;
   }
