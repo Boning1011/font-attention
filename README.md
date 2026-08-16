@@ -16,8 +16,8 @@ The current demo uses the opening quatrain of Shakespeare's *Sonnet 18*. It is a
 - **Design engineering in the browser** — the visualization, transport controls, and inspector are implemented as a lightweight static web app.
 - **One replay, three typewriter faces** — the default case mixes Courier Prime, Special Elite, and Cutive Mono token by token, while the selector can isolate any one face.
 - **Restrained controls** — the portrait sheet keeps only the typewriter selector and mapping preset at its foot; the default state is Typewriter Mixed Case with Balanced mapping.
-- **Parameterized ink annotations** — attention links are assembled from pressure-varying line segments, dry-brush gaps, flecks, and deterministic displacement rather than Bézier curves. The current token receives a rough double circle. The strongest attention link is marked in broken red ballpoint ink; other links rotate through hand-drawn circles, underlines, dense strikeouts, and no mark.
-- **Time-lapse revision rhythm** — annotation segments reveal in rapid sequence on every token, so the slower replay accumulates like a manuscript being continuously circled, crossed out, and revised by hand. Dense strikeouts land as stable, opaque black ink rather than fading strokes.
+- **Parameterized ink annotations** — attention links are assembled from pressure-varying line segments, dry-brush gaps, flecks, and deterministic displacement rather than Bézier curves. The current token receives a loose, single-stroke open circle. The strongest attention link is marked in broken red ballpoint ink; other links rotate through hand-drawn circles, underlines, dense strikeouts, and no mark.
+- **Time-lapse revision rhythm** — circles and strikeouts hold for three token steps before the annotation layer changes, avoiding rapid flashes while preserving the sense of a manuscript being revised by hand. Dense strikeouts land as stable, opaque black ink rather than fading strokes.
 - **Margin notes as data display** — the five strongest token links are written in a loose hand at the page edge and connected directly back to their marked source words.
 - **Typographic memory** — a restrained, deterministic imprint pattern lets selected tokens retain different weights, widths, slants, ink densities, and sub-pixel registration after motion settles; quieter tokens preserve the rhythm of a typed page.
 - **Reproducible model-to-interface pipeline** — a Python exporter converts local model tensors into compact JSON; the deployed site needs no model server or API key.
@@ -53,7 +53,7 @@ The exporter defaults to `Qwen/Qwen3-0.6B`, runs on CUDA when available, average
 
 This mapping is an expressive design decision, not an analytical claim about model cognition.
 
-The motion layer preserves selective disturbance, decaying axis oscillation, stability, and occasional ripples from the early prototype while replacing pop-and-blur movement with tiny local translations and rotations. The four source lines occupy the central half of a portrait 8.5 × 11 sheet. Unprinted tokens remain blank. When the final token arrives, links, margin notes, circles, and strikeouts clear away and the clean typeset page holds for 3.2 seconds before the next replay.
+The motion layer preserves selective disturbance, decaying axis oscillation, stability, and occasional ripples from the early prototype while replacing pop-and-blur movement with tiny local translations and rotations. The four source lines form a compact, left-aligned quatrain set slightly left of center on a portrait 8.5 × 11 sheet, with broad paper margins around it. Unprinted tokens remain blank. When the final token arrives, links, margin notes, circles, and strikeouts clear away and the clean typeset page holds for 3.2 seconds before the next replay.
 
 ## Stack
 

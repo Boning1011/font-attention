@@ -73,6 +73,7 @@ let playing = true;
 let speedIndex = 1;
 let lastStep = performance.now();
 let tuning = { ...DEFAULT_TUNING };
+let annotationSnapshot = { bucket: -1, markup: "" };
 
 const formatToken = (token) => token.replace(/Ġ/g, " ").replace(/Ċ/g, "\n");
 const cleanToken = (token) => formatToken(token).replace(/\n/g, "↵").trim() || "space";
@@ -168,6 +169,7 @@ async function setTypeface(value, persist = true) {
   await Promise.all(loads.map((font) => document.fonts.load(font)));
   if (tokenElements.length) {
     lockTokenWidths();
+    annotationSnapshot.bucket = -1;
     requestAnimationFrame(renderArcs);
   }
 }
@@ -188,6 +190,7 @@ function applyTuning() {
   lockTokenWidths();
   updateTokenState();
   renderInspector();
+  annotationSnapshot.bucket = -1;
   requestAnimationFrame(renderArcs);
 }
 
@@ -355,34 +358,31 @@ function closestConnection(activeShape, targetShape) {
   };
 }
 
-function linkedMark(_link, order) {
+function linkedMark(link, order) {
   if (order === 0) return "red-circle";
   const marks = ["strikeout", "underline", "none", "circle"];
-  return marks[(order - 1 + position * 3) % marks.length];
+  return marks[(link.index + order * 3) % marks.length];
 }
 
 function makeScribbleEllipse(shape, seed, className) {
-  const passes = 2;
-  let segments = "";
-  for (let pass = 0; pass < passes; pass += 1) {
-    const count = 34 + pass * 5;
-    const points = [];
-    for (let index = 0; index <= count; index += 1) {
-      const angle = (index / count) * Math.PI * 2 + pass * .035;
-      const pressureNoise = seededNoise(seed * 41 + pass * 101 + index) * (1.05 + pass * .25);
-      points.push({
-        x: shape.cx + Math.cos(angle) * (shape.rx + pressureNoise) + seededNoise(seed + index * 3) * .45,
-        y: shape.cy + Math.sin(angle) * (shape.ry + pressureNoise * .55) + seededNoise(seed + index * 5) * .5,
-      });
-    }
-    segments += points.slice(0, -1).map((point, index) => {
-      const next = points[index + 1];
-      const width = .78 + (seededNoise(seed + pass * 19 + index) + 1) * .38;
-      const dry = (index + seed + pass * 4) % 13 === 0;
-      const opacity = dry ? .22 : pass === 0 ? .72 : .43;
-      return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" style="--draw:${index + pass * count};--mark-opacity:${opacity}"/>`;
-    }).join("");
-  }
+  const count = 39;
+  const startAngle = -.34 * Math.PI + seededNoise(seed * 7) * .13;
+  const sweep = Math.PI * (1.78 + (seededNoise(seed * 11) + 1) * .045);
+  const points = Array.from({ length: count + 1 }, (_, index) => {
+    const progress = index / count;
+    const angle = startAngle + progress * sweep;
+    const pressureNoise = seededNoise(seed * 41 + index) * .58;
+    return {
+      x: shape.cx + Math.cos(angle) * (shape.rx + pressureNoise) + seededNoise(seed + index * 3) * .28,
+      y: shape.cy + Math.sin(angle) * (shape.ry + pressureNoise * .5) + seededNoise(seed + index * 5) * .32,
+    };
+  });
+  const segments = points.slice(0, -1).map((point, index) => {
+    const next = points[index + 1];
+    const width = .72 + (seededNoise(seed + index * 19) + 1) * .27;
+    const dry = (index + seed) % 17 === 0;
+    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" style="--mark-opacity:${dry ? .42 : .82}"/>`;
+  }).join("");
   return `<g class="${className}">${segments}</g>`;
 }
 
@@ -443,6 +443,7 @@ function renderArcs() {
   marksSvg.classList.toggle("settled", isComplete);
   marginNotes.classList.toggle("settled", isComplete);
   if (isComplete) return;
+  if (position === 0) annotationSnapshot = { bucket: -1, markup: "" };
   const activeRect = active.getBoundingClientRect();
   svg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
   marksSvg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
@@ -475,8 +476,12 @@ function renderArcs() {
     return "";
   }).join("");
   const activeCircle = makeScribbleEllipse(activeShape, position * 47 + 13, "active-circle");
+  const annotationBucket = Math.floor(position / 3);
+  if (annotationSnapshot.bucket !== annotationBucket) {
+    annotationSnapshot = { bucket: annotationBucket, markup: linkedAnnotations + activeCircle };
+  }
   svg.innerHTML = `<defs>${filters}</defs>${strokes}`;
-  marksSvg.innerHTML = `<g class="annotations">${linkedAnnotations}${activeCircle}</g>`;
+  marksSvg.innerHTML = `<g class="annotations">${annotationSnapshot.markup}</g>`;
 }
 
 function setPosition(next, animate = true) {
@@ -519,5 +524,8 @@ timeline.addEventListener("input", (event) => { setPosition(event.target.value);
 speedButton.addEventListener("click", () => { speedIndex = (speedIndex+1)%speeds.length; speedButton.textContent = `${speeds[speedIndex]}×`; });
 fontSelect.addEventListener("change", (event) => setTypeface(event.target.value));
 mappingSelect.addEventListener("change", (event) => { tuning.mapping = event.target.value; applyTuning(); });
-window.addEventListener("resize", () => requestAnimationFrame(renderArcs));
+window.addEventListener("resize", () => {
+  annotationSnapshot.bucket = -1;
+  requestAnimationFrame(renderArcs);
+});
 start().catch((error) => { canvas.innerHTML = `<p>Could not load attention replay.<br><small>${error.message}</small></p>`; });
