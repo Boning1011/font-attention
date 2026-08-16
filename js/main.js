@@ -14,8 +14,9 @@ const linksControl = $("#links-control");
 const tensionControl = $("#tension-control");
 const speeds = [0.5, 1, 1.5, 2];
 const TOKEN_INTERVAL_MS = 160;
-const FONT_STORAGE_KEY = "font-attention:typeface";
-const TUNING_STORAGE_KEY = "font-attention:tuning";
+const END_HOLD_MS = 3200;
+const FONT_STORAGE_KEY = "font-attention:typeface:v2";
+const TUNING_STORAGE_KEY = "font-attention:tuning:v2";
 const FONT_PRESETS = {
   "roboto-flex": { family: "Roboto Flex", load: '72px "Roboto Flex"' },
   recursive: { family: "Recursive", load: '72px "Recursive"' },
@@ -31,6 +32,27 @@ const MAPPING_PRESETS = {
   italic: { wght: 0.7, wdth: 0.75, slnt: 1.7, opsz: 0.7 },
   optical: { wght: 0.7, wdth: 0.75, slnt: 0.7, opsz: 1.65 },
 };
+const IMPRINT_PATTERN = [
+  { wght: 0, wdth: 0, slnt: 0, opsz: 0 },
+  { wght: 28, wdth: -2, slnt: -0.25, opsz: 3 },
+  { wght: 0, wdth: 0, slnt: 0, opsz: 0 },
+  { wght: -18, wdth: 1, slnt: 0, opsz: -2 },
+  { wght: 46, wdth: -3, slnt: -0.6, opsz: 4 },
+  { wght: 0, wdth: 0, slnt: 0, opsz: 0 },
+  { wght: 12, wdth: 2, slnt: -0.2, opsz: -2 },
+  { wght: 0, wdth: 0, slnt: 0, opsz: 0 },
+  { wght: -30, wdth: 3, slnt: 0, opsz: -3 },
+  { wght: 22, wdth: -1, slnt: -0.4, opsz: 2 },
+  { wght: 0, wdth: 0, slnt: 0, opsz: 0 },
+  { wght: 38, wdth: 2, slnt: -0.5, opsz: -1 },
+  { wght: -12, wdth: -2, slnt: -0.2, opsz: 3 },
+];
+const PRINT_PATTERN = [
+  [0, 0, 0.96], [0.35, -0.15, 0.91], [0, 0, 0.95], [-0.25, 0.28, 0.9],
+  [0.45, 0.12, 0.98], [0, 0, 0.94], [-0.18, -0.2, 0.89], [0, 0, 0.95],
+  [0.28, 0.3, 0.92], [-0.4, 0.08, 0.97], [0, 0, 0.94], [0.2, -0.25, 0.9],
+  [-0.12, 0.18, 0.96],
+];
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const AXIS_LIMITS = {
   wght: [100, 1000], wdth: [25, 151], slnt: [-10, 0], opsz: [8, 144],
@@ -66,35 +88,53 @@ function loadTuning() {
   }
 }
 
-function mapAttentionAxes(axes) {
+function mapAttentionAxes(axes, index = -1) {
   const preset = MAPPING_PRESETS[tuning.mapping] || MAPPING_PRESETS.balanced;
   const amount = tuning.variation / 100;
   const centers = { wght: 390, wdth: 105, slnt: -4.5, opsz: 70 };
-  return Object.fromEntries(Object.entries(centers).map(([axis, center]) => [
+  const mapped = Object.fromEntries(Object.entries(centers).map(([axis, center]) => [
     axis,
     clamp(center + (Number(axes[axis]) - center) * amount * preset[axis], AXIS_LIMITS[axis]),
+  ]));
+  if (index < 0) return mapped;
+  const imprint = IMPRINT_PATTERN[index % IMPRINT_PATTERN.length];
+  return Object.fromEntries(Object.entries(mapped).map(([axis, value]) => [
+    axis,
+    clamp(value + imprint[axis], AXIS_LIMITS[axis]),
   ]));
 }
 
 function createTokens() {
   canvas.innerHTML = "";
+  let line = document.createElement("span");
+  line.className = "text-line";
+  canvas.appendChild(line);
   tokenElements = replay.tokens.map((rawToken, index) => {
     const token = formatToken(rawToken);
     const span = document.createElement("span");
     span.className = "token future";
     span.dataset.index = String(index);
     span.textContent = token.replace(/\n/g, "");
+    const [printX, printY, inkDensity] = PRINT_PATTERN[index % PRINT_PATTERN.length];
+    span.style.setProperty("--print-x", `${printX}px`);
+    span.style.setProperty("--print-y", `${printY}px`);
+    span.style.setProperty("--ink-density", String(inkDensity));
+    span.style.setProperty("--print-shadow", `${printX >= 0 ? ".014em" : "-.014em"} .006em rgba(27,26,23,.14)`);
     applyAxes(span, replay.frames[index].axes);
-    canvas.appendChild(span);
+    line.appendChild(span);
     span.style.width = `${span.getBoundingClientRect().width}px`;
-    if (token.includes("\n")) canvas.appendChild(document.createElement("br"));
+    if (token.includes("\n") && index < replay.tokens.length - 1) {
+      line = document.createElement("span");
+      line.className = "text-line";
+      canvas.appendChild(line);
+    }
     return span;
   });
   stability = new Array(tokenElements.length).fill(0);
 }
 
 function applyAxes(element, axes) {
-  const mapped = mapAttentionAxes(axes);
+  const mapped = mapAttentionAxes(axes, Number(element.dataset.index));
   for (const [axis, limits] of Object.entries(AXIS_LIMITS)) {
     element.style.setProperty(`--${axis}`, String(clamp(Number(mapped[axis]), limits)));
   }
@@ -103,9 +143,9 @@ function applyAxes(element, axes) {
   const slant = mapped.slnt;
   element.style.setProperty("--recursive-wght", String(clamp(mapped.wght, [300, 1000])));
   element.style.setProperty("--recursive-slnt", String(slant * 1.5));
-  element.style.setProperty("--casl", String(widthNorm.toFixed(3)));
+  element.style.setProperty("--casl", String((0.1 + widthNorm * 0.55).toFixed(3)));
   element.style.setProperty("--crsv", slant < -5 ? "1" : ".5");
-  element.style.setProperty("--mono-axis", String((1 - opticalNorm).toFixed(3)));
+  element.style.setProperty("--mono-axis", String((0.72 + (1 - opticalNorm) * 0.28).toFixed(3)));
   element.style.setProperty("--serif-wght", String(clamp(mapped.wght, [100, 900])));
   element.style.setProperty("--serif-wdth", String((50 + widthNorm * 100).toFixed(2)));
   element.style.setProperty("--serif-slant", `${slant}deg`);
@@ -276,7 +316,7 @@ function triggerMotion() {
 
 function renderInspector() {
   const frame = replay.frames[position];
-  const mapped = mapAttentionAxes(frame.axes);
+  const mapped = mapAttentionAxes(frame.axes, position);
   $("#active-token").textContent = cleanToken(replay.tokens[position]);
   const definitions = [
     ["WGHT", mapped.wght, 100, 1000], ["WDTH", mapped.wdth, 25, 151],
@@ -325,7 +365,8 @@ function setPosition(next, animate = true) {
 }
 
 function animationLoop(now) {
-  if (playing && now-lastStep > TOKEN_INTERVAL_MS/speeds[speedIndex]) {
+  const interval = position === replay?.tokens.length - 1 ? END_HOLD_MS : TOKEN_INTERVAL_MS / speeds[speedIndex];
+  if (playing && now-lastStep > interval) {
     setPosition(position === replay.tokens.length-1 ? 0 : position+1);
     lastStep = now;
   }
@@ -339,7 +380,7 @@ async function start() {
   timeline.max = replay.tokens.length-1;
   $("#model-label").textContent = `${replay.meta.model.toUpperCase()} / ${replay.meta.source}`;
   $("#method-copy").textContent = replay.meta.method;
-  const savedTypeface = localStorage.getItem(FONT_STORAGE_KEY) || "roboto-flex";
+  const savedTypeface = localStorage.getItem(FONT_STORAGE_KEY) || "recursive";
   await setTypeface(savedTypeface, false);
   await document.fonts.ready;
   createTokens();
