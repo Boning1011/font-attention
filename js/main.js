@@ -29,6 +29,11 @@ const TOKEN_FONT_PATTERN = [
   "special-elite", "cutive-mono", "courier-prime", "special-elite",
   "cutive-mono", "courier-prime", "special-elite", "cutive-mono",
 ];
+const TOKEN_STYLE_PATTERN = [
+  "roman", "italic", "roman", "small-caps",
+  "roman", "italic", "small-caps", "roman",
+  "italic-small-caps", "roman", "italic", "roman",
+];
 const UPPERCASE_PATTERN = new Set([4, 7, 8, 11, 12, 15, 16, 26, 30, 32, 37, 41]);
 const DEFAULT_TUNING = { mapping: "balanced", variation: 135, motion: 25, links: 5, tension: 55 };
 const MAPPING_PRESETS = {
@@ -122,6 +127,7 @@ function createTokens() {
     span.className = "token future";
     span.dataset.index = String(index);
     span.dataset.tokenFont = TOKEN_FONT_PATTERN[index % TOKEN_FONT_PATTERN.length];
+    span.dataset.tokenStyle = TOKEN_STYLE_PATTERN[index % TOKEN_STYLE_PATTERN.length];
     span.dataset.tokenCase = UPPERCASE_PATTERN.has(index) ? "upper" : "source";
     span.textContent = token.replace(/\n/g, "");
     const [printX, printY, inkDensity, printRotate] = PRINT_PATTERN[index % PRINT_PATTERN.length];
@@ -282,24 +288,27 @@ function triggerMotion() {
 }
 
 function makeWeightScribble(link, order) {
-  const length = 9 + Math.min(1, link.weight) * 53;
-  const points = Array.from({ length: 10 }, (_, index) => {
-    const progress = index / 9;
-    const x = progress * 100;
-    const y = 5.5 + Math.sin(progress * Math.PI * (2.2 + order * .17)) * .75
-      + seededNoise(position * 43 + link.index * 17 + order * 7 + index) * 1.15;
+  const length = 13 + Math.min(1, link.weight) * 62;
+  const count = Math.max(5, Math.round(length / 5));
+  const points = Array.from({ length: count + 1 }, (_, index) => {
+    const progress = index / count;
+    const x = 2.5 + progress * (length - 5);
+    const y = 7 + Math.sin(progress * Math.PI * (1.8 + order * .13)) * .5
+      + seededNoise(position * 43 + link.index * 17 + order * 7 + index) * .7;
     return `${x.toFixed(1)},${y.toFixed(1)}`;
   }).join(" ");
   const echo = points.split(" ").map((point, index) => {
     const [x, y] = point.split(",").map(Number);
-    return `${x.toFixed(1)},${(y + .9 + seededNoise(link.index * 29 + index) * .55).toFixed(1)}`;
+    return `${x.toFixed(1)},${(y - 1.15 + seededNoise(link.index * 29 + index) * .45).toFixed(1)}`;
   }).join(" ");
-  return `<span class="weight-scribble" style="--weight-length:${length.toFixed(1)}px" role="img" aria-label="${Math.round(link.weight * 100)} percent attention weight"><svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><polyline points="${points}"/><polyline class="echo" points="${echo}"/></svg></span>`;
+  const startY = Number(points.split(" ")[0].split(",")[1]);
+  const endY = Number(points.split(" ").at(-1).split(",")[1]);
+  return `<span class="weight-scribble" style="--weight-length:${length.toFixed(1)}px" role="img" aria-label="${Math.round(link.weight * 100)} percent attention weight"><svg viewBox="0 0 ${length.toFixed(1)} 14" aria-hidden="true"><polyline class="marker-main" points="${points}"/><polyline class="marker-grain" points="${echo}"/><ellipse class="marker-cap" cx="2.6" cy="${startY.toFixed(1)}" rx="2.7" ry="3.2" transform="rotate(${(seededNoise(link.index + order) * 9).toFixed(1)} 2.6 ${startY.toFixed(1)})"/><ellipse class="marker-cap end" cx="${(length - 2.5).toFixed(1)}" cy="${endY.toFixed(1)}" rx="2.5" ry="3.4" transform="rotate(${(seededNoise(link.index * 3 + order + 11) * 10).toFixed(1)} ${(length - 2.5).toFixed(1)} ${endY.toFixed(1)})"/></svg></span>`;
 }
 
 function renderInspector() {
   const links = getVisibleLinks();
-  $("#margin-link-list").innerHTML = links.map((link, order) => `<div class="margin-link${order === 0 ? " strongest" : ""}" data-link-index="${link.index}" style="--note-rotate:${seededNoise(position * 17 + link.index * 5 + order) * 2.4}deg"><span>${cleanToken(replay.tokens[link.index])}</span>${makeWeightScribble(link, order)}</div>`).join("");
+  $("#margin-link-list").innerHTML = links.map((link, order) => `<div class="margin-link${order === 0 ? " strongest" : ""}" data-link-index="${link.index}" style="--note-rotate:${seededNoise(position * 17 + link.index * 5 + order) * 2.4}deg;--note-shift:${seededNoise(position * 11 + link.index * 3 + order) * 3.5}px"><span>${cleanToken(replay.tokens[link.index])}</span>${makeWeightScribble(link, order)}</div>`).join("");
 }
 
 function seededNoise(seed) {
