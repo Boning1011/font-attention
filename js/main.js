@@ -4,20 +4,17 @@ const $ = (selector) => document.querySelector(selector);
 const canvas = $("#text-canvas");
 const svg = $("#attention-arcs");
 const marksSvg = $("#attention-marks");
+const marginNotes = $("#margin-notes");
 const timeline = $("#timeline");
 const playButton = $("#play-toggle");
 const speedButton = $("#speed");
 const fontSelect = $("#font-select");
 const mappingSelect = $("#mapping-select");
-const variationControl = $("#variation-control");
-const motionControl = $("#motion-control");
-const linksControl = $("#links-control");
-const tensionControl = $("#tension-control");
 const speeds = [0.5, 1, 1.5, 2];
-const TOKEN_INTERVAL_MS = 160;
+const TOKEN_INTERVAL_MS = 210;
 const END_HOLD_MS = 3200;
-const FONT_STORAGE_KEY = "font-attention:typeface:v5";
-const TUNING_STORAGE_KEY = "font-attention:tuning:v2";
+const FONT_STORAGE_KEY = "font-attention:typeface:v6";
+const TUNING_STORAGE_KEY = "font-attention:tuning:v3";
 const FONT_PRESETS = {
   mixed: {
     family: "Courier Prime",
@@ -87,10 +84,10 @@ function loadTuning() {
     if (!stored || typeof stored !== "object") return { ...DEFAULT_TUNING };
     return {
       mapping: stored.mapping in MAPPING_PRESETS ? stored.mapping : DEFAULT_TUNING.mapping,
-      variation: clamp(Number(stored.variation) || DEFAULT_TUNING.variation, [60, 180]),
-      motion: clamp(Number(stored.motion) || 0, [0, 100]),
-      links: clamp(Number(stored.links) || DEFAULT_TUNING.links, [2, 6]),
-      tension: clamp(Number(stored.tension) || 0, [0, 100]),
+      variation: DEFAULT_TUNING.variation,
+      motion: DEFAULT_TUNING.motion,
+      links: DEFAULT_TUNING.links,
+      tension: DEFAULT_TUNING.tension,
     };
   } catch {
     return { ...DEFAULT_TUNING };
@@ -166,7 +163,6 @@ async function setTypeface(value, persist = true) {
   const preset = FONT_PRESETS[value] || FONT_PRESETS.mixed;
   canvas.dataset.font = value in FONT_PRESETS ? value : "mixed";
   fontSelect.value = canvas.dataset.font;
-  $("#active-token").style.fontFamily = `"${preset.family}", sans-serif`;
   if (persist) localStorage.setItem(FONT_STORAGE_KEY, canvas.dataset.font);
   const loads = Array.isArray(preset.load) ? preset.load : [preset.load];
   await Promise.all(loads.map((font) => document.fonts.load(font)));
@@ -176,32 +172,8 @@ async function setTypeface(value, persist = true) {
   }
 }
 
-function setMotionVariables() {
-  const amount = tuning.motion / 100;
-  const root = document.documentElement.style;
-  root.setProperty("--enter-y", `${(-0.2 * amount).toFixed(3)}em`);
-  root.setProperty("--enter-scale", String((1 + 0.32 * amount).toFixed(3)));
-  root.setProperty("--enter-blur", `${(4.8 * amount).toFixed(2)}px`);
-  root.setProperty("--enter-settle-y", `${(0.04 * amount).toFixed(3)}em`);
-  root.setProperty("--enter-settle-scale", String((1 - 0.02 * amount).toFixed(3)));
-  root.setProperty("--pop-y", `${(-0.16 * amount).toFixed(3)}em`);
-  root.setProperty("--pop-scale", String((1 + 0.12 * amount).toFixed(3)));
-  root.setProperty("--pop-blur", `${(0.8 * amount).toFixed(2)}px`);
-  root.setProperty("--pop-settle-y", `${(0.032 * amount).toFixed(3)}em`);
-  root.setProperty("--pop-settle-scale", String((1 - 0.012 * amount).toFixed(3)));
-}
-
 function syncTuningControls() {
   mappingSelect.value = tuning.mapping;
-  variationControl.value = tuning.variation;
-  motionControl.value = tuning.motion;
-  linksControl.value = tuning.links;
-  tensionControl.value = tuning.tension;
-  variationControl.nextElementSibling.value = `${tuning.variation}%`;
-  motionControl.nextElementSibling.value = `${tuning.motion}%`;
-  linksControl.nextElementSibling.value = String(tuning.links);
-  tensionControl.nextElementSibling.value = `${tuning.tension}%`;
-  setMotionVariables();
 }
 
 function getVisibleLinks() {
@@ -226,7 +198,7 @@ function restoreBaseAxes() {
 function clearEffects() {
   effectTimers.forEach(clearTimeout);
   effectTimers = [];
-  tokenElements.forEach((element) => element.classList.remove("entering", "popping"));
+  tokenElements.forEach((element) => element.classList.remove("shifting"));
   restoreBaseAxes();
 }
 
@@ -269,19 +241,6 @@ function pickDisturbedTokens() {
   return [...disturbed];
 }
 
-function triggerSympatheticPops() {
-  const linked = replay.frames[position].links.map(({ index }) => index);
-  const picks = new Set(linked);
-  for (let offset = 1; offset <= position && picks.size < 2; offset += 1) {
-    const candidate = (position * 7 + offset * 11) % position;
-    picks.add(candidate);
-  }
-  [...picks].slice(0, 2).forEach((index, order) => {
-    const element = tokenElements[index];
-    if (element) replayAnimation(element, "popping", 410, order * 38);
-  });
-}
-
 function oscillateDisturbedTokens() {
   const disturbed = position > 0 ? pickDisturbedTokens() : [];
   disturbed.push(position);
@@ -306,26 +265,22 @@ function oscillateDisturbedTokens() {
 
 function triggerMotion() {
   if (reducedMotion) return;
-  const active = tokenElements[position];
   oscillateDisturbedTokens();
-  if (active && position % 3 === 0) replayAnimation(active, "entering", 440);
-  if (position > 0 && position % 3 === 0) {
-    triggerSympatheticPops();
-  }
+  const picks = [position, ...getVisibleLinks().slice(0, 2).map(({ index }) => index)];
+  picks.forEach((index, order) => {
+    const element = tokenElements[index];
+    if (element) {
+      element.style.setProperty("--shift-x", `${(seededNoise(position * 31 + index * 7) * 1.15).toFixed(2)}px`);
+      element.style.setProperty("--shift-y", `${(seededNoise(position * 19 + index * 11) * 1.05).toFixed(2)}px`);
+      element.style.setProperty("--shift-r", `${(seededNoise(position * 23 + index * 13) * .55).toFixed(2)}deg`);
+      replayAnimation(element, "shifting", 300, order * 14);
+    }
+  });
 }
 
 function renderInspector() {
-  const frame = replay.frames[position];
-  const mapped = mapAttentionAxes(frame.axes, position);
-  $("#active-token").textContent = cleanToken(replay.tokens[position]);
-  $("#active-token").style.fontFamily = getComputedStyle(tokenElements[position]).fontFamily;
-  const definitions = [
-    ["WGHT", mapped.wght, 100, 1000], ["WDTH", mapped.wdth, 25, 151],
-    ["SLNT", mapped.slnt, -10, 0], ["OPSZ", mapped.opsz, 8, 144],
-  ];
-  $("#axis-list").innerHTML = definitions.map(([name,value,min,max]) => `<div class="axis-row"><span>${name}</span><div class="axis-track"><div class="axis-fill" style="width:${((value-min)/(max-min))*100}%"></div></div><span class="axis-value">${Number(value).toFixed(name === "SLNT" ? 1 : 0)}</span></div>`).join("");
   const links = getVisibleLinks();
-  $("#link-list").innerHTML = links.length ? links.map((link) => `<div class="link-row"><span>${cleanToken(replay.tokens[link.index])}</span><span>${Math.round(link.weight*100)}%</span></div>`).join("") : '<div class="link-row"><span>beginning of sequence</span><span>—</span></div>';
+  $("#margin-link-list").innerHTML = links.map((link, order) => `<div class="margin-link${order === 0 ? " strongest" : ""}" data-link-index="${link.index}" style="--note-rotate:${seededNoise(position * 17 + link.index * 5 + order) * 2.4}deg"><span>${cleanToken(replay.tokens[link.index])}</span><small>${Math.round(link.weight * 100)}%</small></div>`).join("");
 }
 
 function seededNoise(seed) {
@@ -363,7 +318,7 @@ function makeInkStroke(start, end, link, order, maximumWeight, redInk = false) {
     const next = points[index + 1];
     const pressure = .72 + Math.sin((index / pointCount) * Math.PI) * .38 + seededNoise(index + link.index * 11) * .13;
     const dry = (index + order * 3 + link.index) % (redInk ? 7 : 11) === 0;
-    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${(baseWidth * pressure).toFixed(2)}" opacity="${(dry ? .24 : .35 + strength * .46).toFixed(2)}"/>`;
+    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${(baseWidth * pressure).toFixed(2)}" opacity="${(dry ? .42 : .58 + strength * .36).toFixed(2)}"/>`;
   }).join("");
   const flecks = points.filter((_, index) => index > 2 && index < points.length - 3 && (index + link.index) % 9 === 0).map((point, index) =>
     `<circle cx="${(point.x + seededNoise(index + order) * 1.8).toFixed(2)}" cy="${(point.y + seededNoise(index + link.index) * 1.8).toFixed(2)}" r="${(.25 + strength * .32).toFixed(2)}" opacity=".32"/>`
@@ -457,7 +412,7 @@ function makeStrikeout(rect, stageRect, seed) {
   const right = rect.right - stageRect.left + 6;
   const centerY = rect.top + rect.height * .56 - stageRect.top;
   let segments = "";
-  for (let pass = 0; pass < 4; pass += 1) {
+  for (let pass = 0; pass < 5; pass += 1) {
     const reverse = pass % 2 === 1;
     const count = Math.max(7, Math.min(18, Math.round((right - left) / 8)));
     const points = Array.from({ length: count + 1 }, (_, index) => {
@@ -465,18 +420,18 @@ function makeStrikeout(rect, stageRect, seed) {
       const x = left + (right - left) * (reverse ? 1 - progress : progress);
       return {
         x: x + seededNoise(seed * 13 + pass * 37 + index) * 1.7,
-        y: centerY + (pass - 1.5) * 2.1 + Math.sin(progress * Math.PI * (2 + pass)) * 1.8 + seededNoise(seed * 19 + index) * 1.4,
+        y: centerY + (pass - 2) * 1.75 + Math.sin(progress * Math.PI * (2 + pass)) * 1.45 + seededNoise(seed * 19 + index) * 1.15,
       };
     });
     segments += points.slice(0, -1).map((point, index) => {
       const next = points[index + 1];
-      const width = 1.9 + (seededNoise(seed + pass * 23 + index) + 1) * 1.35;
-      const opacity = (index + pass + seed) % 9 === 0 ? .2 : .64 + pass * .055;
+      const width = 2.7 + (seededNoise(seed + pass * 23 + index) + 1) * 1.4;
+      const opacity = (index + pass + seed) % 11 === 0 ? .88 : 1;
       return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" style="--draw:${index + pass * count};--mark-opacity:${opacity.toFixed(2)}"/>`;
     }).join("");
   }
   const blotX = left + (right - left) * (.28 + (seed % 4) * .12);
-  return `<g class="strikeout">${segments}<ellipse cx="${blotX.toFixed(2)}" cy="${(centerY + seededNoise(seed) * 2).toFixed(2)}" rx="${(2.4 + Math.abs(seededNoise(seed + 8)) * 3).toFixed(2)}" ry="${(1.3 + Math.abs(seededNoise(seed + 11)) * 1.8).toFixed(2)}" opacity=".48"/></g>`;
+  return `<g class="strikeout">${segments}<ellipse cx="${blotX.toFixed(2)}" cy="${(centerY + seededNoise(seed) * 2).toFixed(2)}" rx="${(4 + Math.abs(seededNoise(seed + 8)) * 4.5).toFixed(2)}" ry="${(2.4 + Math.abs(seededNoise(seed + 11)) * 2.5).toFixed(2)}" opacity=".95"/></g>`;
 }
 
 function renderArcs() {
@@ -486,6 +441,7 @@ function renderArcs() {
   const isComplete = position === tokenElements.length - 1;
   svg.classList.toggle("settled", isComplete);
   marksSvg.classList.toggle("settled", isComplete);
+  marginNotes.classList.toggle("settled", isComplete);
   if (isComplete) return;
   const activeRect = active.getBoundingClientRect();
   svg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
@@ -495,14 +451,20 @@ function renderArcs() {
   const activeShape = tokenShape(activeRect, stageRect, "ellipse");
   const decoratedLinks = links.map((link, order) => {
     const target = tokenElements[link.index];
-    if (!target) return null;
+    const note = $(`.margin-link[data-link-index="${link.index}"]`);
+    if (!target || !note) return null;
     const rect = target.getBoundingClientRect();
+    const noteRect = note.getBoundingClientRect();
     const mark = linkedMark(link, order);
-    return { link, order, rect, mark, shape: tokenShape(rect, stageRect, mark.includes("circle") ? "ellipse" : "rect") };
+    return {
+      link, order, rect, mark,
+      shape: tokenShape(rect, stageRect, mark.includes("circle") ? "ellipse" : "rect"),
+      noteShape: tokenShape(noteRect, stageRect, "rect"),
+    };
   }).filter(Boolean);
   const filters = links.map((link, order) => `<filter id="ink-wobble-${order}" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".015 .11" numOctaves="2" seed="${position + link.index + order + 3}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".7"/></filter>`).join("");
-  const strokes = decoratedLinks.map(({ link, order, shape }) => {
-    const { start, end } = closestConnection(activeShape, shape);
+  const strokes = decoratedLinks.map(({ link, order, shape, noteShape }) => {
+    const { start, end } = closestConnection(shape, noteShape);
     return makeInkStroke(start, end, link, order, maximumWeight, order === 0);
   }).join("");
   const linkedAnnotations = decoratedLinks.map(({ link, order, rect, mark, shape }) => {
@@ -543,7 +505,6 @@ async function start() {
   syncTuningControls();
   timeline.max = replay.tokens.length-1;
   $("#model-label").textContent = `${replay.meta.model.toUpperCase()} / ${replay.meta.source}`;
-  $("#method-copy").textContent = replay.meta.method;
   const savedTypeface = localStorage.getItem(FONT_STORAGE_KEY) || "mixed";
   await setTypeface(savedTypeface, false);
   await document.fonts.ready;
@@ -558,10 +519,5 @@ timeline.addEventListener("input", (event) => { setPosition(event.target.value);
 speedButton.addEventListener("click", () => { speedIndex = (speedIndex+1)%speeds.length; speedButton.textContent = `${speeds[speedIndex]}×`; });
 fontSelect.addEventListener("change", (event) => setTypeface(event.target.value));
 mappingSelect.addEventListener("change", (event) => { tuning.mapping = event.target.value; applyTuning(); });
-variationControl.addEventListener("input", (event) => { tuning.variation = Number(event.target.value); applyTuning(); });
-motionControl.addEventListener("input", (event) => { tuning.motion = Number(event.target.value); applyTuning(); });
-linksControl.addEventListener("input", (event) => { tuning.links = Number(event.target.value); applyTuning(); });
-tensionControl.addEventListener("input", (event) => { tuning.tension = Number(event.target.value); applyTuning(); });
-$("#reset-tuning").addEventListener("click", () => { tuning = { ...DEFAULT_TUNING }; applyTuning(); });
 window.addEventListener("resize", () => requestAnimationFrame(renderArcs));
 start().catch((error) => { canvas.innerHTML = `<p>Could not load attention replay.<br><small>${error.message}</small></p>`; });

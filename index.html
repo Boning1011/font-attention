@@ -8,7 +8,7 @@
     <title>Font Attention — language model attention as typography</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cutive+Mono&family=DM+Mono:wght@300;400;500&family=Special+Elite&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cutive+Mono&family=DM+Mono:wght@300;400;500&family=Reenie+Beanie&family=Special+Elite&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
@@ -24,6 +24,10 @@
           <svg id="attention-arcs" class="attention-arcs" aria-hidden="true"></svg>
           <div id="text-canvas" class="text-canvas" aria-live="polite"></div>
           <svg id="attention-marks" class="attention-marks" aria-hidden="true"></svg>
+          <aside id="margin-notes" class="margin-notes" aria-label="Strongest token links">
+            <h2>Strongest token links:</h2>
+            <div id="margin-link-list"></div>
+          </aside>
           <div class="transport">
             <button id="play-toggle" class="transport-button" type="button" aria-label="Pause replay">PAUSE</button>
             <button id="restart" class="transport-button secondary" type="button">RESTART</button>
@@ -32,11 +36,10 @@
             <button id="speed" class="speed-button" type="button" aria-label="Change replay speed">1×</button>
           </div>
         </section>
-        <aside class="inspector" aria-label="Attention inspector">
-          <div class="inspector-heading"><span>02 / INSPECTOR</span><span class="live-dot">DATA</span></div>
-          <div class="active-token-block"><span class="eyebrow">ACTIVE TOKEN</span><strong id="active-token">—</strong></div>
+        <aside class="inspector" aria-label="Display settings">
+          <div class="inspector-heading"><span>02 / SETTINGS</span><span class="live-dot">LIVE</span></div>
           <label class="font-panel">
-            <span class="eyebrow">TYPEFACE</span>
+            <span class="eyebrow">TYPE INTERFACE</span>
             <select id="font-select" aria-label="Visualization typeface">
               <option value="mixed">Typewriter Mixed Case</option>
               <option value="special-elite">Special Elite</option>
@@ -45,7 +48,7 @@
             </select>
           </label>
           <div class="tuning-panel">
-            <div class="panel-title"><span class="eyebrow">MAPPING + EFFECTS</span><button id="reset-tuning" type="button">RESET</button></div>
+            <span class="eyebrow">MAPPING EFFECT</span>
             <label class="mapping-select"><span>MAPPING</span><select id="mapping-select" aria-label="Attention mapping preset">
               <option value="balanced">Balanced</option>
               <option value="weight">Weight led</option>
@@ -53,21 +56,6 @@
               <option value="italic">Italic pulse</option>
               <option value="optical">Optical contrast</option>
             </select></label>
-            <label class="tuning-row"><span>VARIATION</span><input id="variation-control" type="range" min="60" max="180" value="135" /><output>135%</output></label>
-            <label class="tuning-row"><span>MOTION</span><input id="motion-control" type="range" min="0" max="100" value="25" /><output>25%</output></label>
-            <label class="tuning-row"><span>LINKS</span><input id="links-control" type="range" min="2" max="6" value="5" /><output>5</output></label>
-            <label class="tuning-row"><span>TENSION</span><input id="tension-control" type="range" min="0" max="100" value="55" /><output>55%</output></label>
-          </div>
-          <div class="axis-panel"><span class="eyebrow">VARIABLE FONT AXES</span><div id="axis-list"></div></div>
-          <div class="links-panel"><span class="eyebrow">STRONGEST CONTEXT LINKS</span><div id="link-list"></div><p class="links-note">Raw attention percentages · arcs use compressed visual contrast.</p></div>
-          <div class="method-panel">
-            <span class="eyebrow">METHOD</span>
-            <p id="method-copy">Loading the recorded attention tensor…</p>
-            <span class="eyebrow effects-label">ACTIVE MOTION SYSTEM</span>
-            <div class="effect-list" aria-label="Active animation effects">
-              <span>SPRING ENTRANCE</span><span>SYMPATHETIC POPS</span>
-              <span>SELECTIVE OSCILLATION</span><span>STABILITY + RIPPLE</span>
-            </div>
           </div>
         </aside>
       </main>
