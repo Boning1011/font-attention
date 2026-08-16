@@ -324,16 +324,18 @@ function makeInkStroke(start, end, link, order, maximumWeight, redInk = false) {
   const normalX = -dy / distance;
   const normalY = dx / distance;
   const sameLine = Math.abs(dy) < 18;
-  const bend = sameLine
-    ? (18 + distance * .055) * (order % 2 ? -1 : 1)
-    : (14 + Math.min(distance, 460) * .045) * (order % 2 ? -1 : 1);
-  const pointCount = Math.max(14, Math.min(34, Math.round(distance / 24)));
+  const distanceScale = Math.max(.08, Math.min(1, (distance - 8) / 210));
+  const shortStrokeScale = Math.max(.42, Math.min(1, distance / 82));
+  const bend = (.35 + distanceScale * (sameLine ? 4.2 : 7.2)) * (order % 2 ? -1 : 1);
+  const pointCount = Math.max(4, Math.min(30, Math.round(distance / 26)));
   const points = [];
   for (let index = 0; index <= pointCount; index += 1) {
     const progress = index / pointCount;
     const envelope = Math.sin(Math.PI * progress);
-    const drift = Math.sin(progress * Math.PI * (2.2 + order * .31) + order * .8) * (1.2 + tension * 2.1);
-    const grain = seededNoise((position + 1) * 101 + link.index * 37 + order * 17 + index) * (0.55 + tension * .8) * envelope;
+    const drift = Math.sin(progress * Math.PI * (1.35 + order * .17) + order * .8)
+      * (.18 + tension * .58) * shortStrokeScale * envelope;
+    const grain = seededNoise((position + 1) * 101 + link.index * 37 + order * 17 + index)
+      * (.18 + tension * .34) * shortStrokeScale * envelope;
     points.push({
       x: start.x + dx * progress + normalX * (bend * envelope + drift + grain),
       y: start.y + dy * progress + normalY * (bend * envelope + drift + grain),
@@ -341,12 +343,13 @@ function makeInkStroke(start, end, link, order, maximumWeight, redInk = false) {
   }
   const compressed = Math.pow(link.weight / maximumWeight, .28);
   const strength = .28 + compressed * .72;
-  const baseWidth = (1 + strength * 1.65) * (redInk ? .78 : 1);
+  const baseWidth = (1 + strength * 1.65) * (redInk ? .78 : 1) * (.78 + shortStrokeScale * .22);
+  const strokeVisibility = .62 + shortStrokeScale * .38;
   const segments = points.slice(0, -1).map((point, index) => {
     const next = points[index + 1];
     const pressure = .72 + Math.sin((index / pointCount) * Math.PI) * .38 + seededNoise(index + link.index * 11) * .13;
     const dry = (index + order * 3 + link.index) % (redInk ? 7 : 11) === 0;
-    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${(baseWidth * pressure).toFixed(2)}" opacity="${(dry ? .42 : .58 + strength * .36).toFixed(2)}"/>`;
+    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${(baseWidth * pressure).toFixed(2)}" opacity="${((dry ? .42 : .58 + strength * .36) * strokeVisibility).toFixed(2)}"/>`;
   }).join("");
   const flecks = points.filter((_, index) => index > 2 && index < points.length - 3 && (index + link.index) % 9 === 0).map((point, index) =>
     `<circle cx="${(point.x + seededNoise(index + order) * 1.8).toFixed(2)}" cy="${(point.y + seededNoise(index + link.index) * 1.8).toFixed(2)}" r="${(.25 + strength * .32).toFixed(2)}" opacity=".32"/>`
