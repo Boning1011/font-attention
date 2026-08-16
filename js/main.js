@@ -15,15 +15,23 @@ const tensionControl = $("#tension-control");
 const speeds = [0.5, 1, 1.5, 2];
 const TOKEN_INTERVAL_MS = 160;
 const END_HOLD_MS = 3200;
-const FONT_STORAGE_KEY = "font-attention:typeface:v2";
+const FONT_STORAGE_KEY = "font-attention:typeface:v3";
 const TUNING_STORAGE_KEY = "font-attention:tuning:v2";
 const FONT_PRESETS = {
+  mixed: {
+    family: "Recursive",
+    load: ['72px "Recursive"', '72px "Roboto Flex"', '72px "Roboto Serif"', '72px "InterVariable"', '72px "Archivo"'],
+  },
   "roboto-flex": { family: "Roboto Flex", load: '72px "Roboto Flex"' },
   recursive: { family: "Recursive", load: '72px "Recursive"' },
   "roboto-serif": { family: "Roboto Serif", load: '72px "Roboto Serif"' },
   inter: { family: "InterVariable", load: '72px "InterVariable"' },
   archivo: { family: "Archivo", load: '72px "Archivo"' },
 };
+const TOKEN_FONT_PATTERN = [
+  "recursive", "roboto-serif", "recursive", "inter", "archivo", "recursive",
+  "roboto-flex", "recursive", "roboto-serif", "archivo", "recursive", "inter",
+];
 const DEFAULT_TUNING = { mapping: "balanced", variation: 135, motion: 25, links: 5, tension: 55 };
 const MAPPING_PRESETS = {
   balanced: { wght: 1, wdth: 1, slnt: 1, opsz: 1 },
@@ -114,6 +122,7 @@ function createTokens() {
     const span = document.createElement("span");
     span.className = "token future";
     span.dataset.index = String(index);
+    span.dataset.tokenFont = TOKEN_FONT_PATTERN[index % TOKEN_FONT_PATTERN.length];
     span.textContent = token.replace(/\n/g, "");
     const [printX, printY, inkDensity] = PRINT_PATTERN[index % PRINT_PATTERN.length];
     span.style.setProperty("--print-x", `${printX}px`);
@@ -170,7 +179,8 @@ async function setTypeface(value, persist = true) {
   fontSelect.value = canvas.dataset.font;
   $("#active-token").style.fontFamily = `"${preset.family}", sans-serif`;
   if (persist) localStorage.setItem(FONT_STORAGE_KEY, canvas.dataset.font);
-  await document.fonts.load(preset.load);
+  const loads = Array.isArray(preset.load) ? preset.load : [preset.load];
+  await Promise.all(loads.map((font) => document.fonts.load(font)));
   if (tokenElements.length) {
     lockTokenWidths();
     requestAnimationFrame(renderArcs);
@@ -318,6 +328,7 @@ function renderInspector() {
   const frame = replay.frames[position];
   const mapped = mapAttentionAxes(frame.axes, position);
   $("#active-token").textContent = cleanToken(replay.tokens[position]);
+  $("#active-token").style.fontFamily = getComputedStyle(tokenElements[position]).fontFamily;
   const definitions = [
     ["WGHT", mapped.wght, 100, 1000], ["WDTH", mapped.wdth, 25, 151],
     ["SLNT", mapped.slnt, -10, 0], ["OPSZ", mapped.opsz, 8, 144],
@@ -340,16 +351,16 @@ function renderArcs() {
     const target = tokenElements[link.index];
     if (!target) return "";
     const rect = target.getBoundingClientRect();
-    const fan = (order - (links.length - 1) / 2) * 5;
-    const x1 = activeRect.left + activeRect.width / 2 - stageRect.left + fan;
-    const y1 = activeRect.top - stageRect.top - 7 - order * 1.5;
+    const fan = (order - (links.length - 1) / 2) * 13;
+    const x1 = activeRect.left + activeRect.width / 2 - stageRect.left;
+    const y1 = activeRect.top + activeRect.height * 0.16 - stageRect.top;
     const x2 = rect.left + rect.width / 2 - stageRect.left;
-    const y2 = rect.top - stageRect.top - 7;
+    const y2 = rect.top + rect.height * 0.16 - stageRect.top;
     const distanceLift = Math.abs(x1 - x2) * 0.18 + Math.abs(y1 - y2) * 0.3;
     const lift = Math.max(16, Math.min(175, distanceLift * (0.45 + tension * 1.15)));
     const compressed = Math.pow(link.weight / maximumWeight, 0.28);
     const visualStrength = 0.28 + compressed * 0.72;
-    return `<path d="M ${x1} ${y1} C ${x1} ${y1-lift}, ${x2} ${y2-lift}, ${x2} ${y2}" stroke-width="${1.15+visualStrength*2.45}" opacity="${.3+visualStrength*.5}"/>`;
+    return `<path d="M ${x1} ${y1} C ${x1+fan} ${y1-lift}, ${x2+fan*.35} ${y2-lift}, ${x2} ${y2}" stroke-width="${1.15+visualStrength*2.45}" opacity="${.3+visualStrength*.5}"/>`;
   }).join("");
 }
 
@@ -380,7 +391,7 @@ async function start() {
   timeline.max = replay.tokens.length-1;
   $("#model-label").textContent = `${replay.meta.model.toUpperCase()} / ${replay.meta.source}`;
   $("#method-copy").textContent = replay.meta.method;
-  const savedTypeface = localStorage.getItem(FONT_STORAGE_KEY) || "recursive";
+  const savedTypeface = localStorage.getItem(FONT_STORAGE_KEY) || "mixed";
   await setTypeface(savedTypeface, false);
   await document.fonts.ready;
   createTokens();
