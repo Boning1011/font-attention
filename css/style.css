@@ -109,13 +109,23 @@ main { min-height: 0; display: grid; grid-template-columns: minmax(0,1fr) 244px;
   opacity: var(--ink-density,.94);
   transform-origin: 50% 75%;
   rotate: var(--print-rotate, 0deg);
-  text-shadow: var(--print-shadow,.012em 0 rgba(27,26,23,.12));
+  text-shadow:
+    var(--print-shadow,.012em 0 rgba(27,26,23,.14)),
+    -.012em .008em rgba(27,26,23,.11),
+    .006em -.009em rgba(27,26,23,.08);
   transition: color .24s, opacity .24s, filter .18s, transform .18s, font-variation-settings 55ms linear;
   font-variation-settings: "wght" var(--wght,420), "wdth" var(--wdth,100), "slnt" var(--slnt,0), "opsz" var(--opsz,64);
 }
 .token.future { opacity: 0; }
-.token.active { color: var(--ink); filter: contrast(1.18); text-shadow: .025em 0 rgba(27,26,23,.27), -.012em .008em rgba(27,26,23,.13); }
-.token.linked { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
+.token.active { color: var(--ink); filter: contrast(1.18); text-shadow: .026em 0 rgba(27,26,23,.31), -.014em .01em rgba(27,26,23,.16), 0 -.01em rgba(27,26,23,.09); }
+.token[data-token-case="upper"] { text-transform: uppercase; letter-spacing: -.035em; }
+
+.text-canvas[data-font="special-elite"] .token,
+.text-canvas[data-font="mixed"] .token[data-token-font="special-elite"] { font-family: "Special Elite", "Courier New", monospace; }
+.text-canvas[data-font="courier-prime"] .token,
+.text-canvas[data-font="mixed"] .token[data-token-font="courier-prime"] { font-family: "Courier Prime", "Courier New", monospace; }
+.text-canvas[data-font="cutive-mono"] .token,
+.text-canvas[data-font="mixed"] .token[data-token-font="cutive-mono"] { font-family: "Cutive Mono", "Courier New", monospace; }
 
 .text-canvas[data-font="roboto-flex"] .token,
 .text-canvas[data-font="mixed"] .token[data-token-font="roboto-flex"] { font-family: "Roboto Flex", sans-serif; }
@@ -160,6 +170,8 @@ main { min-height: 0; display: grid; grid-template-columns: minmax(0,1fr) 244px;
 .attention-arcs.settled { opacity: 0; }
 .attention-arcs line { stroke: var(--ink); stroke-linecap: round; }
 .attention-arcs circle { fill: var(--ink); }
+.attention-arcs .active-circle line { stroke: rgba(27,26,23,.9); }
+.attention-arcs .linked-circle line, .attention-arcs .hand-underline line { stroke: rgba(27,26,23,.82); }
 
 .transport { display: grid; grid-template-columns: auto auto 1fr auto auto; gap: 12px; align-items: center; padding-top: 13px; border-top: 1px solid var(--hairline); }
 .transport-button, .speed-button { padding: 5px 7px; border: 0; background: transparent; color: var(--ink); cursor: pointer; font-size: 8px; letter-spacing: .1em; }
