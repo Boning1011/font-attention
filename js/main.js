@@ -281,9 +281,25 @@ function triggerMotion() {
   });
 }
 
+function makeWeightScribble(link, order) {
+  const length = 9 + Math.min(1, link.weight) * 53;
+  const points = Array.from({ length: 10 }, (_, index) => {
+    const progress = index / 9;
+    const x = progress * 100;
+    const y = 5.5 + Math.sin(progress * Math.PI * (2.2 + order * .17)) * .75
+      + seededNoise(position * 43 + link.index * 17 + order * 7 + index) * 1.15;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  const echo = points.split(" ").map((point, index) => {
+    const [x, y] = point.split(",").map(Number);
+    return `${x.toFixed(1)},${(y + .9 + seededNoise(link.index * 29 + index) * .55).toFixed(1)}`;
+  }).join(" ");
+  return `<span class="weight-scribble" style="--weight-length:${length.toFixed(1)}px" role="img" aria-label="${Math.round(link.weight * 100)} percent attention weight"><svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><polyline points="${points}"/><polyline class="echo" points="${echo}"/></svg></span>`;
+}
+
 function renderInspector() {
   const links = getVisibleLinks();
-  $("#margin-link-list").innerHTML = links.map((link, order) => `<div class="margin-link${order === 0 ? " strongest" : ""}" data-link-index="${link.index}" style="--note-rotate:${seededNoise(position * 17 + link.index * 5 + order) * 2.4}deg"><span>${cleanToken(replay.tokens[link.index])}</span><small>${Math.round(link.weight * 100)}%</small></div>`).join("");
+  $("#margin-link-list").innerHTML = links.map((link, order) => `<div class="margin-link${order === 0 ? " strongest" : ""}" data-link-index="${link.index}" style="--note-rotate:${seededNoise(position * 17 + link.index * 5 + order) * 2.4}deg"><span>${cleanToken(replay.tokens[link.index])}</span>${makeWeightScribble(link, order)}</div>`).join("");
 }
 
 function seededNoise(seed) {
@@ -452,20 +468,17 @@ function renderArcs() {
   const activeShape = tokenShape(activeRect, stageRect, "ellipse");
   const decoratedLinks = links.map((link, order) => {
     const target = tokenElements[link.index];
-    const note = $(`.margin-link[data-link-index="${link.index}"]`);
-    if (!target || !note) return null;
+    if (!target) return null;
     const rect = target.getBoundingClientRect();
-    const noteRect = note.getBoundingClientRect();
     const mark = linkedMark(link, order);
     return {
       link, order, rect, mark,
       shape: tokenShape(rect, stageRect, mark.includes("circle") ? "ellipse" : "rect"),
-      noteShape: tokenShape(noteRect, stageRect, "rect"),
     };
   }).filter(Boolean);
   const filters = links.map((link, order) => `<filter id="ink-wobble-${order}" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".015 .11" numOctaves="2" seed="${position + link.index + order + 3}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".7"/></filter>`).join("");
-  const strokes = decoratedLinks.map(({ link, order, shape, noteShape }) => {
-    const { start, end } = closestConnection(shape, noteShape);
+  const strokes = decoratedLinks.map(({ link, order, shape }) => {
+    const { start, end } = closestConnection(activeShape, shape);
     return makeInkStroke(start, end, link, order, maximumWeight, order === 0);
   }).join("");
   const linkedAnnotations = decoratedLinks.map(({ link, order, rect, mark, shape }) => {
