@@ -3,6 +3,7 @@ import "../css/style.css";
 const $ = (selector) => document.querySelector(selector);
 const canvas = $("#text-canvas");
 const svg = $("#attention-arcs");
+const marksSvg = $("#attention-marks");
 const timeline = $("#timeline");
 const playButton = $("#play-toggle");
 const speedButton = $("#speed");
@@ -15,25 +16,21 @@ const tensionControl = $("#tension-control");
 const speeds = [0.5, 1, 1.5, 2];
 const TOKEN_INTERVAL_MS = 160;
 const END_HOLD_MS = 3200;
-const FONT_STORAGE_KEY = "font-attention:typeface:v4";
+const FONT_STORAGE_KEY = "font-attention:typeface:v5";
 const TUNING_STORAGE_KEY = "font-attention:tuning:v2";
 const FONT_PRESETS = {
   mixed: {
     family: "Courier Prime",
-    load: ['72px "Courier Prime"', '72px "Special Elite"', '72px "Cutive Mono"', '72px "Recursive"', '72px "Roboto Serif"'],
+    load: ['72px "Courier Prime"', '72px "Special Elite"', '72px "Cutive Mono"'],
   },
   "special-elite": { family: "Special Elite", load: '72px "Special Elite"' },
   "courier-prime": { family: "Courier Prime", load: '72px "Courier Prime"' },
   "cutive-mono": { family: "Cutive Mono", load: '72px "Cutive Mono"' },
-  "roboto-flex": { family: "Roboto Flex", load: '72px "Roboto Flex"' },
-  recursive: { family: "Recursive", load: '72px "Recursive"' },
-  "roboto-serif": { family: "Roboto Serif", load: '72px "Roboto Serif"' },
-  inter: { family: "InterVariable", load: '72px "InterVariable"' },
-  archivo: { family: "Archivo", load: '72px "Archivo"' },
 };
 const TOKEN_FONT_PATTERN = [
-  "courier-prime", "special-elite", "cutive-mono", "recursive", "courier-prime", "roboto-serif",
-  "special-elite", "courier-prime", "recursive", "cutive-mono", "courier-prime", "special-elite",
+  "courier-prime", "special-elite", "cutive-mono", "courier-prime",
+  "special-elite", "cutive-mono", "courier-prime", "special-elite",
+  "cutive-mono", "courier-prime", "special-elite", "cutive-mono",
 ];
 const UPPERCASE_PATTERN = new Set([4, 7, 8, 11, 12, 15, 16, 26, 30, 32, 37, 41]);
 const DEFAULT_TUNING = { mapping: "balanced", variation: 135, motion: 25, links: 5, tension: 55 };
@@ -154,24 +151,10 @@ function applyAxes(element, axes) {
     element.style.setProperty(`--${axis}`, String(clamp(Number(mapped[axis]), limits)));
   }
   const widthNorm = (mapped.wdth - 25) / 126;
-  const opticalNorm = (mapped.opsz - 8) / 136;
   const slant = mapped.slnt;
-  element.style.setProperty("--recursive-wght", String(clamp(mapped.wght, [300, 1000])));
-  element.style.setProperty("--recursive-slnt", String(slant * 1.5));
-  element.style.setProperty("--casl", String((0.1 + widthNorm * 0.55).toFixed(3)));
-  element.style.setProperty("--crsv", slant < -5 ? "1" : ".5");
-  element.style.setProperty("--mono-axis", String((0.72 + (1 - opticalNorm) * 0.28).toFixed(3)));
-  element.style.setProperty("--serif-wght", String(clamp(mapped.wght, [100, 900])));
-  element.style.setProperty("--serif-wdth", String((50 + widthNorm * 100).toFixed(2)));
-  element.style.setProperty("--serif-slant", `${slant}deg`);
-  element.style.setProperty("--grad", String((-50 + opticalNorm * 150).toFixed(2)));
-  element.style.setProperty("--inter-wght", String(clamp(mapped.wght, [100, 900])));
-  element.style.setProperty("--inter-opsz", String((14 + opticalNorm * 18).toFixed(2)));
-  element.style.setProperty("--inter-slant", `${slant}deg`);
-  element.style.setProperty("--archivo-wght", String(clamp(mapped.wght, [100, 900])));
-  element.style.setProperty("--archivo-wdth", String((62 + widthNorm * 63).toFixed(2)));
-  element.style.setProperty("--archivo-slant", `${slant}deg`);
-  element.style.setProperty("--archivo-track", `${(-0.065 + opticalNorm * 0.045).toFixed(4)}em`);
+  element.style.setProperty("--typewriter-wght", String(clamp(mapped.wght, [320, 700])));
+  element.style.setProperty("--typewriter-slant", `${(slant * .62).toFixed(2)}deg`);
+  element.style.setProperty("--typewriter-track", `${(-0.035 + widthNorm * .025).toFixed(4)}em`);
 }
 
 function lockTokenWidths() {
@@ -180,8 +163,8 @@ function lockTokenWidths() {
 }
 
 async function setTypeface(value, persist = true) {
-  const preset = FONT_PRESETS[value] || FONT_PRESETS["roboto-flex"];
-  canvas.dataset.font = value in FONT_PRESETS ? value : "roboto-flex";
+  const preset = FONT_PRESETS[value] || FONT_PRESETS.mixed;
+  canvas.dataset.font = value in FONT_PRESETS ? value : "mixed";
   fontSelect.value = canvas.dataset.font;
   $("#active-token").style.fontFamily = `"${preset.family}", sans-serif`;
   if (persist) localStorage.setItem(FONT_STORAGE_KEY, canvas.dataset.font);
@@ -350,7 +333,7 @@ function seededNoise(seed) {
   return (value - Math.floor(value)) * 2 - 1;
 }
 
-function makeInkStroke(start, end, link, order, maximumWeight) {
+function makeInkStroke(start, end, link, order, maximumWeight, redInk = false) {
   const tension = tuning.tension / 100;
   const dx = end.x - start.x;
   const dy = end.y - start.y;
@@ -375,17 +358,17 @@ function makeInkStroke(start, end, link, order, maximumWeight) {
   }
   const compressed = Math.pow(link.weight / maximumWeight, .28);
   const strength = .28 + compressed * .72;
-  const baseWidth = 1 + strength * 1.65;
+  const baseWidth = (1 + strength * 1.65) * (redInk ? .78 : 1);
   const segments = points.slice(0, -1).map((point, index) => {
     const next = points[index + 1];
     const pressure = .72 + Math.sin((index / pointCount) * Math.PI) * .38 + seededNoise(index + link.index * 11) * .13;
-    const dry = (index + order * 3 + link.index) % 11 === 0;
+    const dry = (index + order * 3 + link.index) % (redInk ? 7 : 11) === 0;
     return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${(baseWidth * pressure).toFixed(2)}" opacity="${(dry ? .24 : .35 + strength * .46).toFixed(2)}"/>`;
   }).join("");
   const flecks = points.filter((_, index) => index > 2 && index < points.length - 3 && (index + link.index) % 9 === 0).map((point, index) =>
     `<circle cx="${(point.x + seededNoise(index + order) * 1.8).toFixed(2)}" cy="${(point.y + seededNoise(index + link.index) * 1.8).toFixed(2)}" r="${(.25 + strength * .32).toFixed(2)}" opacity=".32"/>`
   ).join("");
-  return `<g class="ink-stroke" filter="url(#ink-wobble-${order})">${segments}<circle cx="${start.x}" cy="${start.y}" r="${(baseWidth * .48).toFixed(2)}" opacity=".68"/><circle cx="${end.x}" cy="${end.y}" r="${(baseWidth * .48).toFixed(2)}" opacity=".68"/>${flecks}</g>`;
+  return `<g class="ink-stroke${redInk ? " red-ink" : ""}" filter="url(#ink-wobble-${order})">${segments}<circle cx="${start.x}" cy="${start.y}" r="${(baseWidth * .48).toFixed(2)}" opacity=".68"/><circle cx="${end.x}" cy="${end.y}" r="${(baseWidth * .48).toFixed(2)}" opacity=".68"/>${flecks}</g>`;
 }
 
 function tokenShape(rect, stageRect, kind = "rect") {
@@ -418,8 +401,9 @@ function closestConnection(activeShape, targetShape) {
 }
 
 function linkedMark(_link, order) {
-  const marks = ["underline", "none", "circle", "none", "underline"];
-  return marks[(order + position * 3) % marks.length];
+  if (order === 0) return "red-circle";
+  const marks = ["strikeout", "underline", "none", "circle"];
+  return marks[(order - 1 + position * 3) % marks.length];
 }
 
 function makeScribbleEllipse(shape, seed, className) {
@@ -440,7 +424,8 @@ function makeScribbleEllipse(shape, seed, className) {
       const next = points[index + 1];
       const width = .78 + (seededNoise(seed + pass * 19 + index) + 1) * .38;
       const dry = (index + seed + pass * 4) % 13 === 0;
-      return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" opacity="${dry ? .22 : pass === 0 ? .72 : .43}"/>`;
+      const opacity = dry ? .22 : pass === 0 ? .72 : .43;
+      return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" style="--draw:${index + pass * count};--mark-opacity:${opacity}"/>`;
     }).join("");
   }
   return `<g class="${className}">${segments}</g>`;
@@ -462,9 +447,36 @@ function makeHandUnderline(rect, stageRect, seed) {
     const next = points[index + 1];
     const width = 1.15 + (seededNoise(seed + index * 7) + 1) * .65;
     const dry = (index + seed) % 8 === 0;
-    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" opacity="${dry ? .25 : .76}"/>`;
+    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" style="--draw:${index};--mark-opacity:${dry ? .25 : .76}"/>`;
   }).join("");
   return `<g class="hand-underline">${segments}</g>`;
+}
+
+function makeStrikeout(rect, stageRect, seed) {
+  const left = rect.left - stageRect.left - 5;
+  const right = rect.right - stageRect.left + 6;
+  const centerY = rect.top + rect.height * .56 - stageRect.top;
+  let segments = "";
+  for (let pass = 0; pass < 4; pass += 1) {
+    const reverse = pass % 2 === 1;
+    const count = Math.max(7, Math.min(18, Math.round((right - left) / 8)));
+    const points = Array.from({ length: count + 1 }, (_, index) => {
+      const progress = index / count;
+      const x = left + (right - left) * (reverse ? 1 - progress : progress);
+      return {
+        x: x + seededNoise(seed * 13 + pass * 37 + index) * 1.7,
+        y: centerY + (pass - 1.5) * 2.1 + Math.sin(progress * Math.PI * (2 + pass)) * 1.8 + seededNoise(seed * 19 + index) * 1.4,
+      };
+    });
+    segments += points.slice(0, -1).map((point, index) => {
+      const next = points[index + 1];
+      const width = 1.9 + (seededNoise(seed + pass * 23 + index) + 1) * 1.35;
+      const opacity = (index + pass + seed) % 9 === 0 ? .2 : .64 + pass * .055;
+      return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${width.toFixed(2)}" style="--draw:${index + pass * count};--mark-opacity:${opacity.toFixed(2)}"/>`;
+    }).join("");
+  }
+  const blotX = left + (right - left) * (.28 + (seed % 4) * .12);
+  return `<g class="strikeout">${segments}<ellipse cx="${blotX.toFixed(2)}" cy="${(centerY + seededNoise(seed) * 2).toFixed(2)}" rx="${(2.4 + Math.abs(seededNoise(seed + 8)) * 3).toFixed(2)}" ry="${(1.3 + Math.abs(seededNoise(seed + 11)) * 1.8).toFixed(2)}" opacity=".48"/></g>`;
 }
 
 function renderArcs() {
@@ -473,9 +485,11 @@ function renderArcs() {
   if (!active) return;
   const isComplete = position === tokenElements.length - 1;
   svg.classList.toggle("settled", isComplete);
+  marksSvg.classList.toggle("settled", isComplete);
   if (isComplete) return;
   const activeRect = active.getBoundingClientRect();
   svg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
+  marksSvg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
   const links = getVisibleLinks();
   const maximumWeight = Math.max(...links.map(({ weight }) => weight), 0.0001);
   const activeShape = tokenShape(activeRect, stageRect, "ellipse");
@@ -484,20 +498,23 @@ function renderArcs() {
     if (!target) return null;
     const rect = target.getBoundingClientRect();
     const mark = linkedMark(link, order);
-    return { link, order, rect, mark, shape: tokenShape(rect, stageRect, mark === "circle" ? "ellipse" : "rect") };
+    return { link, order, rect, mark, shape: tokenShape(rect, stageRect, mark.includes("circle") ? "ellipse" : "rect") };
   }).filter(Boolean);
   const filters = links.map((link, order) => `<filter id="ink-wobble-${order}" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".015 .11" numOctaves="2" seed="${position + link.index + order + 3}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".7"/></filter>`).join("");
   const strokes = decoratedLinks.map(({ link, order, shape }) => {
     const { start, end } = closestConnection(activeShape, shape);
-    return makeInkStroke(start, end, link, order, maximumWeight);
+    return makeInkStroke(start, end, link, order, maximumWeight, order === 0);
   }).join("");
   const linkedAnnotations = decoratedLinks.map(({ link, order, rect, mark, shape }) => {
+    if (mark === "red-circle") return makeScribbleEllipse(shape, position * 43 + link.index * 7 + order, "linked-circle red-ink");
     if (mark === "circle") return makeScribbleEllipse(shape, position * 43 + link.index * 7 + order, "linked-circle");
     if (mark === "underline") return makeHandUnderline(rect, stageRect, position * 29 + link.index * 5 + order);
+    if (mark === "strikeout") return makeStrikeout(rect, stageRect, position * 31 + link.index * 11 + order);
     return "";
   }).join("");
   const activeCircle = makeScribbleEllipse(activeShape, position * 47 + 13, "active-circle");
-  svg.innerHTML = `<defs>${filters}</defs>${strokes}<g class="annotations">${linkedAnnotations}${activeCircle}</g>`;
+  svg.innerHTML = `<defs>${filters}</defs>${strokes}`;
+  marksSvg.innerHTML = `<g class="annotations">${linkedAnnotations}${activeCircle}</g>`;
 }
 
 function setPosition(next, animate = true) {

@@ -8,9 +8,7 @@
     <title>Font Attention — language model attention as typography</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://rsms.me" />
-    <link href="https://rsms.me/inter/inter.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cutive+Mono&family=DM+Mono:wght@300;400;500&family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&family=Roboto+Serif:opsz,wdth,wght,GRAD@8..144,50..150,100..900,-50..100&family=Special+Elite&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cutive+Mono&family=DM+Mono:wght@300;400;500&family=Special+Elite&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
@@ -25,6 +23,7 @@
           <div class="stage-meta"><span>01 / LIVE REPLAY</span><span id="model-label">LOADING QWEN DATA…</span></div>
           <svg id="attention-arcs" class="attention-arcs" aria-hidden="true"></svg>
           <div id="text-canvas" class="text-canvas" aria-live="polite"></div>
+          <svg id="attention-marks" class="attention-marks" aria-hidden="true"></svg>
           <div class="transport">
             <button id="play-toggle" class="transport-button" type="button" aria-label="Pause replay">PAUSE</button>
             <button id="restart" class="transport-button secondary" type="button">RESTART</button>
@@ -43,11 +42,6 @@
               <option value="special-elite">Special Elite</option>
               <option value="courier-prime">Courier Prime</option>
               <option value="cutive-mono">Cutive Mono</option>
-              <option value="roboto-flex">Roboto Flex</option>
-              <option value="recursive">Recursive</option>
-              <option value="roboto-serif">Roboto Serif</option>
-              <option value="inter">Inter Variable</option>
-              <option value="archivo">Archivo</option>
             </select>
           </label>
           <div class="tuning-panel">

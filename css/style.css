@@ -3,8 +3,9 @@
   --ink: #1b1a17;
   --faded-ink: rgba(27, 26, 23, .52);
   --hairline: rgba(27, 26, 23, .36);
+  --red-ink: #9f3029;
   --mono: "DM Mono", "Courier New", monospace;
-  --display: "Recursive", "Courier New", monospace;
+  --display: "Courier Prime", "Courier New", monospace;
 }
 
 * { box-sizing: border-box; }
@@ -109,6 +110,9 @@ main { min-height: 0; display: grid; grid-template-columns: minmax(0,1fr) 244px;
   opacity: var(--ink-density,.94);
   transform-origin: 50% 75%;
   rotate: var(--print-rotate, 0deg);
+  font-weight: var(--typewriter-wght, 400);
+  font-style: oblique var(--typewriter-slant, 0deg);
+  letter-spacing: var(--typewriter-track, -.012em);
   text-shadow:
     var(--print-shadow,.012em 0 rgba(27,26,23,.14)),
     -.012em .008em rgba(27,26,23,.11),
@@ -127,33 +131,6 @@ main { min-height: 0; display: grid; grid-template-columns: minmax(0,1fr) 244px;
 .text-canvas[data-font="cutive-mono"] .token,
 .text-canvas[data-font="mixed"] .token[data-token-font="cutive-mono"] { font-family: "Cutive Mono", "Courier New", monospace; }
 
-.text-canvas[data-font="roboto-flex"] .token,
-.text-canvas[data-font="mixed"] .token[data-token-font="roboto-flex"] { font-family: "Roboto Flex", sans-serif; }
-.text-canvas[data-font="recursive"] .token,
-.text-canvas[data-font="mixed"] .token[data-token-font="recursive"] {
-  font-family: "Recursive", sans-serif;
-  font-variation-settings: "wght" var(--recursive-wght,400), "slnt" var(--recursive-slnt,0), "CASL" var(--casl,0), "CRSV" var(--crsv,.5), "MONO" var(--mono-axis,0);
-}
-.text-canvas[data-font="roboto-serif"] .token,
-.text-canvas[data-font="mixed"] .token[data-token-font="roboto-serif"] {
-  font-family: "Roboto Serif", serif;
-  font-style: oblique var(--serif-slant,0deg);
-  font-variation-settings: "wght" var(--serif-wght,400), "wdth" var(--serif-wdth,100), "opsz" var(--opsz,64), "GRAD" var(--grad,0);
-}
-.text-canvas[data-font="inter"] .token,
-.text-canvas[data-font="mixed"] .token[data-token-font="inter"] {
-  font-family: "InterVariable", "Inter", sans-serif;
-  font-style: oblique var(--inter-slant,0deg);
-  font-variation-settings: "wght" var(--inter-wght,400), "opsz" var(--inter-opsz,24);
-}
-.text-canvas[data-font="archivo"] .token,
-.text-canvas[data-font="mixed"] .token[data-token-font="archivo"] {
-  font-family: "Archivo", sans-serif;
-  font-style: oblique var(--archivo-slant,0deg);
-  font-variation-settings: "wght" var(--archivo-wght,400), "wdth" var(--archivo-wdth,100);
-  letter-spacing: var(--archivo-track,inherit);
-}
-
 @keyframes token-enter {
   0% { opacity: .2; transform: translateY(var(--enter-y,-.05em)) scale(var(--enter-scale,1.08)); filter: blur(var(--enter-blur,1.2px)); }
   58% { opacity: 1; transform: translateY(var(--enter-settle-y,.01em)) scale(var(--enter-settle-scale,.995)); filter: blur(0); }
@@ -170,8 +147,18 @@ main { min-height: 0; display: grid; grid-template-columns: minmax(0,1fr) 244px;
 .attention-arcs.settled { opacity: 0; }
 .attention-arcs line { stroke: var(--ink); stroke-linecap: round; }
 .attention-arcs circle { fill: var(--ink); }
-.attention-arcs .active-circle line { stroke: rgba(27,26,23,.9); }
-.attention-arcs .linked-circle line, .attention-arcs .hand-underline line { stroke: rgba(27,26,23,.82); }
+.attention-arcs .red-ink line { stroke: var(--red-ink); }
+.attention-arcs .red-ink circle { fill: var(--red-ink); }
+.attention-marks { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; overflow: visible; opacity: 1; pointer-events: none; transition: opacity 360ms ease; }
+.attention-marks.settled { opacity: 0; }
+.attention-marks line { stroke: var(--ink); stroke-linecap: round; opacity: 0; animation: mark-draw-in 110ms steps(3,end) forwards; animation-delay: calc(var(--draw,0) * 1.45ms); }
+.attention-marks ellipse { fill: var(--ink); }
+.attention-marks .active-circle line { stroke: rgba(27,26,23,.9); }
+.attention-marks .linked-circle line, .attention-marks .hand-underline line { stroke: rgba(27,26,23,.82); }
+.attention-marks .red-ink line { stroke: var(--red-ink); }
+.attention-marks .red-ink ellipse { fill: var(--red-ink); }
+.attention-marks .strikeout line { stroke: rgba(27,26,23,.88); }
+@keyframes mark-draw-in { from { opacity: 0; } to { opacity: var(--mark-opacity,.72); } }
 
 .transport { display: grid; grid-template-columns: auto auto 1fr auto auto; gap: 12px; align-items: center; padding-top: 13px; border-top: 1px solid var(--hairline); }
 .transport-button, .speed-button { padding: 5px 7px; border: 0; background: transparent; color: var(--ink); cursor: pointer; font-size: 8px; letter-spacing: .1em; }
