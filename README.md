@@ -16,6 +16,7 @@ The current demo uses the opening quatrain of Shakespeare's *Sonnet 18*. It is a
 - **Design engineering in the browser** — the visualization, transport controls, and inspector are implemented as a lightweight static web app.
 - **One replay, multiple type systems** — the default mixed type case distributes five variable-font families across the finished text, while the live selector can isolate any one family.
 - **Adjustable visual mapping** — five compact controls switch the mapping emphasis and tune variation, physical motion, link count, and arc tension.
+- **Parameterized ink connections** — attention links are assembled from pressure-varying line segments, dry-brush gaps, flecks, and deterministic displacement rather than Bézier curves. Each stroke joins the underside of the upper token to the top of the lower token.
 - **Typographic memory** — a restrained, deterministic imprint pattern lets selected tokens retain different weights, widths, slants, ink densities, and sub-pixel registration after motion settles; quieter tokens preserve the rhythm of a typed page.
 - **Reproducible model-to-interface pipeline** — a Python exporter converts local model tensors into compact JSON; the deployed site needs no model server or API key.
 
@@ -50,7 +51,7 @@ The exporter defaults to `Qwen/Qwen3-0.6B`, runs on CUDA when available, average
 
 This mapping is an expressive design decision, not an analytical claim about model cognition.
 
-The motion layer preserves the behavior developed in the early prototype—spring entrance, sympathetic pops, selective disturbance, decaying oscillation, stability, and occasional ripples—while replacing its mock attention driver with the recorded Qwen3 tensor data. The four source lines are kept as four deliberate lines on desktop, giving the finished replay the rhythm of a typed and slightly misregistered letterpress proof. Unprinted tokens remain blank, and the completed page holds for 3.2 seconds before the next replay.
+The motion layer preserves the behavior developed in the early prototype—spring entrance, sympathetic pops, selective disturbance, decaying oscillation, stability, and occasional ripples—while replacing its mock attention driver with the recorded Qwen3 tensor data. The four source lines are kept as four deliberate lines on desktop, giving the finished replay the rhythm of a typed and slightly misregistered letterpress proof. Unprinted tokens remain blank. When the final token arrives, links and underlines clear away and the clean typeset page holds for 3.2 seconds before the next replay.
 
 ## Stack
 

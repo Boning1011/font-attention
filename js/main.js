@@ -56,10 +56,10 @@ const IMPRINT_PATTERN = [
   { wght: -12, wdth: -2, slnt: -0.2, opsz: 3 },
 ];
 const PRINT_PATTERN = [
-  [0, 0, 0.96], [0.35, -0.15, 0.91], [0, 0, 0.95], [-0.25, 0.28, 0.9],
-  [0.45, 0.12, 0.98], [0, 0, 0.94], [-0.18, -0.2, 0.89], [0, 0, 0.95],
-  [0.28, 0.3, 0.92], [-0.4, 0.08, 0.97], [0, 0, 0.94], [0.2, -0.25, 0.9],
-  [-0.12, 0.18, 0.96],
+  [0, 0, 0.96, 0], [0.35, -1.2, 0.91, -0.7], [0, 0.7, 0.95, 0.35], [-0.25, 1.55, 0.9, 0.8],
+  [0.45, -0.65, 0.98, -0.35], [0, 0, 0.94, 0], [-0.18, -1.65, 0.89, 1.05], [0, 0.45, 0.95, -0.25],
+  [0.28, 1.3, 0.92, 0.55], [-0.4, -0.85, 0.97, -0.9], [0, 0, 0.94, 0], [0.2, -1.4, 0.9, 0.7],
+  [-0.12, 1.1, 0.96, -0.45],
 ];
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const AXIS_LIMITS = {
@@ -124,9 +124,10 @@ function createTokens() {
     span.dataset.index = String(index);
     span.dataset.tokenFont = TOKEN_FONT_PATTERN[index % TOKEN_FONT_PATTERN.length];
     span.textContent = token.replace(/\n/g, "");
-    const [printX, printY, inkDensity] = PRINT_PATTERN[index % PRINT_PATTERN.length];
+    const [printX, printY, inkDensity, printRotate] = PRINT_PATTERN[index % PRINT_PATTERN.length];
     span.style.setProperty("--print-x", `${printX}px`);
     span.style.setProperty("--print-y", `${printY}px`);
+    span.style.setProperty("--print-rotate", `${printRotate}deg`);
     span.style.setProperty("--ink-density", String(inkDensity));
     span.style.setProperty("--print-shadow", `${printX >= 0 ? ".014em" : "-.014em"} .006em rgba(27,26,23,.14)`);
     applyAxes(span, replay.frames[index].axes);
@@ -242,12 +243,13 @@ function clearEffects() {
 }
 
 function updateTokenState() {
+  const isComplete = position === tokenElements.length - 1;
   tokenElements.forEach((element, index) => {
     element.classList.toggle("future", index > position);
     element.classList.toggle("active", index === position);
     element.classList.remove("linked");
   });
-  getVisibleLinks().forEach(({ index }) => tokenElements[index]?.classList.add("linked"));
+  if (!isComplete) getVisibleLinks().forEach(({ index }) => tokenElements[index]?.classList.add("linked"));
 }
 
 function replayAnimation(element, className, duration, delay = 0) {
@@ -338,30 +340,85 @@ function renderInspector() {
   $("#link-list").innerHTML = links.length ? links.map((link) => `<div class="link-row"><span>${cleanToken(replay.tokens[link.index])}</span><span>${Math.round(link.weight*100)}%</span></div>`).join("") : '<div class="link-row"><span>beginning of sequence</span><span>—</span></div>';
 }
 
+function seededNoise(seed) {
+  const value = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return (value - Math.floor(value)) * 2 - 1;
+}
+
+function makeInkStroke(start, end, link, order, maximumWeight) {
+  const tension = tuning.tension / 100;
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const distance = Math.max(1, Math.hypot(dx, dy));
+  const normalX = -dy / distance;
+  const normalY = dx / distance;
+  const sameLine = Math.abs(dy) < 18;
+  const bend = sameLine
+    ? (18 + distance * .055) * (order % 2 ? -1 : 1)
+    : (14 + Math.min(distance, 460) * .045) * (order % 2 ? -1 : 1);
+  const pointCount = Math.max(14, Math.min(34, Math.round(distance / 24)));
+  const points = [];
+  for (let index = 0; index <= pointCount; index += 1) {
+    const progress = index / pointCount;
+    const envelope = Math.sin(Math.PI * progress);
+    const drift = Math.sin(progress * Math.PI * (2.2 + order * .31) + order * .8) * (1.2 + tension * 2.1);
+    const grain = seededNoise((position + 1) * 101 + link.index * 37 + order * 17 + index) * (0.55 + tension * .8) * envelope;
+    points.push({
+      x: start.x + dx * progress + normalX * (bend * envelope + drift + grain),
+      y: start.y + dy * progress + normalY * (bend * envelope + drift + grain),
+    });
+  }
+  const compressed = Math.pow(link.weight / maximumWeight, .28);
+  const strength = .28 + compressed * .72;
+  const baseWidth = 1 + strength * 1.65;
+  const segments = points.slice(0, -1).map((point, index) => {
+    const next = points[index + 1];
+    const pressure = .72 + Math.sin((index / pointCount) * Math.PI) * .38 + seededNoise(index + link.index * 11) * .13;
+    const dry = (index + order * 3 + link.index) % 11 === 0;
+    return `<line x1="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" x2="${next.x.toFixed(2)}" y2="${next.y.toFixed(2)}" stroke-width="${(baseWidth * pressure).toFixed(2)}" opacity="${(dry ? .24 : .35 + strength * .46).toFixed(2)}"/>`;
+  }).join("");
+  const flecks = points.filter((_, index) => index > 2 && index < points.length - 3 && (index + link.index) % 9 === 0).map((point, index) =>
+    `<circle cx="${(point.x + seededNoise(index + order) * 1.8).toFixed(2)}" cy="${(point.y + seededNoise(index + link.index) * 1.8).toFixed(2)}" r="${(.25 + strength * .32).toFixed(2)}" opacity=".32"/>`
+  ).join("");
+  return `<g class="ink-stroke" filter="url(#ink-wobble-${order})">${segments}<circle cx="${start.x}" cy="${start.y}" r="${(baseWidth * .48).toFixed(2)}" opacity=".68"/><circle cx="${end.x}" cy="${end.y}" r="${(baseWidth * .48).toFixed(2)}" opacity=".68"/>${flecks}</g>`;
+}
+
+function tokenConnectionPoints(activeRect, targetRect, stageRect) {
+  const active = {
+    top: activeRect.top - stageRect.top,
+    bottom: activeRect.bottom - stageRect.top,
+    x: activeRect.left + activeRect.width / 2 - stageRect.left,
+  };
+  const target = {
+    top: targetRect.top - stageRect.top,
+    bottom: targetRect.bottom - stageRect.top,
+    x: targetRect.left + targetRect.width / 2 - stageRect.left,
+  };
+  if (target.top < active.top - 12) return { start: { x: target.x, y: target.bottom + 2 }, end: { x: active.x, y: active.top - 3 } };
+  if (target.top > active.top + 12) return { start: { x: active.x, y: active.bottom + 2 }, end: { x: target.x, y: target.top - 3 } };
+  return { start: { x: target.x, y: target.bottom + 2 }, end: { x: active.x, y: active.top - 3 } };
+}
+
 function renderArcs() {
   const stageRect = $(".stage").getBoundingClientRect();
   const active = tokenElements[position];
   if (!active) return;
+  const isComplete = position === tokenElements.length - 1;
+  svg.classList.toggle("settled", isComplete);
+  if (isComplete) return;
   const activeRect = active.getBoundingClientRect();
   svg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
   const links = getVisibleLinks();
   const maximumWeight = Math.max(...links.map(({ weight }) => weight), 0.0001);
-  const tension = tuning.tension / 100;
-  svg.innerHTML = links.map((link, order) => {
+  const filters = links.map((link, order) => `<filter id="ink-wobble-${order}" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".015 .11" numOctaves="2" seed="${position + link.index + order + 3}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".7"/></filter>`).join("");
+  const strokes = links.map((link, order) => {
     const target = tokenElements[link.index];
     if (!target) return "";
     const rect = target.getBoundingClientRect();
-    const fan = (order - (links.length - 1) / 2) * 13;
-    const x1 = activeRect.left + activeRect.width / 2 - stageRect.left;
-    const y1 = activeRect.top + activeRect.height * 0.16 - stageRect.top;
-    const x2 = rect.left + rect.width / 2 - stageRect.left;
-    const y2 = rect.top + rect.height * 0.16 - stageRect.top;
-    const distanceLift = Math.abs(x1 - x2) * 0.18 + Math.abs(y1 - y2) * 0.3;
-    const lift = Math.max(16, Math.min(175, distanceLift * (0.45 + tension * 1.15)));
-    const compressed = Math.pow(link.weight / maximumWeight, 0.28);
-    const visualStrength = 0.28 + compressed * 0.72;
-    return `<path d="M ${x1} ${y1} C ${x1+fan} ${y1-lift}, ${x2+fan*.35} ${y2-lift}, ${x2} ${y2}" stroke-width="${1.15+visualStrength*2.45}" opacity="${.3+visualStrength*.5}"/>`;
+    const { start, end } = tokenConnectionPoints(activeRect, rect, stageRect);
+    return makeInkStroke(start, end, link, order, maximumWeight);
   }).join("");
+  svg.innerHTML = `<defs>${filters}</defs>${strokes}`;
 }
 
 function setPosition(next, animate = true) {
