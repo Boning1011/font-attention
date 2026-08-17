@@ -4,7 +4,7 @@ Font Attention is a design-engineering experiment that translates transformer at
 
 **[Open the live interactive replay](https://boning1011.github.io/font-attention/)**
 
-The current demo uses the opening quatrain of Shakespeare's *Sonnet 18*. It is a teacher-forced replay of real attention tensors—not a simulation and not a claim that the model authored the text.
+The current demo uses all fourteen lines of Shakespeare's *Sonnet 18*: 148 recorded model tokens displayed through a gently moving seven-line window. The Letter surface contains only the poem and its attention annotations; playback, model metadata, source links, and mapping controls live in a separate dock below the paper. It is a teacher-forced replay of real attention tensors—not a simulation and not a claim that the model authored the text.
 
 ![Font Attention interface replay](media/font-attention-demo.gif)
 

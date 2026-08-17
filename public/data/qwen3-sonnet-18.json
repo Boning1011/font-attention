@@ -2,7 +2,7 @@
   "meta": {
     "model": "Qwen/Qwen3-0.6B",
     "source": "REAL ATTENTION TENSORS",
-    "text": "Shall I compare thee to a summer's day?\nThou art more lovely and more temperate.\nRough winds do shake the darling buds of May,\nAnd summer's lease hath all too short a date.",
+    "text": "Shall I compare thee to a summer's day?\nThou art more lovely and more temperate.\nRough winds do shake the darling buds of May,\nAnd summer's lease hath all too short a date.\nSometime too hot the eye of heaven shines,\nAnd often is his gold complexion dimmed;\nAnd every fair from fair sometime declines,\nBy chance, or nature's changing course, untrimmed;\nBut thy eternal summer shall not fade,\nNor lose possession of that fair thou ow'st,\nNor shall death brag thou wand'rest in his shade,\nWhen in eternal lines to Time thou grow'st.\nSo long as men can breathe, or eyes can see,\nSo long lives this, and this gives life to thee.",
     "method": "Teacher-forced Qwen3 replay. Attention is averaged across all heads in the final four layers, then mapped to weight, width, slant and optical-size axes. The six strongest prior-token links retain their raw attention weights.",
     "layersAveraged": 4
   },
@@ -49,6 +49,111 @@
     " short",
     " a",
     " date",
+    ".\n",
+    "Som",
+    "etime",
+    " too",
+    " hot",
+    " the",
+    " eye",
+    " of",
+    " heaven",
+    " shines",
+    ",\n",
+    "And",
+    " often",
+    " is",
+    " his",
+    " gold",
+    " complexion",
+    " dim",
+    "med",
+    ";\n",
+    "And",
+    " every",
+    " fair",
+    " from",
+    " fair",
+    " sometime",
+    " declines",
+    ",\n",
+    "By",
+    " chance",
+    ",",
+    " or",
+    " nature",
+    "'s",
+    " changing",
+    " course",
+    ",",
+    " un",
+    "trimmed",
+    ";\n",
+    "But",
+    " thy",
+    " eternal",
+    " summer",
+    " shall",
+    " not",
+    " fade",
+    ",\n",
+    "Nor",
+    " lose",
+    " possession",
+    " of",
+    " that",
+    " fair",
+    " thou",
+    " ow",
+    "'s",
+    "t",
+    ",\n",
+    "Nor",
+    " shall",
+    " death",
+    " brag",
+    " thou",
+    " wand",
+    "'re",
+    "st",
+    " in",
+    " his",
+    " shade",
+    ",\n",
+    "When",
+    " in",
+    " eternal",
+    " lines",
+    " to",
+    " Time",
+    " thou",
+    " grow",
+    "'s",
+    "t",
+    ".\n",
+    "So",
+    " long",
+    " as",
+    " men",
+    " can",
+    " breathe",
+    ",",
+    " or",
+    " eyes",
+    " can",
+    " see",
+    ",\n",
+    "So",
+    " long",
+    " lives",
+    " this",
+    ",",
+    " and",
+    " this",
+    " gives",
+    " life",
+    " to",
+    " thee",
     "."
   ],
   "frames": [
@@ -71,40 +176,40 @@
         "wght": 586,
         "wdth": 86,
         "slnt": -0.3,
-        "opsz": 94
+        "opsz": 95
       },
       "metrics": {
-        "focus": 0.967,
-        "entropy": 0.2093,
-        "selfAttention": 0.033
+        "focus": 0.9673,
+        "entropy": 0.2078,
+        "selfAttention": 0.0327
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.967
+          "weight": 0.9673
         }
       ]
     },
     {
       "axes": {
-        "wght": 560,
-        "wdth": 94,
+        "wght": 561,
+        "wdth": 93,
         "slnt": -0.7,
-        "opsz": 84
+        "opsz": 85
       },
       "metrics": {
-        "focus": 0.9048,
-        "entropy": 0.3297,
-        "selfAttention": 0.076
+        "focus": 0.9078,
+        "entropy": 0.322,
+        "selfAttention": 0.0736
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.9048
+          "weight": 0.9078
         },
         {
           "index": 1,
-          "weight": 0.0192
+          "weight": 0.0186
         }
       ]
     },
@@ -116,84 +221,84 @@
         "opsz": 90
       },
       "metrics": {
-        "focus": 0.9158,
-        "entropy": 0.2584,
-        "selfAttention": 0.0564
+        "focus": 0.9166,
+        "entropy": 0.2566,
+        "selfAttention": 0.0559
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.9158
+          "weight": 0.9166
         },
         {
           "index": 2,
-          "weight": 0.0204
+          "weight": 0.0202
         },
         {
           "index": 1,
-          "weight": 0.0074
+          "weight": 0.0073
         }
       ]
     },
     {
       "axes": {
-        "wght": 545,
+        "wght": 546,
         "wdth": 94,
         "slnt": -0.6,
         "opsz": 84
       },
       "metrics": {
-        "focus": 0.8698,
-        "entropy": 0.3342,
-        "selfAttention": 0.0679
+        "focus": 0.8725,
+        "entropy": 0.3292,
+        "selfAttention": 0.0666
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8698
+          "weight": 0.8725
         },
         {
           "index": 3,
-          "weight": 0.0304
+          "weight": 0.0302
         },
         {
           "index": 2,
-          "weight": 0.024
+          "weight": 0.0227
         },
         {
           "index": 1,
-          "weight": 0.0079
+          "weight": 0.0081
         }
       ]
     },
     {
       "axes": {
         "wght": 547,
-        "wdth": 92,
+        "wdth": 91,
         "slnt": -0.7,
         "opsz": 87
       },
       "metrics": {
-        "focus": 0.8736,
-        "entropy": 0.2964,
-        "selfAttention": 0.0734
+        "focus": 0.8744,
+        "entropy": 0.2947,
+        "selfAttention": 0.0729
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8736
+          "weight": 0.8744
         },
         {
           "index": 4,
-          "weight": 0.022
+          "weight": 0.0228
         },
         {
           "index": 3,
-          "weight": 0.0175
+          "weight": 0.0172
         },
         {
           "index": 2,
-          "weight": 0.0089
+          "weight": 0.0082
         },
         {
           "index": 1,
@@ -203,137 +308,137 @@
     },
     {
       "axes": {
-        "wght": 538,
+        "wght": 539,
         "wdth": 93,
         "slnt": -0.6,
         "opsz": 86
       },
       "metrics": {
-        "focus": 0.8532,
-        "entropy": 0.3145,
-        "selfAttention": 0.0668
+        "focus": 0.8543,
+        "entropy": 0.3118,
+        "selfAttention": 0.066
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8532
+          "weight": 0.8543
         },
         {
           "index": 5,
-          "weight": 0.0473
+          "weight": 0.0481
         },
         {
           "index": 4,
-          "weight": 0.0143
-        },
-        {
-          "index": 2,
-          "weight": 0.0087
+          "weight": 0.0146
         },
         {
           "index": 3,
-          "weight": 0.008
+          "weight": 0.0079
+        },
+        {
+          "index": 2,
+          "weight": 0.0075
         },
         {
           "index": 1,
-          "weight": 0.0017
+          "weight": 0.0016
         }
       ]
     },
     {
       "axes": {
-        "wght": 547,
+        "wght": 548,
         "wdth": 89,
         "slnt": -0.6,
         "opsz": 90
       },
       "metrics": {
-        "focus": 0.8745,
-        "entropy": 0.2646,
-        "selfAttention": 0.0627
+        "focus": 0.8752,
+        "entropy": 0.2639,
+        "selfAttention": 0.0623
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8745
+          "weight": 0.8752
         },
         {
           "index": 6,
-          "weight": 0.0331
+          "weight": 0.0323
         },
         {
           "index": 5,
-          "weight": 0.0119
+          "weight": 0.0123
         },
         {
           "index": 4,
-          "weight": 0.0081
+          "weight": 0.0082
         },
         {
           "index": 3,
-          "weight": 0.0042
+          "weight": 0.0041
         },
         {
           "index": 2,
-          "weight": 0.0039
+          "weight": 0.004
         }
       ]
     },
     {
       "axes": {
-        "wght": 538,
+        "wght": 537,
         "wdth": 91,
         "slnt": -0.4,
         "opsz": 88
       },
       "metrics": {
-        "focus": 0.8522,
-        "entropy": 0.2878,
-        "selfAttention": 0.0481
+        "focus": 0.85,
+        "entropy": 0.2908,
+        "selfAttention": 0.0482
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8522
+          "weight": 0.85
         },
         {
           "index": 7,
-          "weight": 0.0638
+          "weight": 0.0653
         },
         {
           "index": 6,
-          "weight": 0.0138
+          "weight": 0.0139
         },
         {
           "index": 5,
-          "weight": 0.0082
+          "weight": 0.0086
         },
         {
           "index": 4,
-          "weight": 0.0069
+          "weight": 0.0073
         },
         {
           "index": 2,
-          "weight": 0.0034
+          "weight": 0.0032
         }
       ]
     },
     {
       "axes": {
-        "wght": 516,
+        "wght": 518,
         "wdth": 96,
         "slnt": -0.8,
         "opsz": 81
       },
       "metrics": {
-        "focus": 0.8007,
-        "entropy": 0.3686,
-        "selfAttention": 0.0879
+        "focus": 0.8036,
+        "entropy": 0.364,
+        "selfAttention": 0.087
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8007
+          "weight": 0.8036
         },
         {
           "index": 4,
@@ -341,132 +446,132 @@
         },
         {
           "index": 8,
-          "weight": 0.0167
+          "weight": 0.0162
         },
         {
           "index": 5,
-          "weight": 0.0145
+          "weight": 0.0142
         },
         {
           "index": 2,
-          "weight": 0.0143
+          "weight": 0.0138
         },
         {
           "index": 7,
-          "weight": 0.0119
+          "weight": 0.0115
         }
       ]
     },
     {
       "axes": {
-        "wght": 464,
+        "wght": 465,
         "wdth": 108,
         "slnt": -0.9,
         "opsz": 66
       },
       "metrics": {
-        "focus": 0.6769,
-        "entropy": 0.5471,
-        "selfAttention": 0.0945
+        "focus": 0.6785,
+        "entropy": 0.5429,
+        "selfAttention": 0.0977
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.6769
+          "weight": 0.6785
         },
         {
           "index": 4,
-          "weight": 0.0385
+          "weight": 0.0391
         },
         {
           "index": 7,
-          "weight": 0.0342
-        },
-        {
-          "index": 2,
-          "weight": 0.0304
+          "weight": 0.0326
         },
         {
           "index": 5,
-          "weight": 0.0299
+          "weight": 0.0295
+        },
+        {
+          "index": 2,
+          "weight": 0.029
         },
         {
           "index": 3,
-          "weight": 0.0264
+          "weight": 0.0271
         }
       ]
     },
     {
       "axes": {
         "wght": 552,
-        "wdth": 87,
-        "slnt": -0.5,
+        "wdth": 86,
+        "slnt": -0.4,
         "opsz": 94
       },
       "metrics": {
-        "focus": 0.8846,
-        "entropy": 0.2202,
-        "selfAttention": 0.0501
+        "focus": 0.8869,
+        "entropy": 0.2162,
+        "selfAttention": 0.0496
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8846
+          "weight": 0.8869
         },
         {
           "index": 10,
-          "weight": 0.0297
+          "weight": 0.0291
         },
         {
           "index": 4,
-          "weight": 0.0148
+          "weight": 0.0147
         },
         {
           "index": 7,
-          "weight": 0.0039
-        },
-        {
-          "index": 8,
           "weight": 0.0036
         },
         {
           "index": 9,
-          "weight": 0.0036
+          "weight": 0.0035
+        },
+        {
+          "index": 8,
+          "weight": 0.0033
         }
       ]
     },
     {
       "axes": {
-        "wght": 523,
-        "wdth": 93,
+        "wght": 522,
+        "wdth": 94,
         "slnt": -0.8,
         "opsz": 85
       },
       "metrics": {
-        "focus": 0.8162,
-        "entropy": 0.3225,
-        "selfAttention": 0.086
+        "focus": 0.8142,
+        "entropy": 0.326,
+        "selfAttention": 0.0857
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8162
+          "weight": 0.8142
         },
         {
           "index": 11,
-          "weight": 0.0186
+          "weight": 0.0189
         },
         {
           "index": 10,
-          "weight": 0.0129
+          "weight": 0.0135
         },
         {
           "index": 4,
-          "weight": 0.011
+          "weight": 0.0119
         },
         {
           "index": 9,
-          "weight": 0.0102
+          "weight": 0.0104
         },
         {
           "index": 8,
@@ -476,118 +581,118 @@
     },
     {
       "axes": {
-        "wght": 521,
+        "wght": 520,
         "wdth": 94,
         "slnt": -0.7,
-        "opsz": 85
+        "opsz": 84
       },
       "metrics": {
-        "focus": 0.8131,
-        "entropy": 0.3262,
-        "selfAttention": 0.0816
+        "focus": 0.8098,
+        "entropy": 0.3331,
+        "selfAttention": 0.0795
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8131
+          "weight": 0.8098
         },
         {
           "index": 4,
-          "weight": 0.0163
+          "weight": 0.0165
         },
         {
           "index": 7,
-          "weight": 0.014
+          "weight": 0.0144
         },
         {
           "index": 12,
-          "weight": 0.0112
+          "weight": 0.0124
         },
         {
           "index": 10,
-          "weight": 0.0108
+          "weight": 0.0122
         },
         {
           "index": 5,
-          "weight": 0.0093
+          "weight": 0.0101
         }
       ]
     },
     {
       "axes": {
-        "wght": 535,
-        "wdth": 90,
+        "wght": 530,
+        "wdth": 91,
         "slnt": -0.6,
-        "opsz": 89
+        "opsz": 88
       },
       "metrics": {
-        "focus": 0.8444,
-        "entropy": 0.2731,
-        "selfAttention": 0.0643
+        "focus": 0.8324,
+        "entropy": 0.2911,
+        "selfAttention": 0.0677
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8444
+          "weight": 0.8324
         },
         {
           "index": 13,
-          "weight": 0.0267
+          "weight": 0.028
         },
         {
           "index": 7,
-          "weight": 0.0111
+          "weight": 0.0119
         },
         {
           "index": 9,
-          "weight": 0.0096
+          "weight": 0.0103
         },
         {
           "index": 4,
-          "weight": 0.0079
+          "weight": 0.0089
         },
         {
           "index": 10,
-          "weight": 0.0077
+          "weight": 0.0088
         }
       ]
     },
     {
       "axes": {
-        "wght": 533,
-        "wdth": 90,
+        "wght": 529,
+        "wdth": 91,
         "slnt": -0.6,
-        "opsz": 89
+        "opsz": 88
       },
       "metrics": {
-        "focus": 0.8411,
-        "entropy": 0.2751,
-        "selfAttention": 0.0681
+        "focus": 0.8319,
+        "entropy": 0.2876,
+        "selfAttention": 0.0714
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8411
+          "weight": 0.8319
         },
         {
           "index": 14,
-          "weight": 0.0169
+          "weight": 0.0182
         },
         {
           "index": 13,
-          "weight": 0.0137
+          "weight": 0.0141
         },
         {
           "index": 4,
-          "weight": 0.0109
-        },
-        {
-          "index": 12,
-          "weight": 0.0099
+          "weight": 0.0118
         },
         {
           "index": 10,
-          "weight": 0.0095
+          "weight": 0.0105
+        },
+        {
+          "index": 12,
+          "weight": 0.0104
         }
       ]
     },
@@ -595,26 +700,26 @@
       "axes": {
         "wght": 515,
         "wdth": 92,
-        "slnt": -0.9,
+        "slnt": -0.8,
         "opsz": 87
       },
       "metrics": {
-        "focus": 0.7978,
-        "entropy": 0.3011,
-        "selfAttention": 0.0949
+        "focus": 0.7979,
+        "entropy": 0.3028,
+        "selfAttention": 0.0921
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7978
+          "weight": 0.7979
         },
         {
           "index": 15,
-          "weight": 0.0372
+          "weight": 0.038
         },
         {
           "index": 14,
-          "weight": 0.0287
+          "weight": 0.0296
         },
         {
           "index": 13,
@@ -622,50 +727,50 @@
         },
         {
           "index": 7,
-          "weight": 0.0038
+          "weight": 0.004
         },
         {
           "index": 4,
-          "weight": 0.0037
+          "weight": 0.0038
         }
       ]
     },
     {
       "axes": {
-        "wght": 519,
+        "wght": 518,
         "wdth": 92,
         "slnt": -0.6,
-        "opsz": 87
+        "opsz": 86
       },
       "metrics": {
-        "focus": 0.8061,
-        "entropy": 0.3019,
-        "selfAttention": 0.062
+        "focus": 0.8038,
+        "entropy": 0.3057,
+        "selfAttention": 0.0612
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8061
+          "weight": 0.8038
         },
         {
           "index": 16,
-          "weight": 0.0484
+          "weight": 0.0494
         },
         {
           "index": 15,
-          "weight": 0.0295
+          "weight": 0.0303
         },
         {
           "index": 14,
-          "weight": 0.0172
+          "weight": 0.0171
         },
         {
           "index": 13,
-          "weight": 0.0089
+          "weight": 0.009
         },
         {
           "index": 5,
-          "weight": 0.0038
+          "weight": 0.004
         }
       ]
     },
@@ -677,26 +782,26 @@
         "opsz": 98
       },
       "metrics": {
-        "focus": 0.9075,
-        "entropy": 0.1677,
-        "selfAttention": 0.0434
+        "focus": 0.9079,
+        "entropy": 0.1668,
+        "selfAttention": 0.0436
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.9075
+          "weight": 0.9079
         },
         {
           "index": 17,
-          "weight": 0.0102
+          "weight": 0.0103
         },
         {
           "index": 16,
-          "weight": 0.0076
+          "weight": 0.0073
         },
         {
           "index": 4,
-          "weight": 0.0049
+          "weight": 0.0048
         },
         {
           "index": 15,
@@ -710,79 +815,79 @@
     },
     {
       "axes": {
-        "wght": 506,
-        "wdth": 96,
+        "wght": 504,
+        "wdth": 97,
         "slnt": -0.4,
-        "opsz": 81
+        "opsz": 80
       },
       "metrics": {
-        "focus": 0.7758,
-        "entropy": 0.3691,
-        "selfAttention": 0.0461
+        "focus": 0.7707,
+        "entropy": 0.3762,
+        "selfAttention": 0.0465
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7758
+          "weight": 0.7707
         },
         {
           "index": 16,
-          "weight": 0.0264
-        },
-        {
-          "index": 10,
-          "weight": 0.0252
+          "weight": 0.0257
         },
         {
           "index": 15,
-          "weight": 0.0234
+          "weight": 0.0254
+        },
+        {
+          "index": 10,
+          "weight": 0.025
         },
         {
           "index": 9,
-          "weight": 0.0163
+          "weight": 0.0164
         },
         {
           "index": 4,
-          "weight": 0.015
+          "weight": 0.0159
         }
       ]
     },
     {
       "axes": {
-        "wght": 447,
-        "wdth": 107,
+        "wght": 451,
+        "wdth": 106,
         "slnt": -0.7,
-        "opsz": 68
+        "opsz": 69
       },
       "metrics": {
-        "focus": 0.6367,
-        "entropy": 0.5261,
-        "selfAttention": 0.0789
+        "focus": 0.6443,
+        "entropy": 0.5178,
+        "selfAttention": 0.0807
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.6367
-        },
-        {
-          "index": 16,
-          "weight": 0.0513
+          "weight": 0.6443
         },
         {
           "index": 10,
-          "weight": 0.05
+          "weight": 0.0535
+        },
+        {
+          "index": 16,
+          "weight": 0.0437
         },
         {
           "index": 15,
-          "weight": 0.0217
+          "weight": 0.0205
         },
         {
           "index": 17,
-          "weight": 0.018
+          "weight": 0.0155
         },
         {
           "index": 18,
-          "weight": 0.0167
+          "weight": 0.0139
         }
       ]
     },
@@ -794,34 +899,34 @@
         "opsz": 96
       },
       "metrics": {
-        "focus": 0.8897,
-        "entropy": 0.189,
-        "selfAttention": 0.0441
+        "focus": 0.8912,
+        "entropy": 0.185,
+        "selfAttention": 0.0454
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8897
+          "weight": 0.8912
         },
         {
           "index": 20,
-          "weight": 0.0237
-        },
-        {
-          "index": 19,
-          "weight": 0.0044
-        },
-        {
-          "index": 16,
-          "weight": 0.0044
+          "weight": 0.0235
         },
         {
           "index": 10,
-          "weight": 0.0044
+          "weight": 0.0045
+        },
+        {
+          "index": 19,
+          "weight": 0.0042
         },
         {
           "index": 15,
-          "weight": 0.0039
+          "weight": 0.0034
+        },
+        {
+          "index": 16,
+          "weight": 0.0033
         }
       ]
     },
@@ -830,142 +935,142 @@
         "wght": 530,
         "wdth": 88,
         "slnt": -0.9,
-        "opsz": 91
+        "opsz": 92
       },
       "metrics": {
-        "focus": 0.8326,
-        "entropy": 0.2448,
+        "focus": 0.8339,
+        "entropy": 0.2428,
         "selfAttention": 0.0952
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8326
+          "weight": 0.8339
         },
         {
           "index": 20,
-          "weight": 0.012
-        },
-        {
-          "index": 16,
-          "weight": 0.0062
+          "weight": 0.0121
         },
         {
           "index": 9,
-          "weight": 0.0061
+          "weight": 0.0059
+        },
+        {
+          "index": 16,
+          "weight": 0.0058
         },
         {
           "index": 18,
           "weight": 0.0049
         },
         {
-          "index": 19,
+          "index": 10,
           "weight": 0.0045
         }
       ]
     },
     {
       "axes": {
-        "wght": 528,
+        "wght": 529,
         "wdth": 87,
         "slnt": -0.8,
-        "opsz": 92
+        "opsz": 93
       },
       "metrics": {
-        "focus": 0.8287,
-        "entropy": 0.2322,
-        "selfAttention": 0.0935
+        "focus": 0.8308,
+        "entropy": 0.2297,
+        "selfAttention": 0.0921
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8287
+          "weight": 0.8308
         },
         {
           "index": 22,
-          "weight": 0.0393
+          "weight": 0.0396
         },
         {
           "index": 21,
-          "weight": 0.0056
+          "weight": 0.0055
         },
         {
           "index": 16,
-          "weight": 0.0043
+          "weight": 0.0039
         },
         {
           "index": 17,
-          "weight": 0.0034
+          "weight": 0.0033
         },
         {
           "index": 20,
-          "weight": 0.0032
+          "weight": 0.0031
         }
       ]
     },
     {
       "axes": {
-        "wght": 498,
-        "wdth": 93,
+        "wght": 499,
+        "wdth": 92,
         "slnt": -0.4,
         "opsz": 86
       },
       "metrics": {
-        "focus": 0.7563,
-        "entropy": 0.3142,
-        "selfAttention": 0.0485
+        "focus": 0.759,
+        "entropy": 0.3095,
+        "selfAttention": 0.0469
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7563
+          "weight": 0.759
         },
         {
           "index": 23,
-          "weight": 0.101
+          "weight": 0.1009
         },
         {
           "index": 22,
-          "weight": 0.047
-        },
-        {
-          "index": 16,
-          "weight": 0.0057
+          "weight": 0.0488
         },
         {
           "index": 18,
-          "weight": 0.0053
+          "weight": 0.0052
+        },
+        {
+          "index": 16,
+          "weight": 0.005
         },
         {
           "index": 21,
-          "weight": 0.0044
+          "weight": 0.0041
         }
       ]
     },
     {
       "axes": {
-        "wght": 547,
+        "wght": 548,
         "wdth": 85,
         "slnt": -0.5,
         "opsz": 95
       },
       "metrics": {
-        "focus": 0.8742,
-        "entropy": 0.1983,
-        "selfAttention": 0.0527
+        "focus": 0.8758,
+        "entropy": 0.1967,
+        "selfAttention": 0.0518
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8742
+          "weight": 0.8758
         },
         {
           "index": 24,
-          "weight": 0.0178
+          "weight": 0.0177
         },
         {
           "index": 23,
-          "weight": 0.0143
+          "weight": 0.0141
         },
         {
           "index": 22,
@@ -973,7 +1078,7 @@
         },
         {
           "index": 16,
-          "weight": 0.0054
+          "weight": 0.0047
         },
         {
           "index": 4,
@@ -983,36 +1088,36 @@
     },
     {
       "axes": {
-        "wght": 531,
+        "wght": 532,
         "wdth": 88,
         "slnt": -0.4,
         "opsz": 92
       },
       "metrics": {
-        "focus": 0.836,
-        "entropy": 0.2407,
-        "selfAttention": 0.0451
+        "focus": 0.8379,
+        "entropy": 0.2382,
+        "selfAttention": 0.0447
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.836
+          "weight": 0.8379
         },
         {
           "index": 25,
-          "weight": 0.0444
+          "weight": 0.0452
         },
         {
           "index": 23,
-          "weight": 0.0202
+          "weight": 0.0199
         },
         {
           "index": 24,
-          "weight": 0.0188
+          "weight": 0.0171
         },
         {
           "index": 22,
-          "weight": 0.0091
+          "weight": 0.009
         },
         {
           "index": 7,
@@ -1022,32 +1127,32 @@
     },
     {
       "axes": {
-        "wght": 545,
+        "wght": 544,
         "wdth": 86,
         "slnt": -0.3,
         "opsz": 95
       },
       "metrics": {
-        "focus": 0.8685,
-        "entropy": 0.2063,
-        "selfAttention": 0.0353
+        "focus": 0.8669,
+        "entropy": 0.2077,
+        "selfAttention": 0.0355
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8685
+          "weight": 0.8669
         },
         {
           "index": 26,
-          "weight": 0.0225
+          "weight": 0.0238
         },
         {
           "index": 23,
-          "weight": 0.0199
+          "weight": 0.0194
         },
         {
           "index": 25,
-          "weight": 0.0178
+          "weight": 0.0188
         },
         {
           "index": 24,
@@ -1061,28 +1166,28 @@
     },
     {
       "axes": {
-        "wght": 548,
+        "wght": 549,
         "wdth": 85,
         "slnt": -0.4,
-        "opsz": 95
+        "opsz": 96
       },
       "metrics": {
-        "focus": 0.8753,
-        "entropy": 0.1985,
-        "selfAttention": 0.0431
+        "focus": 0.8785,
+        "entropy": 0.1935,
+        "selfAttention": 0.0428
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8753
+          "weight": 0.8785
         },
         {
           "index": 26,
-          "weight": 0.0147
+          "weight": 0.0153
         },
         {
           "index": 27,
-          "weight": 0.0132
+          "weight": 0.0129
         },
         {
           "index": 25,
@@ -1090,34 +1195,34 @@
         },
         {
           "index": 24,
-          "weight": 0.0077
+          "weight": 0.007
         },
         {
           "index": 23,
-          "weight": 0.0067
+          "weight": 0.0062
         }
       ]
     },
     {
       "axes": {
-        "wght": 500,
+        "wght": 499,
         "wdth": 94,
         "slnt": -0.4,
         "opsz": 84
       },
       "metrics": {
-        "focus": 0.7623,
-        "entropy": 0.3335,
-        "selfAttention": 0.0391
+        "focus": 0.7593,
+        "entropy": 0.3347,
+        "selfAttention": 0.0403
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7623
+          "weight": 0.7593
         },
         {
           "index": 28,
-          "weight": 0.0539
+          "weight": 0.0566
         },
         {
           "index": 27,
@@ -1125,93 +1230,93 @@
         },
         {
           "index": 26,
-          "weight": 0.0269
+          "weight": 0.0284
         },
         {
           "index": 25,
-          "weight": 0.014
+          "weight": 0.0141
         },
         {
           "index": 23,
-          "weight": 0.0132
+          "weight": 0.0127
         }
       ]
     },
     {
       "axes": {
-        "wght": 518,
+        "wght": 519,
         "wdth": 91,
         "slnt": -0.4,
         "opsz": 88
       },
       "metrics": {
-        "focus": 0.8045,
-        "entropy": 0.2875,
-        "selfAttention": 0.0486
+        "focus": 0.8079,
+        "entropy": 0.282,
+        "selfAttention": 0.0484
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8045
+          "weight": 0.8079
         },
         {
           "index": 28,
-          "weight": 0.0415
+          "weight": 0.0422
         },
         {
           "index": 29,
-          "weight": 0.0171
+          "weight": 0.0175
         },
         {
           "index": 27,
-          "weight": 0.0159
+          "weight": 0.0153
         },
         {
           "index": 23,
-          "weight": 0.0117
+          "weight": 0.0105
         },
         {
           "index": 26,
-          "weight": 0.0075
+          "weight": 0.0076
         }
       ]
     },
     {
       "axes": {
-        "wght": 450,
+        "wght": 448,
         "wdth": 103,
         "slnt": -0.5,
-        "opsz": 73
+        "opsz": 72
       },
       "metrics": {
-        "focus": 0.6426,
-        "entropy": 0.4684,
-        "selfAttention": 0.0516
+        "focus": 0.6378,
+        "entropy": 0.4724,
+        "selfAttention": 0.0524
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.6426
+          "weight": 0.6378
         },
         {
           "index": 28,
-          "weight": 0.0568
+          "weight": 0.058
         },
         {
           "index": 27,
-          "weight": 0.042
+          "weight": 0.0408
         },
         {
           "index": 26,
-          "weight": 0.0302
-        },
-        {
-          "index": 23,
-          "weight": 0.0241
+          "weight": 0.0341
         },
         {
           "index": 25,
-          "weight": 0.0223
+          "weight": 0.0231
+        },
+        {
+          "index": 23,
+          "weight": 0.0231
         }
       ]
     },
@@ -1223,151 +1328,151 @@
         "opsz": 79
       },
       "metrics": {
-        "focus": 0.7006,
-        "entropy": 0.392,
-        "selfAttention": 0.0846
+        "focus": 0.6994,
+        "entropy": 0.3918,
+        "selfAttention": 0.086
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7006
+          "weight": 0.6994
         },
         {
           "index": 28,
-          "weight": 0.0335
+          "weight": 0.0346
         },
         {
           "index": 30,
-          "weight": 0.0215
+          "weight": 0.0212
         },
         {
           "index": 23,
-          "weight": 0.021
-        },
-        {
-          "index": 31,
           "weight": 0.0199
         },
         {
+          "index": 31,
+          "weight": 0.0196
+        },
+        {
           "index": 26,
-          "weight": 0.0181
+          "weight": 0.0194
         }
       ]
     },
     {
       "axes": {
-        "wght": 519,
+        "wght": 520,
         "wdth": 90,
         "slnt": -0.5,
         "opsz": 89
       },
       "metrics": {
-        "focus": 0.808,
-        "entropy": 0.2784,
-        "selfAttention": 0.0566
+        "focus": 0.809,
+        "entropy": 0.2768,
+        "selfAttention": 0.0555
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.808
+          "weight": 0.809
         },
         {
           "index": 32,
-          "weight": 0.0288
+          "weight": 0.0303
         },
         {
           "index": 23,
-          "weight": 0.0141
+          "weight": 0.0132
         },
         {
           "index": 28,
-          "weight": 0.0122
+          "weight": 0.0127
         },
         {
           "index": 31,
-          "weight": 0.0114
+          "weight": 0.0118
         },
         {
           "index": 29,
-          "weight": 0.0089
+          "weight": 0.0096
         }
       ]
     },
     {
       "axes": {
-        "wght": 522,
+        "wght": 523,
         "wdth": 89,
         "slnt": -0.4,
         "opsz": 90
       },
       "metrics": {
-        "focus": 0.8149,
-        "entropy": 0.2593,
-        "selfAttention": 0.0406
+        "focus": 0.8173,
+        "entropy": 0.2571,
+        "selfAttention": 0.04
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8149
+          "weight": 0.8173
         },
         {
           "index": 33,
-          "weight": 0.0473
+          "weight": 0.045
         },
         {
           "index": 32,
-          "weight": 0.0276
+          "weight": 0.0283
         },
         {
           "index": 28,
-          "weight": 0.0115
+          "weight": 0.0117
         },
         {
           "index": 30,
-          "weight": 0.008
+          "weight": 0.0084
         },
         {
           "index": 31,
-          "weight": 0.0068
+          "weight": 0.007
         }
       ]
     },
     {
       "axes": {
-        "wght": 496,
+        "wght": 499,
         "wdth": 94,
         "slnt": -0.6,
         "opsz": 84
       },
       "metrics": {
-        "focus": 0.7531,
-        "entropy": 0.3376,
-        "selfAttention": 0.0633
+        "focus": 0.7598,
+        "entropy": 0.3302,
+        "selfAttention": 0.0612
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7531
+          "weight": 0.7598
         },
         {
           "index": 33,
-          "weight": 0.0342
+          "weight": 0.034
         },
         {
           "index": 32,
-          "weight": 0.0287
+          "weight": 0.0279
         },
         {
           "index": 34,
-          "weight": 0.0198
+          "weight": 0.02
         },
         {
           "index": 31,
-          "weight": 0.0132
+          "weight": 0.013
         },
         {
-          "index": 27,
-          "weight": 0.0103
+          "index": 28,
+          "weight": 0.0102
         }
       ]
     },
@@ -1379,26 +1484,26 @@
         "opsz": 89
       },
       "metrics": {
-        "focus": 0.7941,
-        "entropy": 0.2793,
-        "selfAttention": 0.0582
+        "focus": 0.7963,
+        "entropy": 0.2763,
+        "selfAttention": 0.0587
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7941
+          "weight": 0.7963
         },
         {
           "index": 35,
-          "weight": 0.0352
+          "weight": 0.0351
         },
         {
           "index": 33,
-          "weight": 0.0222
+          "weight": 0.0215
         },
         {
           "index": 32,
-          "weight": 0.0206
+          "weight": 0.0201
         },
         {
           "index": 34,
@@ -1406,85 +1511,85 @@
         },
         {
           "index": 28,
-          "weight": 0.0095
+          "weight": 0.0094
         }
       ]
     },
     {
       "axes": {
-        "wght": 517,
-        "wdth": 90,
+        "wght": 516,
+        "wdth": 91,
         "slnt": -0.4,
         "opsz": 88
       },
       "metrics": {
-        "focus": 0.8016,
-        "entropy": 0.2799,
-        "selfAttention": 0.0415
+        "focus": 0.7992,
+        "entropy": 0.2821,
+        "selfAttention": 0.0418
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8016
+          "weight": 0.7992
         },
         {
           "index": 36,
-          "weight": 0.0334
+          "weight": 0.034
+        },
+        {
+          "index": 35,
+          "weight": 0.0233
         },
         {
           "index": 33,
           "weight": 0.0229
         },
         {
-          "index": 35,
-          "weight": 0.0224
-        },
-        {
           "index": 32,
-          "weight": 0.0127
+          "weight": 0.0126
         },
         {
           "index": 34,
-          "weight": 0.0117
+          "weight": 0.012
         }
       ]
     },
     {
       "axes": {
-        "wght": 523,
+        "wght": 524,
         "wdth": 88,
         "slnt": -0.6,
-        "opsz": 91
+        "opsz": 92
       },
       "metrics": {
-        "focus": 0.8176,
-        "entropy": 0.2442,
-        "selfAttention": 0.0708
+        "focus": 0.8191,
+        "entropy": 0.2432,
+        "selfAttention": 0.0696
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8176
+          "weight": 0.8191
         },
         {
           "index": 36,
-          "weight": 0.0237
+          "weight": 0.0246
         },
         {
           "index": 35,
-          "weight": 0.017
+          "weight": 0.0163
         },
         {
           "index": 37,
-          "weight": 0.0167
+          "weight": 0.0162
         },
         {
           "index": 33,
-          "weight": 0.0092
+          "weight": 0.009
         },
         {
           "index": 34,
-          "weight": 0.0084
+          "weight": 0.0083
         }
       ]
     },
@@ -1496,30 +1601,30 @@
         "opsz": 87
       },
       "metrics": {
-        "focus": 0.7746,
-        "entropy": 0.2936,
-        "selfAttention": 0.0864
+        "focus": 0.7749,
+        "entropy": 0.2944,
+        "selfAttention": 0.084
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7746
+          "weight": 0.7749
         },
         {
           "index": 36,
-          "weight": 0.0234
+          "weight": 0.0239
         },
         {
           "index": 38,
-          "weight": 0.0211
+          "weight": 0.0223
         },
         {
           "index": 37,
-          "weight": 0.0146
+          "weight": 0.0145
         },
         {
           "index": 35,
-          "weight": 0.0138
+          "weight": 0.0137
         },
         {
           "index": 34,
@@ -1529,32 +1634,32 @@
     },
     {
       "axes": {
-        "wght": 519,
+        "wght": 518,
         "wdth": 90,
         "slnt": -0.5,
         "opsz": 90
       },
       "metrics": {
-        "focus": 0.8072,
-        "entropy": 0.2663,
-        "selfAttention": 0.0526
+        "focus": 0.8059,
+        "entropy": 0.2676,
+        "selfAttention": 0.0535
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.8072
+          "weight": 0.8059
         },
         {
           "index": 39,
-          "weight": 0.029
+          "weight": 0.0283
         },
         {
           "index": 36,
-          "weight": 0.0189
+          "weight": 0.0193
         },
         {
           "index": 38,
-          "weight": 0.0185
+          "weight": 0.0183
         },
         {
           "index": 35,
@@ -1562,85 +1667,4180 @@
         },
         {
           "index": 33,
+          "weight": 0.0102
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 507,
+        "wdth": 93,
+        "slnt": -0.4,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7788,
+        "entropy": 0.3208,
+        "selfAttention": 0.0469
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7788
+        },
+        {
+          "index": 38,
+          "weight": 0.0171
+        },
+        {
+          "index": 31,
+          "weight": 0.0154
+        },
+        {
+          "index": 36,
+          "weight": 0.0154
+        },
+        {
+          "index": 35,
+          "weight": 0.0106
+        },
+        {
+          "index": 32,
+          "weight": 0.0105
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 439,
+        "wdth": 105,
+        "slnt": -0.5,
+        "opsz": 71
+      },
+      "metrics": {
+        "focus": 0.6172,
+        "entropy": 0.4936,
+        "selfAttention": 0.0602
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6172
+        },
+        {
+          "index": 32,
+          "weight": 0.0406
+        },
+        {
+          "index": 38,
+          "weight": 0.0375
+        },
+        {
+          "index": 33,
+          "weight": 0.0223
+        },
+        {
+          "index": 40,
+          "weight": 0.0222
+        },
+        {
+          "index": 36,
+          "weight": 0.0197
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 555,
+        "wdth": 82,
+        "slnt": -0.5,
+        "opsz": 99
+      },
+      "metrics": {
+        "focus": 0.8933,
+        "entropy": 0.1532,
+        "selfAttention": 0.0569
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8933
+        },
+        {
+          "index": 42,
+          "weight": 0.0062
+        },
+        {
+          "index": 30,
+          "weight": 0.0036
+        },
+        {
+          "index": 36,
+          "weight": 0.0031
+        },
+        {
+          "index": 32,
+          "weight": 0.0031
+        },
+        {
+          "index": 31,
+          "weight": 0.0031
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 491,
+        "wdth": 95,
+        "slnt": -0.6,
+        "opsz": 82
+      },
+      "metrics": {
+        "focus": 0.74,
+        "entropy": 0.3541,
+        "selfAttention": 0.0633
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.74
+        },
+        {
+          "index": 43,
+          "weight": 0.0378
+        },
+        {
+          "index": 42,
+          "weight": 0.0213
+        },
+        {
+          "index": 32,
+          "weight": 0.0109
+        },
+        {
+          "index": 31,
           "weight": 0.0098
+        },
+        {
+          "index": 38,
+          "weight": 0.0081
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 505,
+        "wdth": 92,
+        "slnt": -0.5,
+        "opsz": 86
+      },
+      "metrics": {
+        "focus": 0.7731,
+        "entropy": 0.3093,
+        "selfAttention": 0.0567
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7731
+        },
+        {
+          "index": 44,
+          "weight": 0.0403
+        },
+        {
+          "index": 43,
+          "weight": 0.0187
+        },
+        {
+          "index": 42,
+          "weight": 0.0106
+        },
+        {
+          "index": 39,
+          "weight": 0.0089
+        },
+        {
+          "index": 38,
+          "weight": 0.0081
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 474,
+        "wdth": 98,
+        "slnt": -0.6,
+        "opsz": 79
+      },
+      "metrics": {
+        "focus": 0.7003,
+        "entropy": 0.3873,
+        "selfAttention": 0.0707
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7003
+        },
+        {
+          "index": 44,
+          "weight": 0.0348
+        },
+        {
+          "index": 45,
+          "weight": 0.0302
+        },
+        {
+          "index": 43,
+          "weight": 0.0202
+        },
+        {
+          "index": 42,
+          "weight": 0.0182
+        },
+        {
+          "index": 40,
+          "weight": 0.008
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 491,
+        "wdth": 95,
+        "slnt": -0.4,
+        "opsz": 83
+      },
+      "metrics": {
+        "focus": 0.7404,
+        "entropy": 0.341,
+        "selfAttention": 0.0422
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7404
+        },
+        {
+          "index": 46,
+          "weight": 0.055
+        },
+        {
+          "index": 45,
+          "weight": 0.0297
+        },
+        {
+          "index": 44,
+          "weight": 0.0194
+        },
+        {
+          "index": 43,
+          "weight": 0.0133
+        },
+        {
+          "index": 30,
+          "weight": 0.0082
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 546,
+        "wdth": 84,
+        "slnt": -0.5,
+        "opsz": 97
+      },
+      "metrics": {
+        "focus": 0.8716,
+        "entropy": 0.1795,
+        "selfAttention": 0.0542
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8716
+        },
+        {
+          "index": 46,
+          "weight": 0.0098
+        },
+        {
+          "index": 47,
+          "weight": 0.0086
+        },
+        {
+          "index": 44,
+          "weight": 0.0084
+        },
+        {
+          "index": 45,
+          "weight": 0.0078
+        },
+        {
+          "index": 43,
+          "weight": 0.0064
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 495,
+        "wdth": 93,
+        "slnt": -0.4,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7503,
+        "entropy": 0.3228,
+        "selfAttention": 0.0432
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7503
+        },
+        {
+          "index": 48,
+          "weight": 0.0512
+        },
+        {
+          "index": 46,
+          "weight": 0.0384
+        },
+        {
+          "index": 47,
+          "weight": 0.0171
+        },
+        {
+          "index": 44,
+          "weight": 0.0105
+        },
+        {
+          "index": 45,
+          "weight": 0.0097
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 492,
+        "wdth": 92,
+        "slnt": -0.6,
+        "opsz": 86
+      },
+      "metrics": {
+        "focus": 0.7426,
+        "entropy": 0.3062,
+        "selfAttention": 0.063
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7426
+        },
+        {
+          "index": 48,
+          "weight": 0.0823
+        },
+        {
+          "index": 46,
+          "weight": 0.0166
+        },
+        {
+          "index": 49,
+          "weight": 0.0115
+        },
+        {
+          "index": 45,
+          "weight": 0.0101
+        },
+        {
+          "index": 44,
+          "weight": 0.0076
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 485,
+        "wdth": 95,
+        "slnt": -0.9,
+        "opsz": 83
+      },
+      "metrics": {
+        "focus": 0.7253,
+        "entropy": 0.3411,
+        "selfAttention": 0.0954
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7253
+        },
+        {
+          "index": 48,
+          "weight": 0.025
+        },
+        {
+          "index": 50,
+          "weight": 0.0235
+        },
+        {
+          "index": 46,
+          "weight": 0.0149
+        },
+        {
+          "index": 45,
+          "weight": 0.0109
+        },
+        {
+          "index": 47,
+          "weight": 0.0086
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 442,
+        "wdth": 102,
+        "slnt": -0.3,
+        "opsz": 74
+      },
+      "metrics": {
+        "focus": 0.6247,
+        "entropy": 0.4515,
+        "selfAttention": 0.0336
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6247
+        },
+        {
+          "index": 51,
+          "weight": 0.0638
+        },
+        {
+          "index": 50,
+          "weight": 0.0433
+        },
+        {
+          "index": 48,
+          "weight": 0.031
+        },
+        {
+          "index": 46,
+          "weight": 0.0256
+        },
+        {
+          "index": 44,
+          "weight": 0.0186
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 459,
+        "wdth": 99,
+        "slnt": -0.7,
+        "opsz": 78
+      },
+      "metrics": {
+        "focus": 0.6645,
+        "entropy": 0.4057,
+        "selfAttention": 0.0827
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6645
+        },
+        {
+          "index": 51,
+          "weight": 0.0292
+        },
+        {
+          "index": 46,
+          "weight": 0.0267
+        },
+        {
+          "index": 50,
+          "weight": 0.0252
+        },
+        {
+          "index": 48,
+          "weight": 0.0208
+        },
+        {
+          "index": 44,
+          "weight": 0.0176
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 495,
+        "wdth": 93,
+        "slnt": -0.8,
+        "opsz": 86
+      },
+      "metrics": {
+        "focus": 0.7499,
+        "entropy": 0.3117,
+        "selfAttention": 0.0905
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7499
+        },
+        {
+          "index": 53,
+          "weight": 0.0273
+        },
+        {
+          "index": 51,
+          "weight": 0.0169
+        },
+        {
+          "index": 46,
+          "weight": 0.0127
+        },
+        {
+          "index": 48,
+          "weight": 0.0093
+        },
+        {
+          "index": 50,
+          "weight": 0.0069
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 488,
+        "wdth": 94,
+        "slnt": -0.5,
+        "opsz": 84
+      },
+      "metrics": {
+        "focus": 0.7331,
+        "entropy": 0.3389,
+        "selfAttention": 0.052
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7331
+        },
+        {
+          "index": 54,
+          "weight": 0.0451
+        },
+        {
+          "index": 51,
+          "weight": 0.026
+        },
+        {
+          "index": 53,
+          "weight": 0.0243
+        },
+        {
+          "index": 46,
+          "weight": 0.0134
+        },
+        {
+          "index": 50,
+          "weight": 0.0099
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 514,
+        "wdth": 90,
+        "slnt": -0.3,
+        "opsz": 89
+      },
+      "metrics": {
+        "focus": 0.7956,
+        "entropy": 0.2702,
+        "selfAttention": 0.0365
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7956
+        },
+        {
+          "index": 54,
+          "weight": 0.0379
+        },
+        {
+          "index": 55,
+          "weight": 0.0217
+        },
+        {
+          "index": 51,
+          "weight": 0.0172
+        },
+        {
+          "index": 53,
+          "weight": 0.0148
+        },
+        {
+          "index": 48,
+          "weight": 0.0102
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 534,
+        "wdth": 85,
+        "slnt": -0.6,
+        "opsz": 96
+      },
+      "metrics": {
+        "focus": 0.8438,
+        "entropy": 0.1958,
+        "selfAttention": 0.0666
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8438
+        },
+        {
+          "index": 56,
+          "weight": 0.0293
+        },
+        {
+          "index": 51,
+          "weight": 0.0075
+        },
+        {
+          "index": 55,
+          "weight": 0.0074
+        },
+        {
+          "index": 54,
+          "weight": 0.0067
+        },
+        {
+          "index": 48,
+          "weight": 0.004
         }
       ]
     },
     {
       "axes": {
         "wght": 506,
-        "wdth": 93,
-        "slnt": -0.4,
-        "opsz": 85
+        "wdth": 90,
+        "slnt": -0.9,
+        "opsz": 90
       },
       "metrics": {
-        "focus": 0.7773,
-        "entropy": 0.3231,
-        "selfAttention": 0.0463
+        "focus": 0.7752,
+        "entropy": 0.2656,
+        "selfAttention": 0.0977
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.7773
+          "weight": 0.7752
         },
         {
-          "index": 38,
-          "weight": 0.0177
+          "index": 57,
+          "weight": 0.0272
         },
         {
-          "index": 36,
-          "weight": 0.0157
+          "index": 56,
+          "weight": 0.0152
         },
         {
-          "index": 31,
-          "weight": 0.0147
+          "index": 54,
+          "weight": 0.0122
         },
         {
-          "index": 39,
-          "weight": 0.0107
+          "index": 51,
+          "weight": 0.0101
         },
         {
-          "index": 32,
-          "weight": 0.0106
+          "index": 55,
+          "weight": 0.0082
         }
       ]
     },
     {
       "axes": {
-        "wght": 467,
-        "wdth": 100,
-        "slnt": -0.6,
-        "opsz": 76
+        "wght": 519,
+        "wdth": 88,
+        "slnt": -0.4,
+        "opsz": 92
       },
       "metrics": {
-        "focus": 0.6827,
-        "entropy": 0.4275,
-        "selfAttention": 0.0715
+        "focus": 0.8074,
+        "entropy": 0.2414,
+        "selfAttention": 0.0457
       },
       "links": [
         {
           "index": 0,
-          "weight": 0.6827
+          "weight": 0.8074
         },
         {
-          "index": 31,
+          "index": 58,
+          "weight": 0.0566
+        },
+        {
+          "index": 57,
+          "weight": 0.0139
+        },
+        {
+          "index": 56,
+          "weight": 0.0091
+        },
+        {
+          "index": 51,
+          "weight": 0.008
+        },
+        {
+          "index": 54,
+          "weight": 0.0077
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 496,
+        "wdth": 93,
+        "slnt": -0.5,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.752,
+        "entropy": 0.3175,
+        "selfAttention": 0.0562
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.752
+        },
+        {
+          "index": 58,
+          "weight": 0.0386
+        },
+        {
+          "index": 57,
+          "weight": 0.0175
+        },
+        {
+          "index": 59,
+          "weight": 0.0159
+        },
+        {
+          "index": 51,
+          "weight": 0.0115
+        },
+        {
+          "index": 54,
+          "weight": 0.009
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 450,
+        "wdth": 101,
+        "slnt": -0.4,
+        "opsz": 75
+      },
+      "metrics": {
+        "focus": 0.6432,
+        "entropy": 0.435,
+        "selfAttention": 0.0442
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6432
+        },
+        {
+          "index": 57,
+          "weight": 0.0356
+        },
+        {
+          "index": 58,
+          "weight": 0.0321
+        },
+        {
+          "index": 56,
+          "weight": 0.0315
+        },
+        {
+          "index": 54,
+          "weight": 0.031
+        },
+        {
+          "index": 53,
+          "weight": 0.0268
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 497,
+        "wdth": 93,
+        "slnt": -0.4,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7548,
+        "entropy": 0.3232,
+        "selfAttention": 0.0446
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7548
+        },
+        {
+          "index": 56,
+          "weight": 0.0203
+        },
+        {
+          "index": 54,
+          "weight": 0.0202
+        },
+        {
+          "index": 57,
+          "weight": 0.0171
+        },
+        {
+          "index": 58,
+          "weight": 0.0159
+        },
+        {
+          "index": 53,
+          "weight": 0.014
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 527,
+        "wdth": 86,
+        "slnt": -0.7,
+        "opsz": 94
+      },
+      "metrics": {
+        "focus": 0.8253,
+        "entropy": 0.2184,
+        "selfAttention": 0.0758
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8253
+        },
+        {
+          "index": 62,
+          "weight": 0.0213
+        },
+        {
+          "index": 58,
+          "weight": 0.0074
+        },
+        {
+          "index": 57,
+          "weight": 0.0073
+        },
+        {
+          "index": 61,
+          "weight": 0.007
+        },
+        {
+          "index": 59,
+          "weight": 0.0045
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 547,
+        "wdth": 83,
+        "slnt": -0.4,
+        "opsz": 98
+      },
+      "metrics": {
+        "focus": 0.8745,
+        "entropy": 0.1639,
+        "selfAttention": 0.0465
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8745
+        },
+        {
+          "index": 63,
+          "weight": 0.0307
+        },
+        {
+          "index": 62,
+          "weight": 0.0081
+        },
+        {
+          "index": 58,
+          "weight": 0.0037
+        },
+        {
+          "index": 61,
+          "weight": 0.0026
+        },
+        {
+          "index": 30,
+          "weight": 0.0025
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 528,
+        "wdth": 85,
+        "slnt": -0.6,
+        "opsz": 95
+      },
+      "metrics": {
+        "focus": 0.8296,
+        "entropy": 0.2045,
+        "selfAttention": 0.064
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8296
+        },
+        {
+          "index": 64,
+          "weight": 0.0414
+        },
+        {
+          "index": 63,
+          "weight": 0.0161
+        },
+        {
+          "index": 62,
+          "weight": 0.0052
+        },
+        {
+          "index": 30,
+          "weight": 0.0035
+        },
+        {
+          "index": 58,
+          "weight": 0.0033
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 515,
+        "wdth": 88,
+        "slnt": -0.4,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.7988,
+        "entropy": 0.2494,
+        "selfAttention": 0.041
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7988
+        },
+        {
+          "index": 64,
+          "weight": 0.0491
+        },
+        {
+          "index": 65,
+          "weight": 0.0301
+        },
+        {
+          "index": 63,
+          "weight": 0.0154
+        },
+        {
+          "index": 62,
+          "weight": 0.0061
+        },
+        {
+          "index": 58,
+          "weight": 0.006
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 504,
+        "wdth": 90,
+        "slnt": -0.6,
+        "opsz": 89
+      },
+      "metrics": {
+        "focus": 0.7724,
+        "entropy": 0.2749,
+        "selfAttention": 0.0669
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7724
+        },
+        {
+          "index": 66,
+          "weight": 0.0297
+        },
+        {
+          "index": 65,
+          "weight": 0.0275
+        },
+        {
+          "index": 64,
+          "weight": 0.0197
+        },
+        {
+          "index": 63,
+          "weight": 0.0151
+        },
+        {
+          "index": 60,
+          "weight": 0.0058
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 519,
+        "wdth": 89,
+        "slnt": -0.4,
+        "opsz": 90
+      },
+      "metrics": {
+        "focus": 0.8071,
+        "entropy": 0.2639,
+        "selfAttention": 0.0445
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8071
+        },
+        {
+          "index": 67,
+          "weight": 0.0186
+        },
+        {
+          "index": 65,
+          "weight": 0.0146
+        },
+        {
+          "index": 63,
+          "weight": 0.0107
+        },
+        {
+          "index": 64,
+          "weight": 0.0092
+        },
+        {
+          "index": 66,
+          "weight": 0.0084
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 463,
+        "wdth": 97,
+        "slnt": -0.3,
+        "opsz": 81
+      },
+      "metrics": {
+        "focus": 0.6735,
+        "entropy": 0.3722,
+        "selfAttention": 0.0368
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6735
+        },
+        {
+          "index": 67,
+          "weight": 0.0585
+        },
+        {
+          "index": 64,
+          "weight": 0.0391
+        },
+        {
+          "index": 68,
+          "weight": 0.03
+        },
+        {
+          "index": 63,
+          "weight": 0.0276
+        },
+        {
+          "index": 65,
+          "weight": 0.025
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 508,
+        "wdth": 90,
+        "slnt": -0.6,
+        "opsz": 89
+      },
+      "metrics": {
+        "focus": 0.7819,
+        "entropy": 0.2702,
+        "selfAttention": 0.0695
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7819
+        },
+        {
+          "index": 67,
+          "weight": 0.0239
+        },
+        {
+          "index": 64,
+          "weight": 0.0151
+        },
+        {
+          "index": 63,
+          "weight": 0.0138
+        },
+        {
+          "index": 66,
+          "weight": 0.0115
+        },
+        {
+          "index": 68,
+          "weight": 0.0098
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 492,
+        "wdth": 93,
+        "slnt": -0.6,
+        "opsz": 86
+      },
+      "metrics": {
+        "focus": 0.7426,
+        "entropy": 0.3134,
+        "selfAttention": 0.0687
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7426
+        },
+        {
+          "index": 70,
+          "weight": 0.0406
+        },
+        {
+          "index": 69,
+          "weight": 0.0146
+        },
+        {
+          "index": 68,
+          "weight": 0.0145
+        },
+        {
+          "index": 67,
+          "weight": 0.0129
+        },
+        {
+          "index": 65,
+          "weight": 0.0116
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 448,
+        "wdth": 98,
+        "slnt": -0.3,
+        "opsz": 79
+      },
+      "metrics": {
+        "focus": 0.6374,
+        "entropy": 0.3946,
+        "selfAttention": 0.0389
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6374
+        },
+        {
+          "index": 71,
+          "weight": 0.0958
+        },
+        {
+          "index": 70,
+          "weight": 0.0635
+        },
+        {
+          "index": 69,
+          "weight": 0.0166
+        },
+        {
+          "index": 67,
+          "weight": 0.0149
+        },
+        {
+          "index": 65,
+          "weight": 0.0137
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 498,
+        "wdth": 91,
+        "slnt": -0.5,
+        "opsz": 87
+      },
+      "metrics": {
+        "focus": 0.7582,
+        "entropy": 0.2918,
+        "selfAttention": 0.0602
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7582
+        },
+        {
+          "index": 71,
+          "weight": 0.0379
+        },
+        {
+          "index": 70,
+          "weight": 0.0267
+        },
+        {
+          "index": 72,
+          "weight": 0.0178
+        },
+        {
+          "index": 65,
+          "weight": 0.0097
+        },
+        {
+          "index": 67,
+          "weight": 0.0085
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 508,
+        "wdth": 91,
+        "slnt": -0.5,
+        "opsz": 88
+      },
+      "metrics": {
+        "focus": 0.7813,
+        "entropy": 0.2883,
+        "selfAttention": 0.0511
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7813
+        },
+        {
+          "index": 73,
+          "weight": 0.0239
+        },
+        {
+          "index": 71,
+          "weight": 0.0141
+        },
+        {
+          "index": 72,
+          "weight": 0.0097
+        },
+        {
+          "index": 70,
+          "weight": 0.0089
+        },
+        {
+          "index": 67,
+          "weight": 0.0088
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 519,
+        "wdth": 88,
+        "slnt": -0.5,
+        "opsz": 92
+      },
+      "metrics": {
+        "focus": 0.8078,
+        "entropy": 0.2369,
+        "selfAttention": 0.0568
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8078
+        },
+        {
+          "index": 74,
+          "weight": 0.0332
+        },
+        {
+          "index": 73,
+          "weight": 0.0221
+        },
+        {
+          "index": 71,
+          "weight": 0.0095
+        },
+        {
+          "index": 60,
+          "weight": 0.0068
+        },
+        {
+          "index": 72,
+          "weight": 0.0051
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 496,
+        "wdth": 91,
+        "slnt": -0.7,
+        "opsz": 88
+      },
+      "metrics": {
+        "focus": 0.7523,
+        "entropy": 0.29,
+        "selfAttention": 0.0731
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7523
+        },
+        {
+          "index": 75,
+          "weight": 0.0453
+        },
+        {
+          "index": 74,
+          "weight": 0.0249
+        },
+        {
+          "index": 73,
+          "weight": 0.0119
+        },
+        {
+          "index": 71,
+          "weight": 0.0086
+        },
+        {
+          "index": 68,
+          "weight": 0.0054
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 495,
+        "wdth": 93,
+        "slnt": -0.3,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7491,
+        "entropy": 0.3178,
+        "selfAttention": 0.0385
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7491
+        },
+        {
+          "index": 76,
+          "weight": 0.0296
+        },
+        {
+          "index": 75,
+          "weight": 0.0276
+        },
+        {
+          "index": 74,
+          "weight": 0.0217
+        },
+        {
+          "index": 73,
+          "weight": 0.0157
+        },
+        {
+          "index": 71,
+          "weight": 0.0118
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 447,
+        "wdth": 100,
+        "slnt": -0.2,
+        "opsz": 76
+      },
+      "metrics": {
+        "focus": 0.6366,
+        "entropy": 0.4236,
+        "selfAttention": 0.0214
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6366
+        },
+        {
+          "index": 77,
+          "weight": 0.0522
+        },
+        {
+          "index": 76,
+          "weight": 0.0478
+        },
+        {
+          "index": 75,
+          "weight": 0.0299
+        },
+        {
+          "index": 74,
+          "weight": 0.0262
+        },
+        {
+          "index": 73,
+          "weight": 0.0227
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 504,
+        "wdth": 90,
+        "slnt": -0.7,
+        "opsz": 90
+      },
+      "metrics": {
+        "focus": 0.771,
+        "entropy": 0.2661,
+        "selfAttention": 0.0816
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.771
+        },
+        {
+          "index": 77,
+          "weight": 0.0192
+        },
+        {
+          "index": 74,
+          "weight": 0.0173
+        },
+        {
+          "index": 75,
+          "weight": 0.0161
+        },
+        {
+          "index": 76,
+          "weight": 0.0114
+        },
+        {
+          "index": 78,
+          "weight": 0.0112
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 509,
+        "wdth": 91,
+        "slnt": -0.4,
+        "opsz": 87
+      },
+      "metrics": {
+        "focus": 0.783,
+        "entropy": 0.2918,
+        "selfAttention": 0.0416
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.783
+        },
+        {
+          "index": 77,
+          "weight": 0.0156
+        },
+        {
+          "index": 79,
+          "weight": 0.01
+        },
+        {
+          "index": 76,
+          "weight": 0.0097
+        },
+        {
+          "index": 78,
+          "weight": 0.0093
+        },
+        {
+          "index": 74,
+          "weight": 0.0088
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 445,
+        "wdth": 102,
+        "slnt": -0.4,
+        "opsz": 73
+      },
+      "metrics": {
+        "focus": 0.6308,
+        "entropy": 0.4596,
+        "selfAttention": 0.0393
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6308
+        },
+        {
+          "index": 73,
+          "weight": 0.0251
+        },
+        {
+          "index": 70,
+          "weight": 0.021
+        },
+        {
+          "index": 76,
+          "weight": 0.0197
+        },
+        {
+          "index": 79,
+          "weight": 0.0195
+        },
+        {
+          "index": 74,
+          "weight": 0.0182
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 498,
+        "wdth": 93,
+        "slnt": -0.6,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7566,
+        "entropy": 0.3201,
+        "selfAttention": 0.0618
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7566
+        },
+        {
+          "index": 79,
+          "weight": 0.0173
+        },
+        {
+          "index": 73,
+          "weight": 0.01
+        },
+        {
+          "index": 70,
+          "weight": 0.0082
+        },
+        {
+          "index": 74,
+          "weight": 0.0062
+        },
+        {
+          "index": 81,
+          "weight": 0.0059
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 530,
+        "wdth": 87,
+        "slnt": -0.4,
+        "opsz": 93
+      },
+      "metrics": {
+        "focus": 0.8341,
+        "entropy": 0.2274,
+        "selfAttention": 0.0454
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8341
+        },
+        {
+          "index": 82,
+          "weight": 0.0213
+        },
+        {
+          "index": 15,
+          "weight": 0.0048
+        },
+        {
+          "index": 13,
+          "weight": 0.0037
+        },
+        {
+          "index": 9,
+          "weight": 0.0036
+        },
+        {
+          "index": 79,
+          "weight": 0.0035
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 550,
+        "wdth": 82,
+        "slnt": -0.5,
+        "opsz": 100
+      },
+      "metrics": {
+        "focus": 0.8814,
+        "entropy": 0.1485,
+        "selfAttention": 0.061
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8814
+        },
+        {
+          "index": 83,
+          "weight": 0.0111
+        },
+        {
+          "index": 82,
+          "weight": 0.0054
+        },
+        {
+          "index": 75,
+          "weight": 0.0017
+        },
+        {
+          "index": 80,
+          "weight": 0.0015
+        },
+        {
+          "index": 81,
+          "weight": 0.0014
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 483,
+        "wdth": 92,
+        "slnt": -0.6,
+        "opsz": 87
+      },
+      "metrics": {
+        "focus": 0.7205,
+        "entropy": 0.2994,
+        "selfAttention": 0.0706
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7205
+        },
+        {
+          "index": 84,
+          "weight": 0.0872
+        },
+        {
+          "index": 83,
+          "weight": 0.0221
+        },
+        {
+          "index": 82,
+          "weight": 0.0156
+        },
+        {
+          "index": 79,
+          "weight": 0.0046
+        },
+        {
+          "index": 76,
+          "weight": 0.0039
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 512,
+        "wdth": 87,
+        "slnt": -0.7,
+        "opsz": 92
+      },
+      "metrics": {
+        "focus": 0.7907,
+        "entropy": 0.2328,
+        "selfAttention": 0.0746
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7907
+        },
+        {
+          "index": 84,
+          "weight": 0.0461
+        },
+        {
+          "index": 85,
+          "weight": 0.0234
+        },
+        {
+          "index": 82,
+          "weight": 0.0075
+        },
+        {
+          "index": 83,
+          "weight": 0.0073
+        },
+        {
+          "index": 80,
+          "weight": 0.0027
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 524,
+        "wdth": 86,
+        "slnt": -0.5,
+        "opsz": 94
+      },
+      "metrics": {
+        "focus": 0.8197,
+        "entropy": 0.2125,
+        "selfAttention": 0.0556
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8197
+        },
+        {
+          "index": 86,
+          "weight": 0.0355
+        },
+        {
+          "index": 84,
+          "weight": 0.0214
+        },
+        {
+          "index": 85,
+          "weight": 0.0145
+        },
+        {
+          "index": 80,
+          "weight": 0.0044
+        },
+        {
+          "index": 83,
+          "weight": 0.0042
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 502,
+        "wdth": 91,
+        "slnt": -0.4,
+        "opsz": 88
+      },
+      "metrics": {
+        "focus": 0.7678,
+        "entropy": 0.286,
+        "selfAttention": 0.0479
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7678
+        },
+        {
+          "index": 87,
+          "weight": 0.0324
+        },
+        {
+          "index": 86,
+          "weight": 0.0295
+        },
+        {
+          "index": 84,
+          "weight": 0.0143
+        },
+        {
+          "index": 85,
+          "weight": 0.0113
+        },
+        {
+          "index": 83,
+          "weight": 0.0056
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 448,
+        "wdth": 98,
+        "slnt": -0.3,
+        "opsz": 79
+      },
+      "metrics": {
+        "focus": 0.637,
+        "entropy": 0.389,
+        "selfAttention": 0.0289
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.637
+        },
+        {
+          "index": 86,
+          "weight": 0.0717
+        },
+        {
+          "index": 84,
+          "weight": 0.061
+        },
+        {
+          "index": 87,
+          "weight": 0.0358
+        },
+        {
+          "index": 88,
+          "weight": 0.0271
+        },
+        {
+          "index": 85,
+          "weight": 0.0238
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 514,
+        "wdth": 89,
+        "slnt": -0.5,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.7946,
+        "entropy": 0.2526,
+        "selfAttention": 0.0583
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7946
+        },
+        {
+          "index": 87,
+          "weight": 0.0195
+        },
+        {
+          "index": 84,
+          "weight": 0.018
+        },
+        {
+          "index": 86,
+          "weight": 0.0159
+        },
+        {
+          "index": 83,
+          "weight": 0.0093
+        },
+        {
+          "index": 88,
+          "weight": 0.0087
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 500,
+        "wdth": 91,
+        "slnt": -0.5,
+        "opsz": 88
+      },
+      "metrics": {
+        "focus": 0.7622,
+        "entropy": 0.2895,
+        "selfAttention": 0.0532
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7622
+        },
+        {
+          "index": 90,
+          "weight": 0.0252
+        },
+        {
+          "index": 84,
           "weight": 0.0226
         },
         {
-          "index": 32,
-          "weight": 0.0225
+          "index": 86,
+          "weight": 0.021
         },
         {
-          "index": 41,
-          "weight": 0.0194
+          "index": 83,
+          "weight": 0.0136
         },
         {
-          "index": 20,
-          "weight": 0.0187
+          "index": 87,
+          "weight": 0.0116
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 503,
+        "wdth": 90,
+        "slnt": -0.5,
+        "opsz": 89
+      },
+      "metrics": {
+        "focus": 0.7702,
+        "entropy": 0.2742,
+        "selfAttention": 0.052
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7702
+        },
+        {
+          "index": 91,
+          "weight": 0.0328
+        },
+        {
+          "index": 90,
+          "weight": 0.021
+        },
+        {
+          "index": 86,
+          "weight": 0.0189
+        },
+        {
+          "index": 87,
+          "weight": 0.0148
+        },
+        {
+          "index": 84,
+          "weight": 0.0099
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 477,
+        "wdth": 95,
+        "slnt": -0.2,
+        "opsz": 82
+      },
+      "metrics": {
+        "focus": 0.707,
+        "entropy": 0.3529,
+        "selfAttention": 0.0261
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.707
+        },
+        {
+          "index": 91,
+          "weight": 0.0383
+        },
+        {
+          "index": 92,
+          "weight": 0.0322
+        },
+        {
+          "index": 84,
+          "weight": 0.0277
+        },
+        {
+          "index": 90,
+          "weight": 0.0243
+        },
+        {
+          "index": 86,
+          "weight": 0.0162
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 461,
+        "wdth": 98,
+        "slnt": -0.4,
+        "opsz": 79
+      },
+      "metrics": {
+        "focus": 0.6702,
+        "entropy": 0.3917,
+        "selfAttention": 0.046
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6702
+        },
+        {
+          "index": 84,
+          "weight": 0.0336
+        },
+        {
+          "index": 91,
+          "weight": 0.0237
+        },
+        {
+          "index": 90,
+          "weight": 0.0237
+        },
+        {
+          "index": 93,
+          "weight": 0.0219
+        },
+        {
+          "index": 92,
+          "weight": 0.0185
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 511,
+        "wdth": 89,
+        "slnt": -0.5,
+        "opsz": 90
+      },
+      "metrics": {
+        "focus": 0.7881,
+        "entropy": 0.2583,
+        "selfAttention": 0.052
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7881
+        },
+        {
+          "index": 94,
+          "weight": 0.0405
+        },
+        {
+          "index": 93,
+          "weight": 0.0137
+        },
+        {
+          "index": 92,
+          "weight": 0.0114
+        },
+        {
+          "index": 91,
+          "weight": 0.0069
+        },
+        {
+          "index": 84,
+          "weight": 0.0068
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 508,
+        "wdth": 89,
+        "slnt": -0.6,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.7811,
+        "entropy": 0.2556,
+        "selfAttention": 0.0655
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7811
+        },
+        {
+          "index": 95,
+          "weight": 0.0258
+        },
+        {
+          "index": 91,
+          "weight": 0.0183
+        },
+        {
+          "index": 92,
+          "weight": 0.0156
+        },
+        {
+          "index": 94,
+          "weight": 0.0125
+        },
+        {
+          "index": 93,
+          "weight": 0.0105
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 551,
+        "wdth": 82,
+        "slnt": -0.3,
+        "opsz": 99
+      },
+      "metrics": {
+        "focus": 0.8832,
+        "entropy": 0.1538,
+        "selfAttention": 0.0316
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8832
+        },
+        {
+          "index": 96,
+          "weight": 0.031
+        },
+        {
+          "index": 91,
+          "weight": 0.0033
+        },
+        {
+          "index": 95,
+          "weight": 0.0027
+        },
+        {
+          "index": 92,
+          "weight": 0.0026
+        },
+        {
+          "index": 90,
+          "weight": 0.0026
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 519,
+        "wdth": 87,
+        "slnt": -0.5,
+        "opsz": 93
+      },
+      "metrics": {
+        "focus": 0.8078,
+        "entropy": 0.2303,
+        "selfAttention": 0.0543
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8078
+        },
+        {
+          "index": 97,
+          "weight": 0.0341
+        },
+        {
+          "index": 96,
+          "weight": 0.0229
+        },
+        {
+          "index": 95,
+          "weight": 0.0057
+        },
+        {
+          "index": 94,
+          "weight": 0.0047
+        },
+        {
+          "index": 93,
+          "weight": 0.0046
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 492,
+        "wdth": 93,
+        "slnt": -0.4,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7426,
+        "entropy": 0.321,
+        "selfAttention": 0.0425
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7426
+        },
+        {
+          "index": 96,
+          "weight": 0.0175
+        },
+        {
+          "index": 91,
+          "weight": 0.0164
+        },
+        {
+          "index": 92,
+          "weight": 0.0155
+        },
+        {
+          "index": 90,
+          "weight": 0.0136
+        },
+        {
+          "index": 94,
+          "weight": 0.0113
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 470,
+        "wdth": 97,
+        "slnt": -0.3,
+        "opsz": 81
+      },
+      "metrics": {
+        "focus": 0.6901,
+        "entropy": 0.3732,
+        "selfAttention": 0.0331
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6901
+        },
+        {
+          "index": 95,
+          "weight": 0.03
+        },
+        {
+          "index": 92,
+          "weight": 0.0239
+        },
+        {
+          "index": 84,
+          "weight": 0.0185
+        },
+        {
+          "index": 96,
+          "weight": 0.0173
+        },
+        {
+          "index": 91,
+          "weight": 0.0155
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 506,
+        "wdth": 90,
+        "slnt": -0.6,
+        "opsz": 89
+      },
+      "metrics": {
+        "focus": 0.7753,
+        "entropy": 0.2779,
+        "selfAttention": 0.0639
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7753
+        },
+        {
+          "index": 91,
+          "weight": 0.0146
+        },
+        {
+          "index": 92,
+          "weight": 0.0144
+        },
+        {
+          "index": 90,
+          "weight": 0.0089
+        },
+        {
+          "index": 95,
+          "weight": 0.0089
+        },
+        {
+          "index": 96,
+          "weight": 0.0073
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 492,
+        "wdth": 93,
+        "slnt": -0.3,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7437,
+        "entropy": 0.3216,
+        "selfAttention": 0.0389
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7437
+        },
+        {
+          "index": 101,
+          "weight": 0.0421
+        },
+        {
+          "index": 95,
+          "weight": 0.0111
+        },
+        {
+          "index": 92,
+          "weight": 0.0106
+        },
+        {
+          "index": 94,
+          "weight": 0.0096
+        },
+        {
+          "index": 90,
+          "weight": 0.0089
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 518,
+        "wdth": 87,
+        "slnt": -0.6,
+        "opsz": 92
+      },
+      "metrics": {
+        "focus": 0.8047,
+        "entropy": 0.2348,
+        "selfAttention": 0.0637
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8047
+        },
+        {
+          "index": 101,
+          "weight": 0.0197
+        },
+        {
+          "index": 102,
+          "weight": 0.0182
+        },
+        {
+          "index": 96,
+          "weight": 0.0087
+        },
+        {
+          "index": 92,
+          "weight": 0.0061
+        },
+        {
+          "index": 86,
+          "weight": 0.0055
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 537,
+        "wdth": 84,
+        "slnt": -0.5,
+        "opsz": 96
+      },
+      "metrics": {
+        "focus": 0.8489,
+        "entropy": 0.189,
+        "selfAttention": 0.0505
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8489
+        },
+        {
+          "index": 103,
+          "weight": 0.0207
+        },
+        {
+          "index": 101,
+          "weight": 0.0131
+        },
+        {
+          "index": 102,
+          "weight": 0.0086
+        },
+        {
+          "index": 92,
+          "weight": 0.0038
+        },
+        {
+          "index": 96,
+          "weight": 0.0024
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 505,
+        "wdth": 89,
+        "slnt": -0.7,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.7744,
+        "entropy": 0.2537,
+        "selfAttention": 0.0765
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7744
+        },
+        {
+          "index": 104,
+          "weight": 0.0379
+        },
+        {
+          "index": 103,
+          "weight": 0.023
+        },
+        {
+          "index": 101,
+          "weight": 0.007
+        },
+        {
+          "index": 13,
+          "weight": 0.0045
+        },
+        {
+          "index": 102,
+          "weight": 0.0045
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 533,
+        "wdth": 85,
+        "slnt": -0.3,
+        "opsz": 95
+      },
+      "metrics": {
+        "focus": 0.8416,
+        "entropy": 0.201,
+        "selfAttention": 0.0334
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8416
+        },
+        {
+          "index": 105,
+          "weight": 0.0274
+        },
+        {
+          "index": 104,
+          "weight": 0.0189
+        },
+        {
+          "index": 103,
+          "weight": 0.0126
+        },
+        {
+          "index": 101,
+          "weight": 0.0051
+        },
+        {
+          "index": 98,
+          "weight": 0.0037
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 502,
+        "wdth": 89,
+        "slnt": -0.4,
+        "opsz": 90
+      },
+      "metrics": {
+        "focus": 0.7668,
+        "entropy": 0.2625,
+        "selfAttention": 0.0458
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7668
+        },
+        {
+          "index": 106,
+          "weight": 0.0573
+        },
+        {
+          "index": 104,
+          "weight": 0.0254
+        },
+        {
+          "index": 105,
+          "weight": 0.0228
+        },
+        {
+          "index": 103,
+          "weight": 0.0116
+        },
+        {
+          "index": 101,
+          "weight": 0.0037
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 457,
+        "wdth": 96,
+        "slnt": -0.3,
+        "opsz": 81
+      },
+      "metrics": {
+        "focus": 0.6605,
+        "entropy": 0.3666,
+        "selfAttention": 0.0374
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6605
+        },
+        {
+          "index": 104,
+          "weight": 0.0633
+        },
+        {
+          "index": 103,
+          "weight": 0.0357
+        },
+        {
+          "index": 106,
+          "weight": 0.035
+        },
+        {
+          "index": 105,
+          "weight": 0.0309
+        },
+        {
+          "index": 101,
+          "weight": 0.0221
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 484,
+        "wdth": 93,
+        "slnt": -0.4,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7239,
+        "entropy": 0.3203,
+        "selfAttention": 0.0475
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7239
+        },
+        {
+          "index": 103,
+          "weight": 0.0408
+        },
+        {
+          "index": 104,
+          "weight": 0.0273
+        },
+        {
+          "index": 108,
+          "weight": 0.0226
+        },
+        {
+          "index": 106,
+          "weight": 0.0144
+        },
+        {
+          "index": 105,
+          "weight": 0.0142
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 492,
+        "wdth": 91,
+        "slnt": -0.7,
+        "opsz": 88
+      },
+      "metrics": {
+        "focus": 0.7435,
+        "entropy": 0.286,
+        "selfAttention": 0.0829
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7435
+        },
+        {
+          "index": 109,
+          "weight": 0.0306
+        },
+        {
+          "index": 104,
+          "weight": 0.0174
+        },
+        {
+          "index": 108,
+          "weight": 0.017
+        },
+        {
+          "index": 103,
+          "weight": 0.0152
+        },
+        {
+          "index": 106,
+          "weight": 0.0074
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 515,
+        "wdth": 89,
+        "slnt": -0.4,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.7979,
+        "entropy": 0.255,
+        "selfAttention": 0.0419
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7979
+        },
+        {
+          "index": 110,
+          "weight": 0.0206
+        },
+        {
+          "index": 104,
+          "weight": 0.0134
+        },
+        {
+          "index": 103,
+          "weight": 0.0115
+        },
+        {
+          "index": 101,
+          "weight": 0.0099
+        },
+        {
+          "index": 109,
+          "weight": 0.0085
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 451,
+        "wdth": 98,
+        "slnt": -0.3,
+        "opsz": 80
+      },
+      "metrics": {
+        "focus": 0.6456,
+        "entropy": 0.3865,
+        "selfAttention": 0.038
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6456
+        },
+        {
+          "index": 110,
+          "weight": 0.0455
+        },
+        {
+          "index": 103,
+          "weight": 0.0434
+        },
+        {
+          "index": 111,
+          "weight": 0.0222
+        },
+        {
+          "index": 101,
+          "weight": 0.0204
+        },
+        {
+          "index": 108,
+          "weight": 0.0196
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 509,
+        "wdth": 89,
+        "slnt": -0.6,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.7839,
+        "entropy": 0.2554,
+        "selfAttention": 0.063
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7839
+        },
+        {
+          "index": 110,
+          "weight": 0.0293
+        },
+        {
+          "index": 103,
+          "weight": 0.0169
+        },
+        {
+          "index": 109,
+          "weight": 0.0091
+        },
+        {
+          "index": 111,
+          "weight": 0.0082
+        },
+        {
+          "index": 112,
+          "weight": 0.0056
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 526,
+        "wdth": 85,
+        "slnt": -0.6,
+        "opsz": 95
+      },
+      "metrics": {
+        "focus": 0.8242,
+        "entropy": 0.1994,
+        "selfAttention": 0.0637
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8242
+        },
+        {
+          "index": 113,
+          "weight": 0.0364
+        },
+        {
+          "index": 110,
+          "weight": 0.0097
+        },
+        {
+          "index": 111,
+          "weight": 0.0092
+        },
+        {
+          "index": 103,
+          "weight": 0.0057
+        },
+        {
+          "index": 109,
+          "weight": 0.0035
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 527,
+        "wdth": 86,
+        "slnt": -0.5,
+        "opsz": 94
+      },
+      "metrics": {
+        "focus": 0.8271,
+        "entropy": 0.2087,
+        "selfAttention": 0.0565
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8271
+        },
+        {
+          "index": 114,
+          "weight": 0.0203
+        },
+        {
+          "index": 113,
+          "weight": 0.018
+        },
+        {
+          "index": 111,
+          "weight": 0.0073
+        },
+        {
+          "index": 110,
+          "weight": 0.0057
+        },
+        {
+          "index": 103,
+          "weight": 0.005
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 484,
+        "wdth": 93,
+        "slnt": -0.6,
+        "opsz": 86
+      },
+      "metrics": {
+        "focus": 0.7242,
+        "entropy": 0.3121,
+        "selfAttention": 0.0657
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7242
+        },
+        {
+          "index": 115,
+          "weight": 0.0466
+        },
+        {
+          "index": 113,
+          "weight": 0.0247
+        },
+        {
+          "index": 114,
+          "weight": 0.0138
+        },
+        {
+          "index": 103,
+          "weight": 0.0103
+        },
+        {
+          "index": 110,
+          "weight": 0.0073
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 472,
+        "wdth": 93,
+        "slnt": -0.5,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.6942,
+        "entropy": 0.3231,
+        "selfAttention": 0.0535
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6942
+        },
+        {
+          "index": 116,
+          "weight": 0.0548
+        },
+        {
+          "index": 115,
+          "weight": 0.0545
+        },
+        {
+          "index": 114,
+          "weight": 0.0238
+        },
+        {
+          "index": 113,
+          "weight": 0.0165
+        },
+        {
+          "index": 103,
+          "weight": 0.0084
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 475,
+        "wdth": 94,
+        "slnt": -0.3,
+        "opsz": 84
+      },
+      "metrics": {
+        "focus": 0.7033,
+        "entropy": 0.3379,
+        "selfAttention": 0.0378
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7033
+        },
+        {
+          "index": 116,
+          "weight": 0.0445
+        },
+        {
+          "index": 115,
+          "weight": 0.0379
+        },
+        {
+          "index": 117,
+          "weight": 0.0209
+        },
+        {
+          "index": 113,
+          "weight": 0.0168
+        },
+        {
+          "index": 114,
+          "weight": 0.0163
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 497,
+        "wdth": 90,
+        "slnt": -0.6,
+        "opsz": 90
+      },
+      "metrics": {
+        "focus": 0.7556,
+        "entropy": 0.2677,
+        "selfAttention": 0.0693
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7556
+        },
+        {
+          "index": 118,
+          "weight": 0.0239
+        },
+        {
+          "index": 116,
+          "weight": 0.0229
+        },
+        {
+          "index": 115,
+          "weight": 0.0223
+        },
+        {
+          "index": 114,
+          "weight": 0.0192
+        },
+        {
+          "index": 117,
+          "weight": 0.0152
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 482,
+        "wdth": 94,
+        "slnt": -0.5,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.7187,
+        "entropy": 0.3266,
+        "selfAttention": 0.0589
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7187
+        },
+        {
+          "index": 119,
+          "weight": 0.0403
+        },
+        {
+          "index": 107,
+          "weight": 0.0211
+        },
+        {
+          "index": 117,
+          "weight": 0.01
+        },
+        {
+          "index": 98,
+          "weight": 0.0096
+        },
+        {
+          "index": 118,
+          "weight": 0.0094
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 525,
+        "wdth": 86,
+        "slnt": -0.5,
+        "opsz": 95
+      },
+      "metrics": {
+        "focus": 0.8211,
+        "entropy": 0.2067,
+        "selfAttention": 0.0609
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8211
+        },
+        {
+          "index": 119,
+          "weight": 0.0233
+        },
+        {
+          "index": 120,
+          "weight": 0.0195
+        },
+        {
+          "index": 115,
+          "weight": 0.0071
+        },
+        {
+          "index": 118,
+          "weight": 0.0059
+        },
+        {
+          "index": 116,
+          "weight": 0.0047
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 464,
+        "wdth": 96,
+        "slnt": -0.3,
+        "opsz": 81
+      },
+      "metrics": {
+        "focus": 0.676,
+        "entropy": 0.3668,
+        "selfAttention": 0.0368
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.676
+        },
+        {
+          "index": 115,
+          "weight": 0.0293
+        },
+        {
+          "index": 119,
+          "weight": 0.0292
+        },
+        {
+          "index": 116,
+          "weight": 0.029
+        },
+        {
+          "index": 117,
+          "weight": 0.0282
+        },
+        {
+          "index": 118,
+          "weight": 0.0221
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 430,
+        "wdth": 102,
+        "slnt": -0.6,
+        "opsz": 74
+      },
+      "metrics": {
+        "focus": 0.5953,
+        "entropy": 0.4533,
+        "selfAttention": 0.0712
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.5953
+        },
+        {
+          "index": 115,
+          "weight": 0.039
+        },
+        {
+          "index": 103,
+          "weight": 0.024
+        },
+        {
+          "index": 116,
+          "weight": 0.0202
+        },
+        {
+          "index": 113,
+          "weight": 0.0158
+        },
+        {
+          "index": 42,
+          "weight": 0.0137
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 497,
+        "wdth": 92,
+        "slnt": -0.5,
+        "opsz": 86
+      },
+      "metrics": {
+        "focus": 0.7553,
+        "entropy": 0.3037,
+        "selfAttention": 0.0607
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7553
+        },
+        {
+          "index": 123,
+          "weight": 0.0161
+        },
+        {
+          "index": 115,
+          "weight": 0.0131
+        },
+        {
+          "index": 122,
+          "weight": 0.0071
+        },
+        {
+          "index": 4,
+          "weight": 0.0068
+        },
+        {
+          "index": 113,
+          "weight": 0.0066
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 545,
+        "wdth": 83,
+        "slnt": -0.4,
+        "opsz": 98
+      },
+      "metrics": {
+        "focus": 0.8697,
+        "entropy": 0.1675,
+        "selfAttention": 0.0471
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8697
+        },
+        {
+          "index": 124,
+          "weight": 0.0109
+        },
+        {
+          "index": 123,
+          "weight": 0.0095
+        },
+        {
+          "index": 4,
+          "weight": 0.0042
         },
         {
           "index": 10,
+          "weight": 0.0026
+        },
+        {
+          "index": 122,
+          "weight": 0.0023
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 537,
+        "wdth": 84,
+        "slnt": -0.6,
+        "opsz": 97
+      },
+      "metrics": {
+        "focus": 0.8511,
+        "entropy": 0.1801,
+        "selfAttention": 0.0678
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8511
+        },
+        {
+          "index": 125,
+          "weight": 0.0073
+        },
+        {
+          "index": 124,
+          "weight": 0.0045
+        },
+        {
+          "index": 115,
+          "weight": 0.0035
+        },
+        {
+          "index": 103,
+          "weight": 0.0032
+        },
+        {
+          "index": 123,
+          "weight": 0.0027
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 527,
+        "wdth": 85,
+        "slnt": -0.6,
+        "opsz": 96
+      },
+      "metrics": {
+        "focus": 0.8258,
+        "entropy": 0.1941,
+        "selfAttention": 0.0652
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8258
+        },
+        {
+          "index": 126,
+          "weight": 0.0345
+        },
+        {
+          "index": 125,
+          "weight": 0.0124
+        },
+        {
+          "index": 124,
+          "weight": 0.0056
+        },
+        {
+          "index": 115,
+          "weight": 0.0035
+        },
+        {
+          "index": 103,
+          "weight": 0.0033
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 547,
+        "wdth": 82,
+        "slnt": -0.5,
+        "opsz": 100
+      },
+      "metrics": {
+        "focus": 0.8731,
+        "entropy": 0.1444,
+        "selfAttention": 0.0555
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8731
+        },
+        {
+          "index": 127,
+          "weight": 0.0224
+        },
+        {
+          "index": 126,
+          "weight": 0.0098
+        },
+        {
+          "index": 125,
+          "weight": 0.004
+        },
+        {
+          "index": 124,
+          "weight": 0.0027
+        },
+        {
+          "index": 103,
+          "weight": 0.0013
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 524,
+        "wdth": 85,
+        "slnt": -0.5,
+        "opsz": 95
+      },
+      "metrics": {
+        "focus": 0.8196,
+        "entropy": 0.2003,
+        "selfAttention": 0.0586
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8196
+        },
+        {
+          "index": 127,
+          "weight": 0.0288
+        },
+        {
+          "index": 128,
+          "weight": 0.0221
+        },
+        {
+          "index": 126,
+          "weight": 0.0158
+        },
+        {
+          "index": 125,
+          "weight": 0.0049
+        },
+        {
+          "index": 124,
+          "weight": 0.0048
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 471,
+        "wdth": 94,
+        "slnt": -0.3,
+        "opsz": 85
+      },
+      "metrics": {
+        "focus": 0.6939,
+        "entropy": 0.3264,
+        "selfAttention": 0.0318
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6939
+        },
+        {
+          "index": 129,
+          "weight": 0.0651
+        },
+        {
+          "index": 128,
+          "weight": 0.04
+        },
+        {
+          "index": 127,
+          "weight": 0.0329
+        },
+        {
+          "index": 126,
+          "weight": 0.0227
+        },
+        {
+          "index": 125,
+          "weight": 0.0125
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 485,
+        "wdth": 91,
+        "slnt": -0.3,
+        "opsz": 88
+      },
+      "metrics": {
+        "focus": 0.7264,
+        "entropy": 0.284,
+        "selfAttention": 0.038
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7264
+        },
+        {
+          "index": 129,
+          "weight": 0.0627
+        },
+        {
+          "index": 128,
+          "weight": 0.0365
+        },
+        {
+          "index": 127,
+          "weight": 0.0277
+        },
+        {
+          "index": 130,
+          "weight": 0.0191
+        },
+        {
+          "index": 126,
+          "weight": 0.0166
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 528,
+        "wdth": 85,
+        "slnt": -0.5,
+        "opsz": 96
+      },
+      "metrics": {
+        "focus": 0.8283,
+        "entropy": 0.1943,
+        "selfAttention": 0.0585
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8283
+        },
+        {
+          "index": 128,
+          "weight": 0.0192
+        },
+        {
+          "index": 129,
+          "weight": 0.015
+        },
+        {
+          "index": 131,
+          "weight": 0.013
+        },
+        {
+          "index": 130,
+          "weight": 0.0099
+        },
+        {
+          "index": 126,
+          "weight": 0.0083
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 520,
+        "wdth": 86,
+        "slnt": -0.4,
+        "opsz": 95
+      },
+      "metrics": {
+        "focus": 0.8105,
+        "entropy": 0.2063,
+        "selfAttention": 0.041
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.8105
+        },
+        {
+          "index": 132,
+          "weight": 0.044
+        },
+        {
+          "index": 129,
+          "weight": 0.0284
+        },
+        {
+          "index": 128,
+          "weight": 0.0123
+        },
+        {
+          "index": 131,
+          "weight": 0.012
+        },
+        {
+          "index": 126,
+          "weight": 0.0054
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 470,
+        "wdth": 94,
+        "slnt": -0.4,
+        "opsz": 84
+      },
+      "metrics": {
+        "focus": 0.6916,
+        "entropy": 0.3337,
+        "selfAttention": 0.0391
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6916
+        },
+        {
+          "index": 132,
+          "weight": 0.04
+        },
+        {
+          "index": 133,
+          "weight": 0.027
+        },
+        {
+          "index": 129,
+          "weight": 0.0252
+        },
+        {
+          "index": 131,
+          "weight": 0.0228
+        },
+        {
+          "index": 127,
+          "weight": 0.0207
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 442,
+        "wdth": 98,
+        "slnt": -0.3,
+        "opsz": 79
+      },
+      "metrics": {
+        "focus": 0.6245,
+        "entropy": 0.397,
+        "selfAttention": 0.0384
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6245
+        },
+        {
+          "index": 132,
+          "weight": 0.0426
+        },
+        {
+          "index": 131,
+          "weight": 0.0382
+        },
+        {
+          "index": 129,
+          "weight": 0.0351
+        },
+        {
+          "index": 133,
+          "weight": 0.0306
+        },
+        {
+          "index": 126,
+          "weight": 0.0179
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 496,
+        "wdth": 92,
+        "slnt": -0.4,
+        "opsz": 87
+      },
+      "metrics": {
+        "focus": 0.7536,
+        "entropy": 0.2959,
+        "selfAttention": 0.0428
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7536
+        },
+        {
+          "index": 129,
+          "weight": 0.0248
+        },
+        {
+          "index": 132,
+          "weight": 0.0161
+        },
+        {
+          "index": 131,
+          "weight": 0.0123
+        },
+        {
+          "index": 128,
+          "weight": 0.0104
+        },
+        {
+          "index": 133,
+          "weight": 0.0103
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 516,
+        "wdth": 88,
+        "slnt": -0.4,
+        "opsz": 92
+      },
+      "metrics": {
+        "focus": 0.7992,
+        "entropy": 0.2394,
+        "selfAttention": 0.0485
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7992
+        },
+        {
+          "index": 136,
+          "weight": 0.024
+        },
+        {
+          "index": 132,
+          "weight": 0.0131
+        },
+        {
+          "index": 126,
+          "weight": 0.0082
+        },
+        {
+          "index": 129,
+          "weight": 0.0076
+        },
+        {
+          "index": 131,
+          "weight": 0.0075
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 511,
+        "wdth": 88,
+        "slnt": -0.5,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.789,
+        "entropy": 0.2486,
+        "selfAttention": 0.059
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.789
+        },
+        {
+          "index": 137,
+          "weight": 0.0169
+        },
+        {
+          "index": 136,
+          "weight": 0.0141
+        },
+        {
+          "index": 132,
+          "weight": 0.0079
+        },
+        {
+          "index": 4,
+          "weight": 0.0076
+        },
+        {
+          "index": 133,
+          "weight": 0.0071
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 496,
+        "wdth": 90,
+        "slnt": -0.8,
+        "opsz": 89
+      },
+      "metrics": {
+        "focus": 0.7523,
+        "entropy": 0.2693,
+        "selfAttention": 0.0867
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7523
+        },
+        {
+          "index": 138,
+          "weight": 0.0217
+        },
+        {
+          "index": 136,
+          "weight": 0.0126
+        },
+        {
+          "index": 137,
+          "weight": 0.0111
+        },
+        {
+          "index": 129,
+          "weight": 0.0082
+        },
+        {
+          "index": 133,
+          "weight": 0.0058
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 487,
+        "wdth": 91,
+        "slnt": -0.3,
+        "opsz": 88
+      },
+      "metrics": {
+        "focus": 0.7309,
+        "entropy": 0.283,
+        "selfAttention": 0.0342
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7309
+        },
+        {
+          "index": 139,
+          "weight": 0.057
+        },
+        {
+          "index": 138,
+          "weight": 0.0392
+        },
+        {
+          "index": 136,
+          "weight": 0.0217
+        },
+        {
+          "index": 137,
+          "weight": 0.0172
+        },
+        {
+          "index": 132,
+          "weight": 0.0109
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 510,
+        "wdth": 88,
+        "slnt": -0.5,
+        "opsz": 92
+      },
+      "metrics": {
+        "focus": 0.7858,
+        "entropy": 0.2387,
+        "selfAttention": 0.0534
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7858
+        },
+        {
+          "index": 139,
+          "weight": 0.025
+        },
+        {
+          "index": 138,
+          "weight": 0.0226
+        },
+        {
+          "index": 136,
+          "weight": 0.0134
+        },
+        {
+          "index": 137,
+          "weight": 0.0126
+        },
+        {
+          "index": 140,
+          "weight": 0.0101
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 505,
+        "wdth": 88,
+        "slnt": -0.6,
+        "opsz": 92
+      },
+      "metrics": {
+        "focus": 0.7748,
+        "entropy": 0.243,
+        "selfAttention": 0.0674
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7748
+        },
+        {
+          "index": 139,
+          "weight": 0.0325
+        },
+        {
+          "index": 141,
+          "weight": 0.0198
+        },
+        {
+          "index": 140,
+          "weight": 0.0121
+        },
+        {
+          "index": 138,
+          "weight": 0.0112
+        },
+        {
+          "index": 136,
+          "weight": 0.0093
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 504,
+        "wdth": 90,
+        "slnt": -0.4,
+        "opsz": 90
+      },
+      "metrics": {
+        "focus": 0.7726,
+        "entropy": 0.2676,
+        "selfAttention": 0.0427
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7726
+        },
+        {
+          "index": 142,
+          "weight": 0.0232
+        },
+        {
+          "index": 141,
+          "weight": 0.0203
+        },
+        {
+          "index": 139,
+          "weight": 0.0177
+        },
+        {
+          "index": 138,
+          "weight": 0.0152
+        },
+        {
+          "index": 140,
+          "weight": 0.0136
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 499,
+        "wdth": 90,
+        "slnt": -0.5,
+        "opsz": 89
+      },
+      "metrics": {
+        "focus": 0.7588,
+        "entropy": 0.275,
+        "selfAttention": 0.0566
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7588
+        },
+        {
+          "index": 142,
+          "weight": 0.0204
+        },
+        {
+          "index": 143,
           "weight": 0.0181
+        },
+        {
+          "index": 141,
+          "weight": 0.0134
+        },
+        {
+          "index": 138,
+          "weight": 0.0115
+        },
+        {
+          "index": 137,
+          "weight": 0.0099
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 506,
+        "wdth": 89,
+        "slnt": -0.3,
+        "opsz": 91
+      },
+      "metrics": {
+        "focus": 0.7761,
+        "entropy": 0.2549,
+        "selfAttention": 0.0343
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7761
+        },
+        {
+          "index": 144,
+          "weight": 0.0361
+        },
+        {
+          "index": 143,
+          "weight": 0.0258
+        },
+        {
+          "index": 141,
+          "weight": 0.0147
+        },
+        {
+          "index": 142,
+          "weight": 0.0135
+        },
+        {
+          "index": 138,
+          "weight": 0.0112
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 507,
+        "wdth": 89,
+        "slnt": -0.4,
+        "opsz": 90
+      },
+      "metrics": {
+        "focus": 0.7781,
+        "entropy": 0.2577,
+        "selfAttention": 0.048
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.7781
+        },
+        {
+          "index": 145,
+          "weight": 0.0219
+        },
+        {
+          "index": 144,
+          "weight": 0.0192
+        },
+        {
+          "index": 143,
+          "weight": 0.015
+        },
+        {
+          "index": 123,
+          "weight": 0.0095
+        },
+        {
+          "index": 142,
+          "weight": 0.0092
+        }
+      ]
+    },
+    {
+      "axes": {
+        "wght": 454,
+        "wdth": 97,
+        "slnt": -0.6,
+        "opsz": 80
+      },
+      "metrics": {
+        "focus": 0.6529,
+        "entropy": 0.3842,
+        "selfAttention": 0.0658
+      },
+      "links": [
+        {
+          "index": 0,
+          "weight": 0.6529
+        },
+        {
+          "index": 146,
+          "weight": 0.0278
+        },
+        {
+          "index": 144,
+          "weight": 0.0212
+        },
+        {
+          "index": 141,
+          "weight": 0.0171
+        },
+        {
+          "index": 123,
+          "weight": 0.0155
+        },
+        {
+          "index": 143,
+          "weight": 0.0122
         }
       ]
     }

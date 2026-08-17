@@ -11,7 +11,7 @@
 
 * { box-sizing: border-box; }
 html { min-width: 320px; background: #e9e7df; color: var(--ink); font-family: var(--mono); font-size: 14px; }
-body { min-width: 320px; min-height: 100vh; margin: 0; padding: 22px; display: flex; justify-content: center; background: #e9e7df; }
+body { min-width: 320px; min-height: 100vh; margin: 0; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 38px; background: #e9e7df; }
 button, input, select { font: inherit; }
 button, a { color: inherit; }
 
@@ -23,8 +23,7 @@ button, a { color: inherit; }
   min-height: 0;
   padding: 25px 29px 20px;
   overflow: hidden;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  display: block;
   background:
     linear-gradient(91deg, rgba(255,255,255,.18), transparent 21%, rgba(90,72,42,.02) 70%, transparent),
     var(--paper);
@@ -51,23 +50,24 @@ button, a { color: inherit; }
 .topbar p { margin: 0; font-size: 9px; line-height: 1.5; letter-spacing: .085em; text-transform: uppercase; }
 .source-link { padding-bottom: 2px; border-bottom: 1px solid; font-size: 9px; letter-spacing: .065em; text-decoration: none; }
 
-main { min-height: 0; display: grid; grid-template-rows: minmax(0,1fr) auto; }
-.stage { position: relative; min-width: 0; min-height: 0; padding: 16px 0 12px; overflow: hidden; display: grid; grid-template-rows: auto minmax(0,1fr) auto; container-type: inline-size; }
+#app > main { width: 100%; height: 100%; min-height: 0; display: block; }
+.stage { position: relative; width: 100%; height: 100%; min-width: 0; min-height: 0; padding: 0; overflow: hidden; display: block; container-type: inline-size; }
 .stage-meta, .inspector-heading, footer { display: flex; justify-content: space-between; font-size: 9px; line-height: 1.45; letter-spacing: .115em; text-transform: uppercase; }
 .stage-meta::before { content: "/"; margin-right: 13px; font-size: 13px; line-height: .8; }
 .stage-meta span:first-child { margin-right: auto; }
 
 .text-canvas {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 2;
-  align-self: stretch;
   width: min(76%, 470px);
-  min-height: 0;
+  height: 100%;
   margin-left: clamp(26px,5cqw,40px);
   padding: clamp(40px,6vh,70px) 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
   color: var(--ink);
   font-family: var(--display);
   font-size: clamp(17px,3.35cqw,22px);
@@ -75,20 +75,21 @@ main { min-height: 0; display: grid; grid-template-rows: minmax(0,1fr) auto; }
   line-height: 1.42;
   letter-spacing: -.018em;
 }
-.text-canvas::before {
-  content: "SAMPLE TEXT / RECORDED TRANSFORMER ATTENTION";
+.poem-lines {
   position: absolute;
-  top: clamp(28px,10%,58px);
+  top: 50%;
   left: 0;
-  display: block;
-  width: max-content;
-  margin: 0;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--hairline);
-  font: 400 8px/1.2 var(--mono);
-  letter-spacing: .13em;
+  width: 100%;
+  transform: translateY(var(--poem-shift, -50%));
+  transition: transform 760ms cubic-bezier(.34,.01,.32,1);
+  will-change: transform;
 }
-.text-line { display: block; min-height: 1.42em; margin-bottom: .5em; white-space: nowrap; }
+.poem-lines.no-scroll-transition { transition: none; }
+.text-canvas::before {
+  display: none;
+}
+.text-line { display: block; width: 100%; min-height: 1.42em; margin-bottom: .5em; white-space: normal; transition: opacity 480ms ease; }
+.text-line.outside-window { opacity: 0; pointer-events: none; }
 .text-line:last-child { margin-bottom: 0; }
 .token {
   position: relative;
@@ -173,6 +174,14 @@ main { min-height: 0; display: grid; grid-template-rows: minmax(0,1fr) auto; }
 .mapping-select { display: block; margin: 0; }
 .mapping-select > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
 footer { padding-top: 10px; border-top: 1px solid var(--ink); }
+.interface-dock {
+  width: min(900px, calc(100vw - 44px));
+  padding: 17px 20px 19px;
+  background: rgba(243,241,233,.72);
+  border: 1px solid rgba(27,26,23,.24);
+}
+.interface-dock .stage-meta { padding: 11px 0 9px; border-bottom: 1px solid var(--hairline); }
+.interface-dock .transport { margin-top: 10px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 @media (min-width: 800px) and (min-height: 1050px) {
@@ -194,10 +203,10 @@ footer { padding-top: 10px; border-top: 1px solid var(--ink); }
 
 @media (max-width: 600px) {
   body { padding: 6px; }
-  #app { width: 100%; min-height: calc(100vh - 12px); aspect-ratio: auto; padding: 17px 16px 14px; }
+  #app { width: 100%; height: max(760px, calc(100vh - 12px)); min-height: 0; aspect-ratio: auto; padding: 17px 16px 14px; }
+  #app > main { height: 100%; min-height: 0; }
   .topbar { grid-template-columns: 1fr auto; }
   .topbar p { display: none; }
-  main { min-height: 760px; }
   .stage { padding-top: 14px; }
   .brand { font-size: 18px; }
   .stage-meta, .inspector-heading, footer { font-size: 10px; }

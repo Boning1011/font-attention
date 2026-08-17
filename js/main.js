@@ -10,6 +10,18 @@ const playButton = $("#play-toggle");
 const speedButton = $("#speed");
 const fontSelect = $("#font-select");
 const mappingSelect = $("#mapping-select");
+
+function moveInterfaceOffPaper() {
+  const dock = document.createElement("section");
+  dock.className = "interface-dock";
+  dock.setAttribute("aria-label", "Font Attention controls and project information");
+  [$(".topbar"), $(".stage-meta"), $(".transport"), $(".inspector"), $("footer")]
+    .filter(Boolean)
+    .forEach((element) => dock.appendChild(element));
+  document.body.appendChild(dock);
+}
+
+moveInterfaceOffPaper();
 const speeds = [0.5, 1, 1.5, 2];
 const TOKEN_INTERVAL_MS = 210;
 const END_HOLD_MS = 3200;
@@ -73,6 +85,7 @@ let replay;
 let tokenElements = [];
 let stability = [];
 let effectTimers = [];
+let arcTrackingFrame = 0;
 let position = 0;
 let playing = true;
 let speedIndex = 1;
@@ -118,14 +131,19 @@ function mapAttentionAxes(axes, index = -1) {
 
 function createTokens() {
   canvas.innerHTML = "";
+  const poemLines = document.createElement("div");
+  poemLines.className = "poem-lines";
+  canvas.appendChild(poemLines);
+  let lineIndex = 0;
   let line = document.createElement("span");
   line.className = "text-line";
-  canvas.appendChild(line);
+  poemLines.appendChild(line);
   tokenElements = replay.tokens.map((rawToken, index) => {
     const token = formatToken(rawToken);
     const span = document.createElement("span");
     span.className = "token future";
     span.dataset.index = String(index);
+    span.dataset.line = String(lineIndex);
     span.dataset.tokenFont = TOKEN_FONT_PATTERN[index % TOKEN_FONT_PATTERN.length];
     span.dataset.tokenStyle = TOKEN_STYLE_PATTERN[index % TOKEN_STYLE_PATTERN.length];
     span.dataset.tokenCase = UPPERCASE_PATTERN.has(index) ? "upper" : "source";
@@ -140,13 +158,48 @@ function createTokens() {
     line.appendChild(span);
     span.style.width = `${span.getBoundingClientRect().width}px`;
     if (token.includes("\n") && index < replay.tokens.length - 1) {
+      lineIndex += 1;
       line = document.createElement("span");
       line.className = "text-line";
-      canvas.appendChild(line);
+      poemLines.appendChild(line);
     }
     return span;
   });
   stability = new Array(tokenElements.length).fill(0);
+  updatePoemWindow(false);
+}
+
+function updatePoemWindow(animate = true) {
+  const poemLines = canvas.querySelector(".poem-lines");
+  const lines = [...canvas.querySelectorAll(".text-line")];
+  const active = tokenElements[position];
+  if (!poemLines || !lines.length || !active) return;
+  const activeLine = Number(active.dataset.line || 0);
+  const visibleLineCount = innerWidth <= 600 ? 5 : 7;
+  const topLine = Math.max(0, activeLine - visibleLineCount + 1);
+  const bottomLine = activeLine;
+  lines.forEach((line, index) => line.classList.toggle("outside-window", index < topLine || index > bottomLine));
+  const topOffset = lines[topLine].offsetTop;
+  const bottomOffset = lines[bottomLine].offsetTop + lines[bottomLine].offsetHeight;
+  const shift = -((topOffset + bottomOffset) / 2);
+  const previous = canvas.style.getPropertyValue("--poem-shift");
+  const next = `${shift.toFixed(2)}px`;
+  poemLines.classList.toggle("no-scroll-transition", !animate);
+  canvas.style.setProperty("--poem-shift", next);
+  if (previous && previous !== next) annotationSnapshot.bucket = -1;
+  if (!animate) requestAnimationFrame(() => poemLines.classList.remove("no-scroll-transition"));
+  if (animate && previous && previous !== next) trackArcsDuringScroll();
+}
+
+function trackArcsDuringScroll() {
+  cancelAnimationFrame(arcTrackingFrame);
+  const started = performance.now();
+  const track = (now) => {
+    annotationSnapshot.bucket = -1;
+    renderArcs();
+    if (now - started < 820) arcTrackingFrame = requestAnimationFrame(track);
+  };
+  arcTrackingFrame = requestAnimationFrame(track);
 }
 
 function applyAxes(element, axes) {
@@ -473,6 +526,7 @@ function renderArcs() {
   if (isComplete) return;
   if (position === 0) annotationSnapshot = { bucket: -1, markup: "" };
   const activeRect = active.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
   svg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
   marksSvg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
   const links = getVisibleLinks();
@@ -481,7 +535,9 @@ function renderArcs() {
   const decoratedLinks = links.map((link, order) => {
     const target = tokenElements[link.index];
     if (!target) return null;
+    if (target.closest(".text-line")?.classList.contains("outside-window")) return null;
     const rect = target.getBoundingClientRect();
+    if (rect.bottom < canvasRect.top + 4 || rect.top > canvasRect.bottom - 4) return null;
     const mark = linkedMark(link, order);
     return {
       link, order, rect, mark,
@@ -515,6 +571,7 @@ function setPosition(next, animate = true) {
   timeline.value = position;
   $("#counter").textContent = `${String(position+1).padStart(2,"0")} / ${String(replay.tokens.length).padStart(2,"0")}`;
   updateTokenState();
+  updatePoemWindow(animate);
   renderInspector();
   requestAnimationFrame(renderArcs);
   if (animate) triggerMotion();
@@ -551,6 +608,7 @@ fontSelect.addEventListener("change", (event) => setTypeface(event.target.value)
 mappingSelect.addEventListener("change", (event) => { tuning.mapping = event.target.value; applyTuning(); });
 window.addEventListener("resize", () => {
   annotationSnapshot.bucket = -1;
+  updatePoemWindow(false);
   requestAnimationFrame(renderArcs);
 });
 start().catch((error) => { canvas.innerHTML = `<p>Could not load attention replay.<br><small>${error.message}</small></p>`; });
