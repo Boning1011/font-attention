@@ -4,7 +4,7 @@ Font Attention is a design-engineering experiment that translates transformer at
 
 **[Open the live interactive replay](https://boning1011.github.io/font-attention/)**
 
-The current demo uses all fourteen lines of Shakespeare's *Sonnet 18*: 148 recorded model tokens displayed through a gently moving seven-line window. The Letter surface contains only the poem and its attention annotations; playback, model metadata, source links, and mapping controls live in a separate dock below the paper. It is a teacher-forced replay of real attention tensors—not a simulation and not a claim that the model authored the text.
+The current demo uses all fourteen lines of Shakespeare's *Sonnet 18*: 148 recorded model tokens displayed through a gently moving ten-line Letter window. The Letter surface contains only the poem and its attention annotations; playback, model metadata, source links, and mapping controls live in a separate dock below the paper. It is a teacher-forced replay of real attention tensors—not a simulation and not a claim that the model authored the text.
 
 ![Font Attention interface replay](media/font-attention-demo.gif)
 
@@ -15,10 +15,11 @@ The current demo uses all fourteen lines of Shakespeare's *Sonnet 18*: 148 recor
 - **Motion as contextual disturbance** — each incoming token and selected context words shift by roughly a pixel and a fraction of a degree in place. There is no scale pop or blur; older words settle until an attention-linked ripple reaches them.
 - **Design engineering in the browser** — the visualization, transport controls, and inspector are implemented as a lightweight static web app.
 - **One replay, three typewriter faces** — the default case mixes Courier Prime, Special Elite, and Cutive Mono token by token, while the selector can isolate any one face. A true Courier Prime italic, synthetic italics for the single-style faces, small caps, and italic small caps introduce restrained token-level variants.
-- **Restrained controls** — the portrait sheet keeps only the typewriter selector and mapping preset at its foot; the default state is Typewriter Mixed Case with Balanced mapping.
+- **Controls outside the Letter** — playback, typewriter selection, and the Balanced mapping preset remain interactive in a separate dock below the paper, keeping the recorded Letter free of interface chrome.
 - **Parameterized ink annotations** — attention links are assembled from pressure-varying line segments, dry-brush gaps, flecks, and deterministic displacement rather than Bézier curves. They stay nearly straight, with distance-scaled drift so short links read as quiet connecting strokes instead of angular hooks. The current token receives a loose, single-stroke open circle. The strongest attention link is marked in broken red ballpoint ink; other links rotate through hand-drawn circles, underlines, dense strikeouts, and no mark.
 - **Time-lapse revision rhythm** — circles and strikeouts hold for three token steps before the annotation layer changes, avoiding rapid flashes while preserving the sense of a manuscript being revised by hand. Dense strikeouts land as stable, opaque black ink rather than fading strokes.
 - **Margin notes as data display** — each incoming token connects directly back to its five strongest source words, preserving the direction of contextual attention. A loose, unboxed handwritten list at the page edge repeats those words independently; broad, jittered marker strokes replace numeric percentages as the weight display.
+- **Distance-aware annotation grammar** — same-line and adjacent-token relationships favor circles, underlines, strikeouts, and typographic disturbance. Long strokes are reserved for real links that cross at least two source lines whenever the recorded candidates provide them, keeping local attention from reading as an accidental deletion line.
 - **Typographic memory** — a restrained, deterministic imprint pattern lets selected tokens retain different weights, widths, slants, ink densities, and sub-pixel registration after motion settles; quieter tokens preserve the rhythm of a typed page.
 - **Reproducible model-to-interface pipeline** — a Python exporter converts local model tensors into compact JSON; the deployed site needs no model server or API key.
 
@@ -40,7 +41,7 @@ python -m pip install -r requirements-model.txt
 python scripts/export_attention_replay.py
 ```
 
-The exporter defaults to `Qwen/Qwen3-0.6B`, runs on CUDA when available, averages every head in the final four transformer layers, and writes `public/data/qwen3-sonnet-18.json`. It retains the six strongest prior-token links with their raw attention weights; the browser compresses only their visual contrast so weaker links stay legible. A different model or text can be supplied with `--model` and `--text`.
+The exporter defaults to `Qwen/Qwen3-0.6B`, runs on CUDA when available, averages every head in the final four transformer layers, and writes `public/data/qwen3-sonnet-18.json`. It retains the twelve strongest prior-token links with their raw attention weights; the browser uses the broader candidate set to separate local marks from longer-range strokes while the margin still reports the top five. A different model or text can be supplied with `--model` and `--text`.
 
 ## Mapping
 

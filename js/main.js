@@ -175,7 +175,7 @@ function updatePoemWindow(animate = true) {
   const active = tokenElements[position];
   if (!poemLines || !lines.length || !active) return;
   const activeLine = Number(active.dataset.line || 0);
-  const visibleLineCount = innerWidth <= 600 ? 5 : 7;
+  const visibleLineCount = innerWidth <= 600 ? 5 : innerHeight >= 1050 ? 10 : 8;
   const topLine = Math.max(0, activeLine - visibleLineCount + 1);
   const bottomLine = activeLine;
   lines.forEach((line, index) => line.classList.toggle("outside-window", index < topLine || index > bottomLine));
@@ -529,31 +529,40 @@ function renderArcs() {
   const canvasRect = canvas.getBoundingClientRect();
   svg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
   marksSvg.setAttribute("viewBox", `0 0 ${stageRect.width} ${stageRect.height}`);
-  const links = getVisibleLinks();
-  const maximumWeight = Math.max(...links.map(({ weight }) => weight), 0.0001);
+  const annotationLinks = getVisibleLinks();
+  const candidateLinks = replay.frames[position].links;
+  const maximumWeight = Math.max(annotationLinks[0]?.weight || 0, 0.0001);
   const activeShape = tokenShape(activeRect, stageRect, "ellipse");
-  const decoratedLinks = links.map((link, order) => {
+  const activeLine = Number(active.dataset.line || 0);
+  const decorateLink = (link, rank) => {
     const target = tokenElements[link.index];
     if (!target) return null;
     if (target.closest(".text-line")?.classList.contains("outside-window")) return null;
     const rect = target.getBoundingClientRect();
     if (rect.bottom < canvasRect.top + 4 || rect.top > canvasRect.bottom - 4) return null;
-    const mark = linkedMark(link, order);
+    const mark = linkedMark(link, rank);
     return {
-      link, order, rect, mark,
+      link, rank, rect, mark,
+      lineGap: Math.abs(activeLine - Number(target.dataset.line || 0)),
       shape: tokenShape(rect, stageRect, mark.includes("circle") ? "ellipse" : "rect"),
     };
-  }).filter(Boolean);
-  const filters = links.map((link, order) => `<filter id="ink-wobble-${order}" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".015 .11" numOctaves="2" seed="${position + link.index + order + 3}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".7"/></filter>`).join("");
-  const strokes = decoratedLinks.map(({ link, order, shape }) => {
+  };
+  const annotationDecorated = annotationLinks.map(decorateLink).filter(Boolean);
+  const candidateDecorated = candidateLinks.map(decorateLink).filter(Boolean);
+  const distantLinks = candidateDecorated.filter(({ lineGap }) => lineGap >= 2).slice(0, 3);
+  const strokeLinks = distantLinks.length
+    ? distantLinks
+    : candidateDecorated.filter(({ lineGap }) => lineGap === 1).slice(0, 1);
+  const filters = strokeLinks.map(({ link, rank }) => `<filter id="ink-wobble-${rank}" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".015 .11" numOctaves="2" seed="${position + link.index + rank + 3}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".7"/></filter>`).join("");
+  const strokes = strokeLinks.map(({ link, rank, shape }) => {
     const { start, end } = closestConnection(activeShape, shape);
-    return makeInkStroke(start, end, link, order, maximumWeight, order === 0);
+    return makeInkStroke(start, end, link, rank, maximumWeight, rank === 0);
   }).join("");
-  const linkedAnnotations = decoratedLinks.map(({ link, order, rect, mark, shape }) => {
-    if (mark === "red-circle") return makeScribbleEllipse(shape, position * 43 + link.index * 7 + order, "linked-circle red-ink");
-    if (mark === "circle") return makeScribbleEllipse(shape, position * 43 + link.index * 7 + order, "linked-circle");
-    if (mark === "underline") return makeHandUnderline(rect, stageRect, position * 29 + link.index * 5 + order);
-    if (mark === "strikeout") return makeStrikeout(rect, stageRect, position * 31 + link.index * 11 + order);
+  const linkedAnnotations = annotationDecorated.map(({ link, rank, rect, mark, shape }) => {
+    if (mark === "red-circle") return makeScribbleEllipse(shape, position * 43 + link.index * 7 + rank, "linked-circle red-ink");
+    if (mark === "circle") return makeScribbleEllipse(shape, position * 43 + link.index * 7 + rank, "linked-circle");
+    if (mark === "underline") return makeHandUnderline(rect, stageRect, position * 29 + link.index * 5 + rank);
+    if (mark === "strikeout") return makeStrikeout(rect, stageRect, position * 31 + link.index * 11 + rank);
     return "";
   }).join("");
   const activeCircle = makeScribbleEllipse(activeShape, position * 47 + 13, "active-circle");

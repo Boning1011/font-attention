@@ -67,7 +67,7 @@ def main() -> None:
         previous = causal[:-1]
         links = []
         if previous.numel():
-            count = min(6, previous.numel())
+            count = min(12, previous.numel())
             values, indices = torch.topk(previous, count)
             links = [
                 {"index": int(link_index), "weight": round(float(value), 4)}
@@ -94,7 +94,7 @@ def main() -> None:
             "model": args.model,
             "source": "REAL ATTENTION TENSORS",
             "text": args.text,
-            "method": "Teacher-forced Qwen3 replay. Attention is averaged across all heads in the final four layers, then mapped to weight, width, slant and optical-size axes. The six strongest prior-token links retain their raw attention weights.",
+            "method": "Teacher-forced Qwen3 replay. Attention is averaged across all heads in the final four layers, then mapped to weight, width, slant and optical-size axes. The twelve strongest prior-token links retain their raw attention weights so the browser can distinguish local marks from longer-range connections.",
             "layersAveraged": 4,
         },
         "tokens": tokens,
